@@ -12,7 +12,7 @@ spec:
     match:
       context: SIDECAR_OUTBOUND
       cluster:    
-        service: outband|8000|httpbin.default.svc.cluster.local
+        name: outbound|8000|httpbin.default.svc.cluster.local
     patch:
       operation: MERGE
       value: 
@@ -23,10 +23,9 @@ spec:
             max_session_keys: 0
             common_tls_context:
               tls_params:
-                cipher_suites:
-                  tls_maximum_protocol_version: TLSv1_3
-                  tls_minimum_protocol_version: TLSv1_3
-                  ecdh_curves: ["X25519MLKEM768"]
+                tls_maximum_protocol_version: TLSv1_3
+                tls_minimum_protocol_version: TLSv1_3
+                ecdh_curves: ["X25519MLKEM768"]
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
@@ -43,20 +42,19 @@ spec:
       context: SIDECAR_INBOUND
       listener:
         filterChain:
-          destinationport: 8080
-          transport_protocol: tls
+          destinationPort: 8080
+          transportProtocol: tls
     patch:
       operation: MERGE
       value:
         transport_socket: 
           name: envoy.transport_sockets.tls
           typed_config:
-            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.Downstream
+            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
             disable_stateless_session_resumption: true   
             disable_stateful_session_resumption: true 
             common_tls_context:
               tls_params:
-                cipher_suites:
                   tls_maximum_protocol_version: TLSv1_3
                   tls_minimum_protocol_version: TLSv1_3
                   ecdh_curves: ["X25519MLKEM768"] 

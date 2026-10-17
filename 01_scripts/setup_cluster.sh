@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-ISTIO_VERSION="1.24.0"
+ISTIO_VERSION="1.30.2"
 
 AGENTS="2"
 CLIENT_CPUSET="0,1"
@@ -15,11 +15,11 @@ k3d cluster delete thesis-cluster || true
 
 echo "Create new cluster 'thesis-cluster'"
 k3d cluster create thesis-cluster \
-    --agents $AGENTS \ 
+    --agents $AGENTS \
     --api-port 6550 \
     --k3s-arg "--disable=traefik@server:0" \
     --wait \
-    --k3s-arg "--kubelet-arg-allowed-unsafe-sysctls=net.ipv4.tcp_tw_reuse:*"
+    --k3s-arg "--kubelet-arg=allowed-unsafe-sysctls=net.ipv4.tcp_tw_reuse@agent:*"
 
 echo "Configuring kubernets api endpoint"
 kubectl config set-cluster k3d-thesis-cluster --server=https://localhost:6550
@@ -38,7 +38,6 @@ if docker exec "$NODE_CONTAINER" sh -c "wget -S -T 10 -O /dev/null https://regis
     echo "Docker Hub is reachable from the node container"
 else
     echo "Docker Hub is not reachable from the node container"
-    exit 1
 fi
 
 echo "Labeling nodes" 
@@ -57,8 +56,8 @@ kubectl label "$SERVER_NODE" role=server --overwrite
 
 if [ -n "$CLIENT_CPUSET" ] && [ -n "$SERVER_CPUSET" ]; then
     echo "Setting CPU sets for nodes"
-    docker update --cpuset-cpus="$CLIENT_CPUSET" "$CLIENT_NODE#node/"
-    docker update --cpuset-cpus="$SERVER_CPUSET" "$SERVER_NODE#node/"
+    docker update --cpuset-cpus="$CLIENT_CPUSET" "${CLIENT_NODE#node/}"
+    docker update --cpuset-cpus="$SERVER_CPUSET" "${SERVER_NODE#node/}"
 fi
 
 echo "Verifying nodes "
@@ -71,7 +70,7 @@ echo "Enabling Istio sidecar injection for default namespace"
 kubectl label namespace default istio-injection=enabled --overwrite
 
 echo "Installing monitoring stack"
-kubectl apply -f "https://raw.githubusercontent.com/istio/istio/release-$ISTIO_VERSION/samples/addons/prometheus.yaml"
+kubectl apply -f "https://raw.githubusercontent.com/istio/istio/release-${ISTIO_VERSION%.*}/samples/addons/prometheus.yaml"
 
 kubectl get configmap prometheus -n istio-system -o yaml \
   | sed -e 's/scrape_interval: .*/scrape_interval: 5s/' \
@@ -81,8 +80,8 @@ kubectl get configmap prometheus -n istio-system -o yaml \
 
 kubectl rollout restart deployment prometheus -n istio-system
 
-kubectl apply -f "https://raw.githubusercontent.com/istio/istio/release-$ISTIO_VERSION/samples/addons/grafana.yaml"
-kubectl apply -f "https://raw.githubusercontent.com/istio/istio/release-$ISTIO_VERSION/samples/addons/kiali.yaml"
+kubectl apply -f "https://raw.githubusercontent.com/istio/istio/release-${ISTIO_VERSION%.*}/samples/addons/grafana.yaml"
+kubectl apply -f "https://raw.githubusercontent.com/istio/istio/release-${ISTIO_VERSION%.*}/samples/addons/kiali.yaml"
 
 echo "Deploying backend service"
 kubectl apply -f 02_manifests/backend.yaml

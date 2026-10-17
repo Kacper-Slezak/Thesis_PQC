@@ -12,7 +12,7 @@ spec:
     match:
       context: SIDECAR_OUTBOUND
       cluster:
-        service: outband|8000|httpbin.default.svc.cluster.local
+        name: outbound|8000|httpbin.default.svc.cluster.local
     patch:
       operation: MERGE
       value:
@@ -20,10 +20,9 @@ spec:
           name: envoy.transport_sockets.tls
           typed_config:
             "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.Upstream
-          max_session_keys: 0
-          common_tls_context:
-            tls_params:
-              cipher_suites:
+            max_session_keys: 0
+            common_tls_context:
+              tls_params:
                 tls_maximum_protocol_version: TLSv1_3
                 tls_minimum_protocol_version: TLSv1_3
                 ecdh_curves: ["X25519"]
@@ -43,20 +42,19 @@ spec:
       context: SIDECAR_INBOUND
       listener:
         filterChain:
-          destinationport: 8080
-          transport_protocol: tls
+          destinationPort: 8080
+          transportProtocol: tls
     patch:
       operation: MERGE
       value:
         transport_socket:
           name: envoy.transport_sockets.tls
           typed_config:
-            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.Downstream
-          disable_stateless_session_resumption: true   
-          disable_stateful_session_resumption: true 
-          common_tls_context:
-            tls_params:
-              cipher_suites:
+            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+            disable_stateless_session_resumption: true   
+            disable_stateful_session_resumption: true 
+            common_tls_context:
+              tls_params:
                 tls_maximum_protocol_version: TLSv1_3
                 tls_minimum_protocol_version: TLSv1_3
                 ecdh_curves: ["X25519"]

@@ -12,7 +12,7 @@ spec:
     match:
       context: SIDECAR_OUTBOUND
       cluster:
-        service: outband|8000|httpbin.default.svc.cluster.local
+        name: outbound|8000|httpbin.default.svc.cluster.local
     patch:
       operation: MERGE
       value:
@@ -41,8 +41,8 @@ spec:
       context: SIDECAR_INBOUND
       listener:
         filterChain:
-          destinationport: 8080
-          transport_protocol: tls
+          destinationPort: 8080
+          transportProtocol: tls
     patch:
       operation: MERGE
       value:
