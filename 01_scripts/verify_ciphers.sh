@@ -25,17 +25,17 @@ fi
 echo "httpbin pod found: $HTTPBIN_POD"
 
 CONFIGURATIONS_NAMES=(
-    "mtls1.3-default"
-    "mtls1.2-gcm"
-    "mtls1.2-chacha20"
-    "mtls1.2-gcm256"
-    "mtls1.2-cbc"
-    "mtls1.3-postquantum"
-    "mtls1.3-x25519"
+  "mtls1.3-default"
+  "mtls1.2-gcm"
+  "mtls1.2-gcm256"
+  "mtls1.2-chacha"
+  "mtls1.2-cbc"
+  "mtls1.3-postquantum"
+  "mtls1.3-x25519"
 )
 
 MANIFESTS=(
-    ""  # mtls1.3-default: bez EnvoyFilter
+    ""
     "${MANIFEST_DIR}/envoyfilter_gcm.yaml"
     "${MANIFEST_DIR}/envoyfilter_gcm256.yaml"
     "${MANIFEST_DIR}/envoyfilter_chacha.yaml"
@@ -67,7 +67,7 @@ EXPECTED_CURVES=(
 check_delta() {
   local before="$1" after="$2" name_regex="$3" stat_type="$4"
   PATTERN="ssl\.${stat_type}\.(${name_regex}):" awk -F': ' '
-    NR == FNR { before[$1] = $2; next }                  
+    FILENAME == ARGV[1] { before[$1] = $2; next }                  
     $0 ~ ENVIRON["PATTERN"] && $2 + 0 > before[$1] + 0 { found = 1 }
     END { exit !found }
   ' "$before" "$after"
@@ -113,7 +113,7 @@ for i in "${!CONFIGURATIONS_NAMES[@]}"; do
     echo "import http from 'k6/http'; export default function () { http.get('http://httpbin.default.svc.cluster.local:8000/get'); }" \
         | kubectl exec -i "$K6_POD" -c k6 -- k6 run --vus 5 --duration 8s - > "$K6_LOG" 2>&1 \
         || K6_EXIT=$?
-    K6_LINE=$(grep -E "http_reqs|http_req_failed" "$K6_LOG" | tr -s ' ' | tr '\n' ';')
+    K6_LINE=$(grep -E "http_reqs|http_req_failed" "$K6_LOG" | tr -s ' ' | tr '\n' ';') || true
     rm -f "$K6_LOG"
 
     FULL_AFTER=$(fetch_ssl_stats "$HTTPBIN_POD" "$AFTER_STATS")
