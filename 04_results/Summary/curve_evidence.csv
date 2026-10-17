@@ -1,4 +1,0 @@
-setup,label,window_start,window_end,curve_deltas,expected_curve,handshakes,conn_errors,verdict
-mtls1.3-x25519-full,handshake_r200_m1_run1,2026-10-17T20:38:12Z,2026-10-17T20:38:59Z,"X25519=9258;X25519MLKEM768=0;all=9258",X25519,9258,0,PASS
-mtls1.3-postquantum-full,handshake_r200_m1_run1,2026-10-17T20:44:10Z,2026-10-17T20:44:56Z,"X25519=0;X25519MLKEM768=9301;all=9301",X25519MLKEM768,9301,0,PASS
-mtls1.3-x25519,handshake_r200_m1_run1,2026-10-17T20:47:08Z,2026-10-17T20:47:54Z,"X25519=9280;X25519MLKEM768=0;all=9280",X25519,9280,0,PASS

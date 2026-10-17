@@ -1,5 +1,0 @@
-mode,setup,rate_target,mrpc,fraction,run,window_rps,k6_rps,p50_ms,p95_ms,p99_ms,fail_rate,dropped_iters,client_sidecar_cpu,server_sidecar_cpu,handshakes,handshakes_per_s,session_reused,conn_errors,cpu_per_req_us,cpu_per_handshake_us,netem_rtt_ms,netem_loss_pct,cert_key,timestamp,session
-handshake,mtls1.3-x25519-full,200,1,0,1,200.5,200.96584448437423,7.405367,10.156958,12.170076,0,0,.679,.708,9258,200.5,0,0,6923.1,6922.4,0,0,RSA,2026-10-17T20:39:03Z,1
-handshake,plaintext,200,1,0,1,198.3,200.83856779379846,3.727789,4.722519,5.508897,0,0,.325,.354,0,0,0,0,3427.7,n/a,0,0,RSA,2026-10-17T20:42:02Z,1
-handshake,mtls1.3-postquantum-full,200,1,0,1,200.4,200.8055446223649,8.79,12.529427,14.351452,0,0,.770,.788,9301,200.4,0,0,7775.5,7776.3,0,0,RSA,2026-10-17T20:45:01Z,1
-handshake,mtls1.3-x25519,200,1,0,1,199.6,200.79417973748502,7.9627275,11.9357112,14.669178310000015,0,0,.717,.743,9280,199.6,0,0,7314.6,7314.6,0,0,RSA,2026-10-17T20:47:58Z,1
