@@ -9,3 +9,4 @@
 - handshake every connection no reuse
 - `max_session_keys: 0` and `disable_stateless_session_resumption: true   
           disable_stateful_session_resumption: true` - fore to do  handshake each connection
+- https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/transport_sockets/tls/v3/tls.proto

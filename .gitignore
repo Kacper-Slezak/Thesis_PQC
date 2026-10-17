@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 04_results/RawLogs/
+
+# lokalna kopia, nie w repo
+/PROGRESS.md
