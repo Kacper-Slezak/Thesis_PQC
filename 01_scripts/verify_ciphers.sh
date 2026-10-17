@@ -33,6 +33,7 @@ CONFIGURATIONS_NAMES=(
   "mtls1.3-postquantum"
   "mtls1.3-x25519"
   "mtls1.3-x25519-full"
+  "mtls1.3-postquantum-full"
 )
 
 MANIFESTS=(
@@ -44,6 +45,7 @@ MANIFESTS=(
     "${MANIFEST_DIR}/envoyfilter_pqc.yaml"
     "${MANIFEST_DIR}/envoyfilter_x25519.yaml"
     "${MANIFEST_DIR}/envoyfilter_x25519_full.yaml"
+    "${MANIFEST_DIR}/envoyfilter_pqc_full.yaml"
 )
 
 EXPECTED_CIPHERS=(
@@ -52,6 +54,7 @@ EXPECTED_CIPHERS=(
   "ECDHE-RSA-AES256-GCM-SHA384"
   "ECDHE-RSA-CHACHA20-POLY1305"
   "ECDHE-RSA-AES128-SHA256"
+  "TLS_AES_(128|256)_GCM_SHA(256|384)"
   "TLS_AES_(128|256)_GCM_SHA(256|384)"
   "TLS_AES_(128|256)_GCM_SHA(256|384)"
   "TLS_AES_(128|256)_GCM_SHA(256|384)"
@@ -66,6 +69,7 @@ EXPECTED_CURVES=(
   "X25519MLKEM768"
   "X25519"
   "X25519"
+  "X25519MLKEM768"
 )
 
 EXPECTED_PROTOCOLS=(
@@ -74,6 +78,7 @@ EXPECTED_PROTOCOLS=(
   "TLSv1_2"
   "TLSv1_2"
   "TLSv1_2"
+  "TLSv1_3"
   "TLSv1_3"
   "TLSv1_3"
   "TLSv1_3"
@@ -88,6 +93,7 @@ EXPECTED_CLIENT_CURVES=(
   "X25519MLKEM768"
   "X25519"
   "X25519"
+  "X25519MLKEM768"
 )
 
 EXPECTED_MAX_SESSION_KEYS=(
@@ -98,6 +104,7 @@ EXPECTED_MAX_SESSION_KEYS=(
   ""
   ""
   ""
+  "0"
   "0"
 )
 
@@ -246,6 +253,9 @@ for i in "${!CONFIGURATIONS_NAMES[@]}"; do
     rm -f "$CLIENT_CONFIG" "$CLIENT_CONFIG_ERROR"
 done
 
+# clean up before the result, so a failed check never leaves a filter on the cluster
+kubectl delete envoyfilter --all -n "$NAMESPACE" >/dev/null 2>&1 || true
+
 if [ "${#FAILS[@]}" -gt 0 ]; then
     echo ""
     echo "Failed configurations:"
@@ -254,13 +264,4 @@ if [ "${#FAILS[@]}" -gt 0 ]; then
     done
     exit 1
 fi
-if [ ${#FAILS[@]} -eq 0 ]; then
-  echo "All setups negotiated the expected cryptographic algorithms. Ready for benchmark execution!"
-else
-  echo "WARNING: The following setups did not match expectations (inspect logs for details):"
-  for k in "${!FAILS[@]}"; do
-    echo "  - $k: ${FAILS[$k]}"
-  done
-fi
-
-kubectl delete envoyfilter --all -n "$NAMESPACE" >/dev/null 2>&1 || true
+echo "All setups negotiated the expected cryptographic algorithms. Ready for benchmark execution!"
