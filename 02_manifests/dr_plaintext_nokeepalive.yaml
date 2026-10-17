@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: disable-mtls-client
+  namespace: default
+spec:
+  host: httpbin.default.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+    connectionPool:
+      http:
+        maxRequestsPerConnection: 1
+        h2UpgradePolicy: DO_NOT_UPGRADE

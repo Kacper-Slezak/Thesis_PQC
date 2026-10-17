@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: httpbin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin
+  labels:
+    app: httpbin
+    service: httpbin
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8080
+  selector:
+    app: httpbin
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpbin
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: httpbin
+        version: v1
+      annotations:
+        proxy.istio.io/config: |
+          proxyStatsMatcher:
+            inclusionRegexps:
+            - ".*ssl.*"
+            - ".*tls.*"
+            - "cluster.inbound.*upstream_rq_total"
+        sidecar.istio.io/proxyCPU: "2"
+        sidecar.istio.io/proxyCPULimit: "2"
+        sidecar.istio.io/proxyMemory: "512Mi"
+        sidecar.istio.io/proxyMemoryLimit: "512Mi"
+    spec:
+      serviceAccountName: httpbin
+      nodeSelector:
+        role: server
+      containers:
+      - name: httpbin
+        image: mccutchen/go-httpbin:2.18.3
+        ports:
+          - containerPort: 8080
+        resources:
+          requests:
+            cpu: 2
+            memory: 512Mi
+          limits:
+            cpu: 2
+            memory: 512Mi
