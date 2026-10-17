@@ -58,7 +58,7 @@ one_point() {
 
   measure_window "$K6_POD" "$HTTPBIN_POD" "$WARM_S" "$STEADY_S" "$K6_SCRIPT" \
     -e TEST_TYPE=handshake -e RATE="$rate" -e DURATION="${DURATION}s"
-  record_evidence "$setup" "${MODE}_r${rate}_m${mrpc}_run${run}"
+  record_evidence "$setup" "${MODE}_r${rate}_m${mrpc}_run${run}_s${SESSION}"
 
   local summary
   summary=$(kubectl exec "$K6_POD" -c k6 -- cat /tmp/summary.json 2>/dev/null || echo '{"metrics":{}}')
@@ -72,6 +72,9 @@ one_point() {
 
   echo "$MODE,$setup,$rate,$mrpc,0,$run,$W_RPS,$k6_rps,$p50,$p95,$p99,$fail,$dropped,$W_CLIENT_CPU,$W_SERVER_CPU,$W_HS,$W_HS_PER_S,$W_REUSED,$W_ERRORS,$W_CPU_PER_REQ_US,$W_CPU_PER_HS_US,0,0,$(cert_key),$(date -u +%FT%TZ),$SESSION" >> "$CSV"
   echo "    rps=$W_RPS p99=$p99 cpu/req=${W_CPU_PER_REQ_US}us hs/s=$W_HS_PER_S reused=$W_REUSED errors=$W_ERRORS"
+  if [ "$setup" = "plaintext" ] && [ "$W_HS" -gt 0 ]; then
+    echo "WARNING: plaintext window had $W_HS TLS handshakes - traffic was not plaintext"
+  fi
 
   sleep "$COOLDOWN_S"
 }

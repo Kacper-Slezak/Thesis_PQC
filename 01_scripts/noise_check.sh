@@ -14,10 +14,16 @@ OUTDIR=./04_results/Noise; mkdir -p "$OUTDIR"
 TS=$(date +%Y%m%d_%H%M%S)
 OUT="$OUTDIR/noise_${SETUP}_r${RATE}_${TS}.csv"
 
-# Keep the main sweeps.csv clean: back it up, run, cut out the new rows, restore.
-BACKUP=""
+# Keep sweeps.csv and curve_evidence.csv clean: back them up, run, cut out the new rows, restore.
+EVID=./04_results/Summary/curve_evidence.csv
+BACKUP=""; EVID_BACKUP=""
 if [ -f "$CSV" ]; then BACKUP=$(mktemp); cp "$CSV" "$BACKUP"; fi
-restore() { if [ -n "$BACKUP" ]; then cp "$BACKUP" "$CSV"; rm -f "$BACKUP"; else rm -f "$CSV"; fi; }
+if [ -f "$EVID" ]; then EVID_BACKUP=$(mktemp); cp "$EVID" "$EVID_BACKUP"; fi
+
+restore() {
+  if [ -n "$BACKUP" ]; then cp "$BACKUP" "$CSV"; rm -f "$BACKUP"; else rm -f "$CSV"; fi
+  if [ -n "$EVID_BACKUP" ]; then cp "$EVID_BACKUP" "$EVID"; rm -f "$EVID_BACKUP"; else rm -f "$EVID"; fi
+}
 trap restore EXIT
 
 SESSION="noise_$TS" N_RUNS="$N" DURATION="$DURATION" COOLDOWN_S="$COOLDOWN_S" RATES="$RATE" \
