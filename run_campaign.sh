@@ -22,7 +22,10 @@ for S in $(seq "$START_SESSION" "$LAST"); do
   ./01_scripts/setup_cluster.sh
   kubectl wait --for=condition=ready pod -l app=httpbin --timeout=180s
   kubectl wait --for=condition=ready pod -l app=k6 --timeout=180s
-  ./01_scripts/verify_ciphers.sh || echo "Warning: verify_ciphers reported problems"
+  if ! ./01_scripts/verify_ciphers.sh; then
+    echo "verify_ciphers failed in session $S - stopping, nothing was measured" >&2
+    exit 1
+  fi
   ./01_scripts/quiet_mode.sh on                       # disable monitoring during measurements
 
   ./run_sweeps.sh handshake $SETUPS
