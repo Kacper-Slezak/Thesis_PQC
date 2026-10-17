@@ -12,7 +12,7 @@ spec:
     match:
       context: SIDECAR_OUTBOUND
       cluster:    
-        name: outbound|8000|httpbin.default.svc.cluster.local
+        name: "outbound|8000||httpbin.default.svc.cluster.local"
     patch:
       operation: MERGE
       value: 

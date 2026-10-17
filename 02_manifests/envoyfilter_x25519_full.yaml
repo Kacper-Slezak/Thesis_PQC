@@ -12,14 +12,14 @@ spec:
     match:
       context: SIDECAR_OUTBOUND
       cluster:
-        name: outbound|8000|httpbin.default.svc.cluster.local
+        name: "outbound|8000||httpbin.default.svc.cluster.local"
     patch:
       operation: MERGE
       value:
         transport_socket:
           name: envoy.transport_sockets.tls
           typed_config:
-            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.Upstream
+            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
             max_session_keys: 0
             common_tls_context:
               tls_params:

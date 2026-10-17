@@ -32,6 +32,7 @@ CONFIGURATIONS_NAMES=(
   "mtls1.2-cbc"
   "mtls1.3-postquantum"
   "mtls1.3-x25519"
+  "mtls1.3-x25519-full"
 )
 
 MANIFESTS=(
@@ -42,6 +43,7 @@ MANIFESTS=(
     "${MANIFEST_DIR}/envoyfilter_cbc.yaml"
     "${MANIFEST_DIR}/envoyfilter_pqc.yaml"
     "${MANIFEST_DIR}/envoyfilter_x25519.yaml"
+    "${MANIFEST_DIR}/envoyfilter_x25519_full.yaml"
 )
 
 EXPECTED_CIPHERS=(
@@ -50,6 +52,7 @@ EXPECTED_CIPHERS=(
   "ECDHE-RSA-AES256-GCM-SHA384"
   "ECDHE-RSA-CHACHA20-POLY1305"
   "ECDHE-RSA-AES128-SHA256"
+  "TLS_AES_(128|256)_GCM_SHA(256|384)"
   "TLS_AES_(128|256)_GCM_SHA(256|384)"
   "TLS_AES_(128|256)_GCM_SHA(256|384)"
 )
@@ -62,6 +65,40 @@ EXPECTED_CURVES=(
   "X25519"
   "X25519MLKEM768"
   "X25519"
+  "X25519"
+)
+
+EXPECTED_PROTOCOLS=(
+  ""
+  "TLSv1_2"
+  "TLSv1_2"
+  "TLSv1_2"
+  "TLSv1_2"
+  "TLSv1_3"
+  "TLSv1_3"
+  "TLSv1_3"
+)
+
+EXPECTED_CLIENT_CURVES=(
+  ""
+  ""
+  ""
+  ""
+  ""
+  "X25519MLKEM768"
+  "X25519"
+  "X25519"
+)
+
+EXPECTED_MAX_SESSION_KEYS=(
+  ""
+  ""
+  ""
+  ""
+  ""
+  ""
+  ""
+  "0"
 )
 
 check_delta() {
@@ -83,6 +120,31 @@ fetch_ssl_stats() {
   rm -f "$full"
 }
 
+check_client_config() {
+    local config="$1" expected_protocol="$2" expected_curve="$3" expected_max_session_keys="$4"
+    local failures=()
+
+    if ! grep -Eq '"(tls_minimum_protocol_version|tlsMinimumProtocolVersion)"[[:space:]]*:[[:space:]]*"'"$expected_protocol"'"' "$config"; then
+        failures+=("minimum protocol is not $expected_protocol")
+    fi
+    if ! grep -Eq '"(tls_maximum_protocol_version|tlsMaximumProtocolVersion)"[[:space:]]*:[[:space:]]*"'"$expected_protocol"'"' "$config"; then
+        failures+=("maximum protocol is not $expected_protocol")
+    fi
+    if [ -n "$expected_curve" ] && ! grep -Fq "$expected_curve" "$config"; then
+        failures+=("curve $expected_curve not found")
+    fi
+    if [ -n "$expected_max_session_keys" ] && ! grep -Eq '"(max_session_keys|maxSessionKeys)"[[:space:]]*:[[:space:]]*'"$expected_max_session_keys"'([,}]|$)' "$config"; then
+        failures+=("maxSessionKeys is not $expected_max_session_keys")
+    fi
+
+    if [ "${#failures[@]}" -gt 0 ]; then
+        CLIENT_CONFIG_DIAG=$(IFS='; '; echo "${failures[*]}")
+        return 1
+    fi
+    CLIENT_CONFIG_DIAG="ok"
+    return 0
+}
+
 declare -A FAILS=()
 
 for i in "${!CONFIGURATIONS_NAMES[@]}"; do
@@ -90,6 +152,9 @@ for i in "${!CONFIGURATIONS_NAMES[@]}"; do
     MANIFEST="${MANIFESTS[$i]}"
     EXPECTED_CIPHER="${EXPECTED_CIPHERS[$i]}"
     EXPECTED_CURVE="${EXPECTED_CURVES[$i]}"
+    EXPECTED_PROTOCOL="${EXPECTED_PROTOCOLS[$i]}"
+    EXPECTED_CLIENT_CURVE="${EXPECTED_CLIENT_CURVES[$i]}"
+    EXPECTED_MAX_SESSION_KEY="${EXPECTED_MAX_SESSION_KEYS[$i]}"
 
     echo "Processing configuration: $CONFIG_NAME"
     kubectl delete envoyfilter --all -n "$NAMESPACE" >/dev/null 2>&1 || true
@@ -101,6 +166,30 @@ for i in "${!CONFIGURATIONS_NAMES[@]}"; do
 
     echo "Waiting for configuration to take effect..."
     sleep 10
+
+    CLIENT_CONFIG=$(mktemp)
+    CLIENT_CONFIG_ERROR=$(mktemp)
+    CLIENT_CONFIG_OK=SKIP
+    CLIENT_CONFIG_DIAG="no client TLS configuration expected"
+    if [ -n "$EXPECTED_PROTOCOL" ]; then
+        if istioctl proxy-config cluster "$K6_POD" -n "$NAMESPACE" \
+            --fqdn httpbin.default.svc.cluster.local -o json \
+            > "$CLIENT_CONFIG" 2> "$CLIENT_CONFIG_ERROR"; then
+            CLIENT_CONFIG_OK=PASS
+            if ! check_client_config "$CLIENT_CONFIG" "$EXPECTED_PROTOCOL" \
+                "$EXPECTED_CLIENT_CURVE" "$EXPECTED_MAX_SESSION_KEY"; then
+                CLIENT_CONFIG_OK=FAIL
+            fi
+        else
+            CLIENT_CONFIG_OK=FAIL
+            CLIENT_CONFIG_DIAG="istioctl proxy-config failed: $(tr '\n' ' ' < "$CLIENT_CONFIG_ERROR")"
+        fi
+    fi
+    CLIENT_CONFIG_DETAILS=$(grep -E 'ecdh_curves|ecdhCurves|tls_minimum|tlsMinimum|tls_maximum|tlsMaximum|max_session|maxSessionKeys' \
+        -A2 "$CLIENT_CONFIG" | tr '\n' ';' || true)
+    if [ -z "$CLIENT_CONFIG_DETAILS" ]; then
+        CLIENT_CONFIG_DETAILS="no matching TLS fields"
+    fi
 
     BEFORE_STATS=$(mktemp)
     AFTER_STATS=$(mktemp)
@@ -131,6 +220,8 @@ for i in "${!CONFIGURATIONS_NAMES[@]}"; do
         echo "date:         $(date -u +%FT%TZ)"
         echo "k6_exit:      $K6_EXIT"
         echo "k6:           ${K6_LINE:-none}"
+        echo "client_config: $CLIENT_CONFIG_OK ($CLIENT_CONFIG_DIAG)"
+        echo "client_tls:    $CLIENT_CONFIG_DETAILS"
         echo "stats_lines:  before=${FULL_BEFORE:-0} after=${FULL_AFTER:-0}"
         echo "diagnosis:    $DIAG"
         echo "--- delta (after - before, non-zero only) ---"
@@ -147,10 +238,12 @@ for i in "${!CONFIGURATIONS_NAMES[@]}"; do
 
     echo ">>> Expected cipher counter incremented: $CIPHER_OK"
     echo ">>> Expected curve counter incremented:  $CURVE_OK"
+    echo ">>> Client proxy TLS config:              $CLIENT_CONFIG_OK ($CLIENT_CONFIG_DIAG)"
 
-    if [ "$CIPHER_OK" != "PASS" ] || [ "$CURVE_OK" != "PASS" ]; then
-        FAILS["$CONFIG_NAME"]="cipher_ok=$CIPHER_OK curve_ok=$CURVE_OK ($DIAG)"
+    if [ "$CIPHER_OK" != "PASS" ] || [ "$CURVE_OK" != "PASS" ] || [ "$CLIENT_CONFIG_OK" = "FAIL" ]; then
+        FAILS["$CONFIG_NAME"]="cipher_ok=$CIPHER_OK curve_ok=$CURVE_OK client_config=$CLIENT_CONFIG_OK ($CLIENT_CONFIG_DIAG; $DIAG)"
     fi
+    rm -f "$CLIENT_CONFIG" "$CLIENT_CONFIG_ERROR"
 done
 
 if [ "${#FAILS[@]}" -gt 0 ]; then
