@@ -21,3 +21,12 @@
      - https://istio.io/latest/docs/reference/config/annotations/
 9. The `{ ... } | tee "$OUT_FILE"` block - writes the report to `04_results/Summary/verify_<name>.txt` and shows it on screen. `awk` prints only the counters that changed (after - before)
 10. `check_delta` is called twice, for the cipher and for the curve. Result is `PASS` or `FAIL`. On `FAIL` the reason is stored in `FAILS`
+11. After each TLS `EnvoyFilter` is applied, the script also checks the effective cluster configuration in the k6 proxy with `istioctl proxy-config cluster`. The report includes `client_config` (`PASS`/`FAIL`) and the matching TLS settings. This is separate from the cipher and curve counters on the httpbin server: those counters alone do not prove that the client patch was applied. The `mtls1.3-x25519-full` case applies `envoyfilter_x25519_full.yaml` and additionally requires `maxSessionKeys: 0`, alongside `X25519` and TLS 1.3.
+
+    To inspect the same client configuration manually:
+    ```bash
+    K6=$(kubectl get pods -l app=k6 -o jsonpath='{.items[0].metadata.name}')
+    istioctl proxy-config cluster "$K6" --fqdn httpbin.default.svc.cluster.local -o json \
+      | grep -E 'ecdh_curves|ecdhCurves|tls_minimum|tlsMinimum|tls_maximum|tlsMaximum|max_session|maxSessionKeys' -A2
+    ```
+    For `envoyfilter_x25519_full.yaml`, the output should include `X25519`, `TLSv1_3`, and `maxSessionKeys: 0`. If the settings are missing, investigate the `EnvoyFilter` before relying on the cipher and curve results.
