@@ -8,7 +8,14 @@ AGENTS="2"
 CLIENT_CPUSET="${CLIENT_CPUSET:-}"
 SERVER_CPUSET="${SERVER_CPUSET:-}"
 
-export ISTIO_VERSION K6_IMAGE BACKEND_IMAGE AGENTS
+export ISTIO_VERSION AGENTS
+
+# istioctl installs its own version, so make sure it is the one we want
+INSTALLED=$(istioctl version --remote=false 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+if [ "$INSTALLED" != "$ISTIO_VERSION" ]; then
+    echo "istioctl is $INSTALLED, expected $ISTIO_VERSION. Install the right istioctl first."
+    exit 1
+fi
 
 echo "Delete old cluster if it exists"
 k3d cluster delete thesis-cluster || true

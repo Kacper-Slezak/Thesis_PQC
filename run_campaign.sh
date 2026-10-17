@@ -29,9 +29,8 @@ for S in $(seq "$START_SESSION" "$LAST"); do
 done
 
 # Run statistical analysis on sweep results
-./.venv/bin/python3 ./05_analytics/analyze_stats.py --mode handshake \
-  --pair mtls1.3-postquantum-full:mtls1.3-x25519-full \
-  --pair mtls1.3-x25519-full:mtls1.3-x25519 \
+python ./05_analytics/analyze_stats.py handshake \
   || echo "Warning: analyze_stats.py failed (is .venv set up?)"
+
 
 echo "Done. Results: 04_results/Summary/sweeps.csv, report: 04_results/Summary/stats_report.md"

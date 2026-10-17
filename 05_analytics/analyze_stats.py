@@ -7,6 +7,7 @@ Usage:
 """
 import sys
 
+import numpy as np
 import pandas as pd
 from scipy import stats
 
@@ -36,16 +37,56 @@ def mean_ci(values):
     return mean, mean - t * sem, mean + t * sem
 
 
+def session_bootstrap_ci(diff_pct, n_boot=5000):
+    """95% CI of the mean difference, resampling whole sessions (not single runs).
+
+    Runs from one session are more alike than runs from different sessions,
+    so we draw sessions with replacement and take all their pairs each time.
+    """
+    sessions = diff_pct.index.get_level_values("session").unique()
+    if len(sessions) < 2:
+        return float("nan"), float("nan")
+    rng = np.random.default_rng(1)
+    by_session = {s: diff_pct.xs(s, level="session").to_numpy() for s in sessions}
+    means = []
+    for _ in range(n_boot):
+        drawn = rng.choice(sessions, size=len(sessions), replace=True)
+        means.append(np.concatenate([by_session[s] for s in drawn]).mean())
+    return np.percentile(means, 2.5), np.percentile(means, 97.5)
+
+
 # Load sweep data
 df = pd.read_csv(f"{DIR}/sweeps.csv")
 df = df[df["mode"] == MODE]
 if df.empty:
     sys.exit(f"No rows with mode={MODE} in sweeps.csv")
 
+# Reject bad windows: k6 errors, k6 could not keep the rate,
+# plaintext that still did TLS handshakes, or wrong key-exchange curve
+bad = (df["fail_rate"] > 0) | (df["dropped_iters"] > 0)
+bad |= (df["setup"] == "plaintext") & (df["handshakes"] > 0)
+try:
+    ev = pd.read_csv(f"{DIR}/curve_evidence.csv")
+    fail = ev[ev["verdict"] == "FAIL"]
+    # same label as written by run_sweeps.sh: handshake_r200_m1_run3_s2
+    label = (df["mode"] + "_r" + df["rate_target"].astype(str) + "_m" + df["mrpc"].astype(str)
+             + "_run" + df["run"].astype(str) + "_s" + df["session"].astype(str))
+    bad |= (df["setup"] + "|" + label).isin(fail["setup"] + "|" + fail["label"])
+except FileNotFoundError:
+    pass
+rejected = df[bad]
+df = df[~bad]
+
 # Group points by target rate and requests per connection
 POINT = ["rate_target", "mrpc"]
 
-report = [f"# Statistical report (mode = {MODE})", ""]
+report = [f"# Statistical report (mode = {MODE})", "",
+          f"Rejected windows: {len(rejected)} (k6 errors, dropped iterations, "
+          "plaintext with handshakes or curve FAIL)", ""]
+for r in rejected.itertuples():
+    report.append(f"- {r.setup} session={r.session} run={r.run}: fail_rate={r.fail_rate} "
+                  f"dropped={r.dropped_iters} handshakes={r.handshakes}")
+report.append("")
 results = []
 
 for point, d in df.groupby(POINT):
@@ -64,8 +105,8 @@ for point, d in df.groupby(POINT):
 
     # 2. Pairwise comparisons
     report += ["### Pairwise comparisons (paired t-test on same session and run)", "",
-               "| metric | A | B | pairs | diff A vs B | 95% CI | p-value | per session |",
-               "|---|---|---|---|---|---|---|---|"]
+               "| metric | A | B | pairs | diff A vs B | 95% CI (t) | 95% CI (sessions) | p-value | per session |",
+               "|---|---|---|---|---|---|---|---|---|"]
     for a, b in PAIRS:
         da = d[d["setup"] == a].set_index(["session", "run"])
         db = d[d["setup"] == b].set_index(["session", "run"])
@@ -78,15 +119,16 @@ for point, d in df.groupby(POINT):
                 continue
             diff_pct = (pairs["A"] - pairs["B"]) / pairs["B"] * 100
             mean, lo, hi = mean_ci(diff_pct)
+            blo, bhi = session_bootstrap_ci(diff_pct)
             p = stats.ttest_1samp(diff_pct, 0).pvalue
             per_session = diff_pct.groupby(level="session").mean()
             sess_txt = ", ".join(f"S{s}: {x:+.1f}%" for s, x in per_session.items())
 
             report.append(f"| {metric} | {a} | {b} | {len(pairs)} | {mean:+.1f}% | "
-                          f"[{lo:+.1f}, {hi:+.1f}] | {p:.3g} | {sess_txt} |")
+                          f"[{lo:+.1f}, {hi:+.1f}] | [{blo:+.1f}, {bhi:+.1f}] | {p:.3g} | {sess_txt} |")
             results.append(dict(mode=MODE, rate_target=point[0], mrpc=point[1], metric=metric,
                                 setup_a=a, setup_b=b, n_pairs=len(pairs), diff_pct=mean,
-                                ci_lo=lo, ci_hi=hi, p_value=p, per_session=sess_txt))
+                                ci_lo=lo, ci_hi=hi, boot_lo=blo, boot_hi=bhi, p_value=p, per_session=sess_txt))
     report.append("")
 
 # 3. TLS session resumption

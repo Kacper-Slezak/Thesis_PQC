@@ -14,7 +14,6 @@ ALL_SETUPS=(
     "mtls1.3-postquantum-full"
 )
 
-COOLDOWN_S="${COOLDOWN_S:-45}"
 
 # Apply EnvoyFilter or PeerAuthentication for given setup
 apply_setup() {
@@ -33,7 +32,7 @@ apply_setup() {
     mtls1.3-x25519)      ef=envoyfilter_x25519.yaml ;;
     mtls1.3-x25519-full)ef=envoyfilter_x25519_full.yaml ;;
     mtls1.3-postquantum-full) ef=envoyfilter_pqc_full.yaml ;;
-    *) echo "Unknown setup '$name'" >&2; return 1 ;;
+    *) echo "Unknown setup '$setup_name'" >&2; return 1 ;;
   esac
   [ -n "$ef" ] && kubectl apply -f "./02_manifests/$ef" >/dev/null
   sleep 15
@@ -42,7 +41,7 @@ apply_setup() {
 # Apply DestinationRule (traffic policy and requests per connection)
 apply_dr() {
     local dr_name=$1 mrpc=${2:-0} tls="" mr=""
-    [ "dr" = "$dr_name" ] && tls=$'  tls:\n    mode: DISABLE'
+    [ "$dr_name" = "plaintext" ] && tls=$'    tls:\n      mode: DISABLE'
     [ "$mrpc" != "0" ] && mr="        maxRequestsPerConnection: $mrpc"
     kubectl delete destinationrule disable-mtls-client force-nokeepalive -n default >/dev/null 2>&1 || true
     kubectl apply -f - >/dev/null <<EOF

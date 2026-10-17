@@ -1,3 +1,4 @@
+#!/bin/bash
 set -eo pipefail
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 cd "$REPO_ROOT"
@@ -5,7 +6,7 @@ cd "$REPO_ROOT"
 SETUP="${SETUP:-plaintext}"
 RATE="${RATE:-200}"
 N="${N:-5}"
-DURATION="${DURATION:-60s}"
+DURATION="${DURATION:-60}"
 COOLDOWN_S="${COOLDOWN_S:-10}"
 
 CSV=./04_results/Summary/sweeps.csv
