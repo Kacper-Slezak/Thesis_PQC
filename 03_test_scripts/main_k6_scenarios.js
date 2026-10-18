@@ -25,6 +25,7 @@ function scenario() {
 
 export const options = {
   scenarios: { main: scenario() },
+  discardResponseBodies: true,
   summaryTrendStats: ['avg', 'min', 'med', 'p(90)', 'p(95)', 'p(99)', 'max'],
 };
 

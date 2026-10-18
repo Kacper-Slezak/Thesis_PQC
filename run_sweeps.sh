@@ -57,7 +57,8 @@ one_point() {
   echo "--- [$MODE] $setup rate=$rate mrpc=$mrpc run=$run ---"
 
   measure_window "$K6_POD" "$HTTPBIN_POD" "$WARM_S" "$STEADY_S" "$K6_SCRIPT" \
-    -e TEST_TYPE=handshake -e RATE="$rate" -e DURATION="${DURATION}s"
+    -e TEST_TYPE=handshake -e RATE="$rate" -e DURATION="${DURATION}s" \
+    ${TARGET_URL:+-e "TARGET_URL=$TARGET_URL"}
   record_evidence "$setup" "${MODE}_r${rate}_m${mrpc}_run${run}_s${SESSION}"
 
   local summary
@@ -92,7 +93,7 @@ for RUN in $(seq 1 "$N_RUNS"); do
       done
 
     else  # mrpc
-      for M in $MRPCS; do
+      for M in $(printf "%s\n" $MRPCS | shuf); do
         apply_dr "$SETUP" "$M"
         warmup
         one_point "$SETUP" "$MRPC_RATE" "$M" "$RUN"
