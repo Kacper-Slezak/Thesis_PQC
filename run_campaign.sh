@@ -12,7 +12,8 @@ SESSIONS="${SESSIONS:-3}"            # number of cluster sessions
 START_SESSION="${START_SESSION:-1}"  # starting session index
 export N_RUNS="${N_RUNS:-10}"        # runs per session
 export RATES="${RATES:-200}"         # requests per second
-SETUPS="plaintext mtls1.3-x25519 mtls1.3-x25519-full mtls1.3-postquantum-full"
+SETUPS="${SETUPS:-plaintext mtls1.3-x25519 mtls1.3-x25519-full mtls1.3-postquantum mtls1.3-postquantum-full}"
+MODE="${MODE:-mrpc}"                  # handshake | mrpc
 
 LAST=$(( START_SESSION + SESSIONS - 1 ))
 for S in $(seq "$START_SESSION" "$LAST"); do
@@ -28,7 +29,7 @@ for S in $(seq "$START_SESSION" "$LAST"); do
   fi
   ./01_scripts/quiet_mode.sh on                       # disable monitoring during measurements
 
-  ./run_sweeps.sh handshake $SETUPS
+    ./run_sweeps.sh "$MODE" $SETUPS
 done
 
 # Run statistical analysis on sweep results
