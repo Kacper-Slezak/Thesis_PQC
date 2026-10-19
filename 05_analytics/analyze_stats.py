@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-DIR = "./04_results/Summary"
+DIR = sys.argv[2] if len(sys.argv) > 2 else "./04_results/Summary"
 MODE = sys.argv[1] if len(sys.argv) > 1 else "handshake"
 
 # Metrics to analyze
@@ -23,6 +23,13 @@ PAIRS = [
     ("mtls1.3-x25519-full",      "plaintext"),             # full handshake vs plaintext
     ("mtls1.3-x25519-full",      "mtls1.3-x25519"),        # full handshake vs resumed
     ("mtls1.3-postquantum-full", "mtls1.3-x25519-full"),   # PQC vs classical X25519
+    ("mtls1.3-postquantum",      "mtls1.3-x25519"),        # PQC vs classical, resumed
+    ("mtls1.3-postquantum-full", "mtls1.3-postquantum"),   # PQC full vs resumed
+    ("mtls1.3-default",          "plaintext"),             # classic: TLS 1.3 default vs plaintext
+    ("mtls1.2-gcm",              "mtls1.3-default"),       # classic: TLS 1.2 vs TLS 1.3
+    ("mtls1.2-gcm256",           "mtls1.3-default"),
+    ("mtls1.2-chacha",           "mtls1.3-default"),
+    ("mtls1.2-cbc",              "mtls1.3-default"),
 ]
 
 

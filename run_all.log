@@ -1,0 +1,2740 @@
+=== 2026-10-18 13:03:07 PHASE 1: mrpc x resumption x key exchange
+########## SESSION 1 (of 1..1) ##########
+Delete old cluster if it exists
+[36mINFO[0m[0000] Deleting cluster 'thesis-cluster'            
+[36mINFO[0m[0002] Deleting 1 attached volumes...               
+[36mINFO[0m[0002] Removing cluster details from default kubeconfig... 
+[36mINFO[0m[0002] Removing standalone kubeconfig file (if there is one)... 
+[36mINFO[0m[0002] Successfully deleted cluster thesis-cluster! 
+Create new cluster 'thesis-cluster'
+[36mINFO[0m[0000] Prep: Network                                
+[36mINFO[0m[0000] Re-using existing network 'k3d-thesis-cluster' (96df9256be5cf75fbd5ba311ee351b23a3a5bb044c37c38f950ce42f99750378) 
+[36mINFO[0m[0000] Created image volume k3d-thesis-cluster-images 
+[36mINFO[0m[0000] Starting new tools node...                   
+[36mINFO[0m[0000] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0001] Creating LoadBalancer 'k3d-thesis-cluster-serverlb' 
+[36mINFO[0m[0001] Using the k3d-tools node to gather environment information 
+[36mINFO[0m[0001] Starting new tools node...                   
+[36mINFO[0m[0002] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0003] Starting cluster 'thesis-cluster'            
+[36mINFO[0m[0003] Starting servers...                          
+[36mINFO[0m[0003] Starting node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0008] Starting agents...                           
+[36mINFO[0m[0008] Starting node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0008] Starting node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0011] Starting helpers...                          
+[36mINFO[0m[0011] Starting node 'k3d-thesis-cluster-serverlb'  
+[36mINFO[0m[0018] Injecting records for hostAliases (incl. host.k3d.internal) and for 5 network members into CoreDNS configmap... 
+[36mINFO[0m[0020] Cluster 'thesis-cluster' created successfully! 
+[36mINFO[0m[0020] You can now use it like this:                
+kubectl cluster-info
+Configuring kubernets api endpoint
+Cluster "k3d-thesis-cluster" set.
+Check if cluster is ready
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   12s   v1.35.5+k3s1
+Checking docker hub reachability
+Docker Hub is not reachable from the node container
+Labeling nodes
+node/k3d-thesis-cluster-agent-0 labeled
+node/k3d-thesis-cluster-agent-1 labeled
+Verifying nodes 
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   12s   v1.35.5+k3s1
+Installing Istio 1.30.2 profile MINIMAL
+        |\          
+        | \         
+        |  \        
+        |   \       
+      /||    \      
+     / ||     \     
+    /  ||      \    
+   /   ||       \   
+  /    ||        \  
+ /     ||         \ 
+/______||__________\
+____________________
+  \__       _____/  
+     \_____/        
+
+
+- Processing resources for Istio core.
+✔ Istio core installed ⛵️
+- Processing resources for Istiod.
+- Processing resources for Istiod. Waiting for Deployment/istio-system/istiod
+✔ Istiod installed 🧠
+- Pruning removed resources
+✔ Installation completeEnabling Istio sidecar injection for default namespace
+namespace/default labeled
+Installing monitoring stack
+serviceaccount/prometheus created
+configmap/prometheus created
+clusterrole.rbac.authorization.k8s.io/prometheus created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+service/prometheus created
+deployment.apps/prometheus created
+configmap/prometheus configured
+deployment.apps/prometheus restarted
+serviceaccount/grafana created
+configmap/grafana created
+service/grafana created
+deployment.apps/grafana created
+configmap/istio-grafana-dashboards created
+configmap/istio-services-grafana-dashboards created
+serviceaccount/kiali created
+configmap/kiali created
+clusterrole.rbac.authorization.k8s.io/kiali created
+clusterrolebinding.rbac.authorization.k8s.io/kiali created
+service/kiali created
+deployment.apps/kiali created
+Deploying backend service
+serviceaccount/httpbin created
+service/httpbin created
+deployment.apps/httpbin created
+Deploying k6 load generator
+deployment.apps/k6-deploy created
+Waiting for backend service to be ready and k6
+Waiting for deployment "httpbin" rollout to finish: 0 of 1 updated replicas are available...
+deployment "httpbin" successfully rolled out
+Waiting for deployment "k6-deploy" rollout to finish: 0 of 1 updated replicas are available...
+deployment "k6-deploy" successfully rolled out
+2026/10/18 11:04:23 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment.txt
+Environment setup complete. Cluster is ready for testing.
+Verify by running: kubectl get pods -A
+pod/httpbin-5b46b7dc4b-262lv condition met
+pod/k6-deploy-855895c75f-567rl condition met
+K6 pod found: k6-deploy-855895c75f-567rl
+httpbin pod found: httpbin-5b46b7dc4b-262lv
+Processing configuration: mtls1.3-default
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-default
+date:         2026-10-18T11:04:43Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 27761; http_reqs......................: 27761 3570.273517/s;
+client_config: SKIP (no client TLS configuration expected)
+client_tls:    no matching TLS fields
+stats_lines:  before=599 after=608
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              SKIP (no client TLS configuration expected)
+Processing configuration: mtls1.2-gcm
+Applying configuration: mtls1.2-gcm
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-k6-client created
+envoyfilter.networking.istio.io/force-cipher-httpbin-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm
+date:         2026-10-18T11:05:02Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 27527; http_reqs......................: 27527 3440.116945/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-GCM-SHA256";
+stats_lines:  before=608 after=610
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-gcm256
+Applying configuration: mtls1.2-gcm256
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/gm256-cipher-suite-client created
+envoyfilter.networking.istio.io/gm256-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm256
+date:         2026-10-18T11:05:21Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 28456; http_reqs......................: 28456 3556.136075/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES256-GCM-SHA384",;
+stats_lines:  before=610 after=611
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 15
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-chacha
+Applying configuration: mtls1.2-chacha
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-chacha
+date:         2026-10-18T11:05:40Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 26999; http_reqs......................: 26999 3374.462084/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-CHACHA20-POLY1305",;
+stats_lines:  before=611 after=612
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 20
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-cbc
+Applying configuration: mtls1.2-cbc
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-cbc
+date:         2026-10-18T11:05:59Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 26195; http_reqs......................: 26195 3274.195071/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-SHA256";
+stats_lines:  before=612 after=613
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum
+Applying configuration: mtls1.3-postquantum
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum
+date:         2026-10-18T11:06:18Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 27805; http_reqs......................: 27805 3575.523048/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];
+stats_lines:  before=613 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 10
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519
+Applying configuration: mtls1.3-x25519
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/x25519-cipher-client created
+envoyfilter.networking.istio.io/x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519
+date:         2026-10-18T11:06:37Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 26942; http_reqs......................: 26942 3367.291552/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 15
+listener.0.0.0.0_15006.ssl.curves.X25519: 30
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519-full
+Applying configuration: mtls1.3-x25519-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/full-x25519-cipher-client created
+envoyfilter.networking.istio.io/full-x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519-full
+date:         2026-10-18T11:06:56Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 27210; http_reqs......................: 27210 3400.651593/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 20
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum-full
+Applying configuration: mtls1.3-postquantum-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum-full
+date:         2026-10-18T11:07:14Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 27970; http_reqs......................: 27970 3596.604122/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 25
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+All setups negotiated the expected cryptographic algorithms. Ready for benchmark execution!
+deployment.apps/prometheus scaled
+deployment.apps/grafana scaled
+deployment.apps/kiali scaled
+2026/10/18 11:07:46 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261018_130746.txt
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=1 ---
+    rps=201.8 p99=2.114932 cpu/req=844.1us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=1 ---
+    rps=201.8 p99=2.809907 cpu/req=1107.0us hs/s=40.3 reused=3640 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=1 ---
+    rps=201.8 p99=2.613936 cpu/req=990.3us hs/s=20.1 reused=1821 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=1 ---
+    rps=201.7 p99=3.452496 cpu/req=2003.9us hs/s=201.7 reused=18213 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=1 ---
+    rps=201.7 p99=2.978101 cpu/req=1448.8us hs/s=100.8 reused=9105 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=1 ---
+    rps=200.7 p99=3.705745 cpu/req=1300.8us hs/s=40.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=1 ---
+    rps=201.5 p99=4.510594060000002 cpu/req=2922.6us hs/s=201.5 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=1 ---
+    rps=201.7 p99=4.004247 cpu/req=1927.2us hs/s=100.8 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=1 ---
+    rps=201.4 p99=2.1935459800000014 cpu/req=853.6us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=1 ---
+    rps=201.4 p99=3.499508 cpu/req=1082.6us hs/s=20.1 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=1 ---
+    rps=200.6 p99=2.736889 cpu/req=1004.6us hs/s=20.0 reused=1821 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=1 ---
+    rps=200.7 p99=3.608582 cpu/req=2145.7us hs/s=200.7 reused=18216 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=1 ---
+    rps=200.7 p99=8.506094 cpu/req=1944.6us hs/s=100.3 reused=8888 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=1 ---
+    rps=200.7 p99=5.387309 cpu/req=1072.3us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=1 ---
+    rps=200.6 p99=7.659433 cpu/req=1476.2us hs/s=40.1 reused=3546 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=1 ---
+    rps=201.3 p99=5.229475 cpu/req=1010.7us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=1 ---
+    rps=201.0 p99=5.752522 cpu/req=1180.5us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=1 ---
+    rps=201.1 p99=7.400382 cpu/req=1683.3us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=1 ---
+    rps=200.5 p99=6.274451 cpu/req=1360.8us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=1 ---
+    rps=200.7 p99=5.652888 cpu/req=1090.1us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=1 ---
+    rps=201.5 p99=8.658148 cpu/req=1606.1us hs/s=40.3 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=1 ---
+    rps=201.0 p99=7.491291 cpu/req=1350.5us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=1 ---
+    rps=201.0 p99=10.015803900000002 cpu/req=2263.0us hs/s=100.5 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=1 ---
+    rps=201.0 p99=5.631159 cpu/req=1074.8us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=1 ---
+    rps=200.9 p99=13.292752 cpu/req=3347.8us hs/s=200.9 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=2 ---
+    rps=200.8 p99=5.405031 cpu/req=1021.5us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=2 ---
+    rps=200.5 p99=6.343904 cpu/req=1364.0us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=2 ---
+    rps=200.3 p99=5.416167 cpu/req=1095.5us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=2 ---
+    rps=201.4 p99=7.330159 cpu/req=1694.2us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=2 ---
+    rps=201.2 p99=5.81846 cpu/req=1171.0us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=2 ---
+    rps=200.3 p99=5.461637 cpu/req=1083.1us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=2 ---
+    rps=200.8 p99=10.00206 cpu/req=2326.7us hs/s=100.4 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=2 ---
+    rps=200.2 p99=8.707261 cpu/req=1631.2us hs/s=40.0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=2 ---
+    rps=200.3 p99=8.008214 cpu/req=1373.7us hs/s=19.9 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=2 ---
+    rps=201.0 p99=13.893648 cpu/req=3497.6us hs/s=201.0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=2 ---
+    rps=200.8 p99=7.308975 cpu/req=1424.1us hs/s=40.1 reused=3567 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=2 ---
+    rps=201.0 p99=11.068055 cpu/req=2528.0us hs/s=201.0 reused=17919 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=2 ---
+    rps=200.8 p99=8.755789 cpu/req=1880.7us hs/s=100.4 reused=8911 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=2 ---
+    rps=201.3 p99=5.567843 cpu/req=1085.9us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=2 ---
+    rps=200.5 p99=6.329288 cpu/req=1270.4us hs/s=20.0 reused=1772 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=2 ---
+    rps=200.8 p99=6.626046 cpu/req=1278.5us hs/s=20.0 reused=1768 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=2 ---
+    rps=201.0 p99=11.080779300000003 cpu/req=2655.9us hs/s=201.0 reused=17892 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=2 ---
+    rps=201.0 p99=5.686583 cpu/req=1097.1us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=2 ---
+    rps=201.0 p99=7.661576 cpu/req=1455.9us hs/s=40.2 reused=3539 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=2 ---
+    rps=201.0 p99=8.987906 cpu/req=1906.2us hs/s=100.5 reused=8895 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=2 ---
+    rps=200.2 p99=7.569183 cpu/req=1366.3us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=2 ---
+    rps=200.5 p99=12.751129 cpu/req=3368.4us hs/s=200.5 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=2 ---
+    rps=200.5 p99=5.56485 cpu/req=1094.2us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=2 ---
+    rps=200.9 p99=10.356592 cpu/req=2280.1us hs/s=100.4 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=2 ---
+    rps=201.2 p99=8.236283 cpu/req=1588.0us hs/s=40.2 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=3 ---
+    rps=200.6 p99=5.556093800000002 cpu/req=1098.2us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=3 ---
+    rps=200.6 p99=8.308404 cpu/req=1588.5us hs/s=40.1 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=3 ---
+    rps=200.5 p99=7.529108 cpu/req=1353.6us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=3 ---
+    rps=200.7 p99=14.307467 cpu/req=3331.8us hs/s=200.7 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=3 ---
+    rps=200.4 p99=9.982595 cpu/req=2261.3us hs/s=100.2 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=3 ---
+    rps=201.1 p99=14.02888 cpu/req=3478.1us hs/s=201.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=3 ---
+    rps=200.9 p99=7.482264 cpu/req=1358.3us hs/s=20.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=3 ---
+    rps=200.3 p99=5.580577 cpu/req=1081.7us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=3 ---
+    rps=200.7 p99=8.388951 cpu/req=1628.3us hs/s=40.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=3 ---
+    rps=200.5 p99=10.409951 cpu/req=2333.6us hs/s=100.2 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=3 ---
+    rps=200.7 p99=7.794497 cpu/req=1465.4us hs/s=40.1 reused=3544 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=3 ---
+    rps=201.0 p99=6.813007 cpu/req=1276.9us hs/s=20.1 reused=1763 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=3 ---
+    rps=201.0 p99=12.454172 cpu/req=2816.6us hs/s=201.0 reused=17840 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=3 ---
+    rps=200.8 p99=9.159679 cpu/req=1941.9us hs/s=100.4 reused=8873 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=3 ---
+    rps=200.9 p99=2.132187 cpu/req=846.9us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=3 ---
+    rps=200.5 p99=2.140887 cpu/req=840.9us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=3 ---
+    rps=200.5 p99=3.141585 cpu/req=1475.8us hs/s=100.2 reused=9104 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=3 ---
+    rps=200.9 p99=2.575284 cpu/req=982.3us hs/s=20.0 reused=1818 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=3 ---
+    rps=201.1 p99=2.749021490000001 cpu/req=1125.5us hs/s=40.2 reused=3640 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=3 ---
+    rps=201.1 p99=3.331751 cpu/req=2002.2us hs/s=201.1 reused=18214 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=3 ---
+    rps=200.6 p99=2.072737 cpu/req=796.2us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=3 ---
+    rps=200.5 p99=2.247679 cpu/req=924.2us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=3 ---
+    rps=200.5 p99=2.206285 cpu/req=861.2us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=3 ---
+    rps=200.6 p99=2.496666 cpu/req=1099.7us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=3 ---
+    rps=200.7 p99=2.8441 cpu/req=1403.6us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=4 ---
+    rps=201.0 p99=2.730927 cpu/req=1367.4us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=4 ---
+    rps=201.1 p99=2.316233 cpu/req=944.6us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=4 ---
+    rps=201.1 p99=2.439811 cpu/req=1097.2us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=4 ---
+    rps=201.4 p99=3.357014 cpu/req=896.2us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=4 ---
+    rps=200.5 p99=5.346985 cpu/req=1034.7us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=4 ---
+    rps=201.3 p99=9.012094710000001 cpu/req=1661.3us hs/s=40.2 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=4 ---
+    rps=201.2 p99=12.826195 cpu/req=3351.8us hs/s=201.2 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=4 ---
+    rps=201.1 p99=7.458114120000001 cpu/req=1350.6us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=4 ---
+    rps=201.1 p99=3.92539 cpu/req=1860.9us hs/s=100.5 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=4 ---
+    rps=201.2 p99=2.14666 cpu/req=857.1us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=4 ---
+    rps=200.6 p99=2.685938 cpu/req=1011.2us hs/s=20.0 reused=1819 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=4 ---
+    rps=201.0 p99=3.492633 cpu/req=2164.6us hs/s=201.0 reused=18222 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=4 ---
+    rps=200.5 p99=3.19974 cpu/req=1552.5us hs/s=100.2 reused=9107 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=4 ---
+    rps=200.6 p99=2.155256 cpu/req=848.2us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=4 ---
+    rps=201.3 p99=2.853484 cpu/req=1148.2us hs/s=40.2 reused=3641 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=4 ---
+    rps=200.7 p99=2.076028 cpu/req=822.9us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=4 ---
+    rps=200.7 p99=2.821915 cpu/req=1137.0us hs/s=40.1 reused=3642 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=4 ---
+    rps=200.6 p99=3.00069473 cpu/req=1479.4us hs/s=100.3 reused=9104 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=4 ---
+    rps=200.7 p99=3.465074 cpu/req=2058.1us hs/s=200.7 reused=18218 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=4 ---
+    rps=200.7 p99=2.571213 cpu/req=1031.8us hs/s=20.0 reused=1821 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=4 ---
+    rps=201.3 p99=4.030879 cpu/req=1968.2us hs/s=100.6 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=4 ---
+    rps=201.4 p99=4.347603 cpu/req=2983.4us hs/s=201.4 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=4 ---
+    rps=201.8 p99=7.09427 cpu/req=1531.6us hs/s=40.3 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=4 ---
+    rps=201.8 p99=7.656049 cpu/req=1443.5us hs/s=20.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=4 ---
+    rps=201.4 p99=5.400782 cpu/req=1091.3us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=5 ---
+    rps=201.7 p99=8.45369 cpu/req=1587.1us hs/s=40.3 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=5 ---
+    rps=201.9 p99=7.518912 cpu/req=1373.2us hs/s=20.1 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=5 ---
+    rps=202.0 p99=10.106244 cpu/req=2280.1us hs/s=101.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=5 ---
+    rps=201.9 p99=4.275091 cpu/req=2815.8us hs/s=201.9 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=5 ---
+    rps=201.9 p99=2.144419 cpu/req=844.8us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=5 ---
+    rps=201.1 p99=3.527129 cpu/req=2139.1us hs/s=201.1 reused=18214 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=5 ---
+    rps=200.8 p99=2.937753 cpu/req=1137.0us hs/s=40.1 reused=3643 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=5 ---
+    rps=200.7 p99=2.76003 cpu/req=1010.8us hs/s=20.0 reused=1819 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=5 ---
+    rps=201.1 p99=2.218639 cpu/req=849.6us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=5 ---
+    rps=200.7 p99=3.108904 cpu/req=1509.9us hs/s=100.3 reused=9104 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=5 ---
+    rps=202.0 p99=3.765335 cpu/req=1309.9us hs/s=40.3 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=5 ---
+    rps=201.0 p99=4.47231 cpu/req=2935.9us hs/s=201.0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=5 ---
+    rps=200.8 p99=2.106356 cpu/req=838.8us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=5 ---
+    rps=200.6 p99=3.529818 cpu/req=1089.4us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=5 ---
+    rps=200.7 p99=3.953893 cpu/req=1906.8us hs/s=100.3 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=5 ---
+    rps=201.5 p99=2.623949 cpu/req=991.5us hs/s=20.1 reused=1821 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=5 ---
+    rps=201.5 p99=2.915608 cpu/req=1465.3us hs/s=100.7 reused=9102 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=5 ---
+    rps=201.5 p99=3.3669588900000007 cpu/req=2033.0us hs/s=201.5 reused=18210 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=5 ---
+    rps=201.4 p99=2.147936 cpu/req=844.2us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=5 ---
+    rps=201.3 p99=2.755137 cpu/req=1114.5us hs/s=40.2 reused=3642 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=5 ---
+    rps=200.5 p99=2.392337 cpu/req=1091.4us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=5 ---
+    rps=201.5 p99=2.22337 cpu/req=867.9us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=5 ---
+    rps=201.4 p99=2.128504 cpu/req=803.9us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=5 ---
+    rps=201.4 p99=2.291413 cpu/req=928.5us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=5 ---
+    rps=201.3 p99=2.628921 cpu/req=1369.2us hs/s=0 reused=0 errors=0
+Done. Results appended to ./04_results/Summary/sweeps.csv
+No rows with mode=handshake in sweeps.csv
+Warning: analyze_stats.py failed (is .venv set up?)
+Done. Results: 04_results/Summary/sweeps.csv, report: 04_results/Summary/stats_report.md
+########## SESSION 2 (of 2..2) ##########
+Delete old cluster if it exists
+[36mINFO[0m[0000] Deleting cluster 'thesis-cluster'            
+[36mINFO[0m[0003] Deleting 1 attached volumes...               
+[36mINFO[0m[0003] Removing cluster details from default kubeconfig... 
+[36mINFO[0m[0003] Removing standalone kubeconfig file (if there is one)... 
+[36mINFO[0m[0003] Successfully deleted cluster thesis-cluster! 
+Create new cluster 'thesis-cluster'
+[36mINFO[0m[0000] Prep: Network                                
+[36mINFO[0m[0000] Re-using existing network 'k3d-thesis-cluster' (96df9256be5cf75fbd5ba311ee351b23a3a5bb044c37c38f950ce42f99750378) 
+[36mINFO[0m[0000] Created image volume k3d-thesis-cluster-images 
+[36mINFO[0m[0000] Starting new tools node...                   
+[36mINFO[0m[0000] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0001] Creating LoadBalancer 'k3d-thesis-cluster-serverlb' 
+[36mINFO[0m[0001] Using the k3d-tools node to gather environment information 
+[36mINFO[0m[0001] Starting new tools node...                   
+[36mINFO[0m[0002] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0003] Starting cluster 'thesis-cluster'            
+[36mINFO[0m[0003] Starting servers...                          
+[36mINFO[0m[0003] Starting node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0008] Starting agents...                           
+[36mINFO[0m[0008] Starting node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0008] Starting node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0011] Starting helpers...                          
+[36mINFO[0m[0011] Starting node 'k3d-thesis-cluster-serverlb'  
+[36mINFO[0m[0018] Injecting records for hostAliases (incl. host.k3d.internal) and for 5 network members into CoreDNS configmap... 
+[36mINFO[0m[0020] Cluster 'thesis-cluster' created successfully! 
+[36mINFO[0m[0020] You can now use it like this:                
+kubectl cluster-info
+Configuring kubernets api endpoint
+Cluster "k3d-thesis-cluster" set.
+Check if cluster is ready
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   12s   v1.35.5+k3s1
+Checking docker hub reachability
+Docker Hub is not reachable from the node container
+Labeling nodes
+node/k3d-thesis-cluster-agent-0 labeled
+node/k3d-thesis-cluster-agent-1 labeled
+Verifying nodes 
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   12s   v1.35.5+k3s1
+Installing Istio 1.30.2 profile MINIMAL
+        |\          
+        | \         
+        |  \        
+        |   \       
+      /||    \      
+     / ||     \     
+    /  ||      \    
+   /   ||       \   
+  /    ||        \  
+ /     ||         \ 
+/______||__________\
+____________________
+  \__       _____/  
+     \_____/        
+
+
+- Processing resources for Istio core.
+✔ Istio core installed ⛵️
+- Processing resources for Istiod.
+- Processing resources for Istiod. Waiting for Deployment/istio-system/istiod
+✔ Istiod installed 🧠
+- Pruning removed resources
+✔ Installation completeEnabling Istio sidecar injection for default namespace
+namespace/default labeled
+Installing monitoring stack
+serviceaccount/prometheus created
+configmap/prometheus created
+clusterrole.rbac.authorization.k8s.io/prometheus created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+service/prometheus created
+deployment.apps/prometheus created
+configmap/prometheus configured
+deployment.apps/prometheus restarted
+serviceaccount/grafana created
+configmap/grafana created
+service/grafana created
+deployment.apps/grafana created
+configmap/istio-grafana-dashboards created
+configmap/istio-services-grafana-dashboards created
+serviceaccount/kiali created
+configmap/kiali created
+clusterrole.rbac.authorization.k8s.io/kiali created
+clusterrolebinding.rbac.authorization.k8s.io/kiali created
+service/kiali created
+deployment.apps/kiali created
+Deploying backend service
+serviceaccount/httpbin created
+service/httpbin created
+deployment.apps/httpbin created
+Deploying k6 load generator
+deployment.apps/k6-deploy created
+Waiting for backend service to be ready and k6
+Waiting for deployment "httpbin" rollout to finish: 0 of 1 updated replicas are available...
+deployment "httpbin" successfully rolled out
+deployment "k6-deploy" successfully rolled out
+2026/10/18 15:26:53 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment.txt
+Environment setup complete. Cluster is ready for testing.
+Verify by running: kubectl get pods -A
+pod/httpbin-5b46b7dc4b-hqk48 condition met
+pod/k6-deploy-855895c75f-8lg52 condition met
+K6 pod found: k6-deploy-855895c75f-8lg52
+httpbin pod found: httpbin-5b46b7dc4b-hqk48
+Processing configuration: mtls1.3-default
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-default
+date:         2026-10-18T15:27:14Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 27046; http_reqs......................: 27046 3380.003646/s;
+client_config: SKIP (no client TLS configuration expected)
+client_tls:    no matching TLS fields
+stats_lines:  before=599 after=608
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              SKIP (no client TLS configuration expected)
+Processing configuration: mtls1.2-gcm
+Applying configuration: mtls1.2-gcm
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-k6-client created
+envoyfilter.networking.istio.io/force-cipher-httpbin-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm
+date:         2026-10-18T15:27:32Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 27861; http_reqs......................: 27861 3481.960514/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-GCM-SHA256";
+stats_lines:  before=608 after=610
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-gcm256
+Applying configuration: mtls1.2-gcm256
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/gm256-cipher-suite-client created
+envoyfilter.networking.istio.io/gm256-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm256
+date:         2026-10-18T15:27:52Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 26673; http_reqs......................: 26673 3333.449309/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES256-GCM-SHA384",;
+stats_lines:  before=610 after=611
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 15
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-chacha
+Applying configuration: mtls1.2-chacha
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-chacha
+date:         2026-10-18T15:28:10Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 27629; http_reqs......................: 27629 3453.471435/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-CHACHA20-POLY1305",;
+stats_lines:  before=611 after=612
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 20
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-cbc
+Applying configuration: mtls1.2-cbc
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-cbc
+date:         2026-10-18T15:28:29Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 27457; http_reqs......................: 27457 3492.074187/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-SHA256";
+stats_lines:  before=612 after=613
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum
+Applying configuration: mtls1.3-postquantum
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum
+date:         2026-10-18T15:28:48Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 27789; http_reqs......................: 27789 3472.967196/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];
+stats_lines:  before=613 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 10
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519
+Applying configuration: mtls1.3-x25519
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/x25519-cipher-client created
+envoyfilter.networking.istio.io/x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519
+date:         2026-10-18T15:29:07Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 27435; http_reqs......................: 27435 3428.615602/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 15
+listener.0.0.0.0_15006.ssl.curves.X25519: 30
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519-full
+Applying configuration: mtls1.3-x25519-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/full-x25519-cipher-client created
+envoyfilter.networking.istio.io/full-x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519-full
+date:         2026-10-18T15:29:26Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 28125; http_reqs......................: 28125 3576.234418/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 20
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum-full
+Applying configuration: mtls1.3-postquantum-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum-full
+date:         2026-10-18T15:29:45Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 27893; http_reqs......................: 27893 3486.00522/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 25
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+All setups negotiated the expected cryptographic algorithms. Ready for benchmark execution!
+deployment.apps/prometheus scaled
+deployment.apps/grafana scaled
+deployment.apps/kiali scaled
+2026/10/18 15:30:16 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261018_173015.txt
+--- [mrpc] plaintext rate=200 mrpc=2 run=1 ---
+    rps=200.7 p99=2.861221 cpu/req=1116.4us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=1 ---
+    rps=200.6 p99=2.139326 cpu/req=856.8us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=1 ---
+    rps=200.5 p99=2.11466 cpu/req=797.7us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=1 ---
+    rps=200.5 p99=2.308016 cpu/req=926.5us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=1 ---
+    rps=201.2 p99=2.631702 cpu/req=1334.9us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=1 ---
+    rps=200.5 p99=3.37547 cpu/req=1060.6us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=1 ---
+    rps=200.3 p99=3.525672 cpu/req=1275.1us hs/s=40.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=1 ---
+    rps=200.5 p99=4.124346 cpu/req=2758.0us hs/s=200.5 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=1 ---
+    rps=200.5 p99=3.760909 cpu/req=1807.0us hs/s=100.2 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=1 ---
+    rps=200.4 p99=5.547912 cpu/req=1086.7us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=1 ---
+    rps=201.0 p99=15.902117 cpu/req=3456.6us hs/s=201.0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=1 ---
+    rps=201.0 p99=7.338938360000003 cpu/req=1351.8us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=1 ---
+    rps=201.1 p99=10.581403 cpu/req=2320.2us hs/s=100.5 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=1 ---
+    rps=200.7 p99=8.83397908 cpu/req=1616.3us hs/s=40.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=1 ---
+    rps=201.0 p99=5.537459 cpu/req=1081.3us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=1 ---
+    rps=200.8 p99=5.577447 cpu/req=1083.8us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=1 ---
+    rps=201.0 p99=9.13176 cpu/req=1917.4us hs/s=100.4 reused=8885 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=1 ---
+    rps=201.0 p99=7.039248 cpu/req=1296.3us hs/s=20.0 reused=1763 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=1 ---
+    rps=200.6 p99=8.126826 cpu/req=1451.6us hs/s=40.1 reused=3553 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=1 ---
+    rps=200.5 p99=12.243505 cpu/req=2656.6us hs/s=200.5 reused=17939 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=1 ---
+    rps=200.5 p99=5.681271 cpu/req=1090.2us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=1 ---
+    rps=200.7 p99=11.386955 cpu/req=2525.3us hs/s=200.7 reused=17893 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=1 ---
+    rps=200.4 p99=7.719329 cpu/req=1429.6us hs/s=40.1 reused=3546 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=1 ---
+    rps=200.2 p99=8.542682 cpu/req=1861.1us hs/s=100.1 reused=8938 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=1 ---
+    rps=200.0 p99=6.861308 cpu/req=1272.0us hs/s=20.0 reused=1778 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=2 ---
+    rps=200.2 p99=11.810663 cpu/req=2346.8us hs/s=100.1 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=2 ---
+    rps=200.4 p99=5.196871 cpu/req=1328.1us hs/s=40.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=2 ---
+    rps=200.3 p99=3.354801 cpu/req=1066.9us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=2 ---
+    rps=200.4 p99=4.32139185 cpu/req=2840.6us hs/s=200.4 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=2 ---
+    rps=200.4 p99=2.12456 cpu/req=838.4us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=2 ---
+    rps=200.8 p99=3.523462 cpu/req=2104.3us hs/s=200.8 reused=18212 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=2 ---
+    rps=200.7 p99=3.067722 cpu/req=1500.4us hs/s=100.3 reused=9105 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=2 ---
+    rps=200.7 p99=2.81967 cpu/req=1123.7us hs/s=40.1 reused=3643 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=2 ---
+    rps=200.7 p99=2.710214 cpu/req=991.9us hs/s=20.0 reused=1822 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=2 ---
+    rps=200.8 p99=2.1359507800000017 cpu/req=852.6us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=2 ---
+    rps=200.3 p99=2.093376 cpu/req=779.5us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=2 ---
+    rps=200.6 p99=3.060101 cpu/req=1378.6us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=2 ---
+    rps=200.7 p99=2.151206 cpu/req=866.8us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=2 ---
+    rps=200.7 p99=2.281422 cpu/req=911.2us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=2 ---
+    rps=200.7 p99=2.34313457 cpu/req=1070.4us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=2 ---
+    rps=200.4 p99=2.754495 cpu/req=1108.5us hs/s=40.1 reused=3641 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=2 ---
+    rps=200.0 p99=6.781406 cpu/req=1267.0us hs/s=20.0 reused=1772 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=2 ---
+    rps=200.1 p99=10.915382 cpu/req=2493.2us hs/s=200.1 reused=17906 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=2 ---
+    rps=200.1 p99=5.417026 cpu/req=1069.7us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=2 ---
+    rps=200.3 p99=8.921725 cpu/req=1888.1us hs/s=100.1 reused=8914 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=2 ---
+    rps=200.5 p99=9.029356 cpu/req=1624.0us hs/s=40.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=2 ---
+    rps=200.8 p99=14.884798 cpu/req=3440.2us hs/s=200.8 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=2 ---
+    rps=200.4 p99=5.815265 cpu/req=1076.2us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=2 ---
+    rps=200.0 p99=11.263744 cpu/req=2341.9us hs/s=99.9 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=2 ---
+    rps=200.2 p99=7.316987 cpu/req=1367.4us hs/s=20.0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=3 ---
+    rps=201.0 p99=12.043599 cpu/req=2645.6us hs/s=201.0 reused=17882 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=3 ---
+    rps=200.8 p99=9.394888 cpu/req=1925.6us hs/s=100.4 reused=8890 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=3 ---
+    rps=200.5 p99=7.513054 cpu/req=1460.4us hs/s=40.1 reused=3546 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=3 ---
+    rps=200.9 p99=5.461515 cpu/req=1103.6us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=3 ---
+    rps=200.3 p99=6.996616 cpu/req=1289.4us hs/s=20.0 reused=1761 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=3 ---
+    rps=200.4 p99=10.97933 cpu/req=2544.9us hs/s=200.4 reused=17908 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=3 ---
+    rps=200.4 p99=5.424546 cpu/req=1088.7us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=3 ---
+    rps=200.6 p99=9.415873 cpu/req=1875.2us hs/s=100.3 reused=8898 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=3 ---
+    rps=200.7 p99=7.433681 cpu/req=1435.5us hs/s=40.1 reused=3561 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=3 ---
+    rps=200.4 p99=6.89766 cpu/req=1289.0us hs/s=20.0 reused=1779 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=3 ---
+    rps=200.6 p99=10.915486 cpu/req=2374.9us hs/s=100.3 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=3 ---
+    rps=200.4 p99=9.087606 cpu/req=1645.6us hs/s=40.0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=3 ---
+    rps=200.6 p99=7.706209 cpu/req=1388.1us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=3 ---
+    rps=200.6 p99=5.603397 cpu/req=1087.3us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=3 ---
+    rps=200.1 p99=14.788114 cpu/req=3478.1us hs/s=200.1 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=3 ---
+    rps=200.8 p99=7.481332 cpu/req=1367.5us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=3 ---
+    rps=200.7 p99=10.765507 cpu/req=2272.6us hs/s=100.3 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=3 ---
+    rps=200.5 p99=8.793189 cpu/req=1611.1us hs/s=40.1 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=3 ---
+    rps=200.7 p99=14.483459 cpu/req=3389.2us hs/s=200.7 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=3 ---
+    rps=200.4 p99=5.844979 cpu/req=1101.6us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=3 ---
+    rps=200.6 p99=6.718959730000006 cpu/req=1461.7us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=3 ---
+    rps=200.7 p99=2.158065 cpu/req=848.8us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=3 ---
+    rps=200.8 p99=2.670012 cpu/req=1355.0us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=3 ---
+    rps=200.8 p99=2.304153 cpu/req=924.6us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=3 ---
+    rps=200.7 p99=2.05118 cpu/req=799.3us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=4 ---
+    rps=200.2 p99=3.9677 cpu/req=1899.7us hs/s=100.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=4 ---
+    rps=200.4 p99=3.505917 cpu/req=1083.5us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=4 ---
+    rps=200.3 p99=4.44498992 cpu/req=2888.4us hs/s=200.3 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=4 ---
+    rps=200.3 p99=2.200494 cpu/req=857.3us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=4 ---
+    rps=200.9 p99=3.749999 cpu/req=1299.4us hs/s=40.2 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=4 ---
+    rps=200.5 p99=3.301932 cpu/req=1988.7us hs/s=200.5 reused=18208 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=4 ---
+    rps=200.4 p99=2.112129 cpu/req=845.5us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=4 ---
+    rps=200.4 p99=2.615955 cpu/req=986.7us hs/s=20.0 reused=1820 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=4 ---
+    rps=200.4 p99=2.997098 cpu/req=1470.6us hs/s=100.2 reused=9105 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=4 ---
+    rps=200.4 p99=2.782197 cpu/req=1118.4us hs/s=40.0 reused=3642 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=4 ---
+    rps=200.8 p99=2.203772 cpu/req=859.2us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=4 ---
+    rps=200.7 p99=6.105032 cpu/req=1189.7us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=4 ---
+    rps=201.1 p99=5.644831 cpu/req=1034.3us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=4 ---
+    rps=200.8 p99=7.796392 cpu/req=1703.0us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=4 ---
+    rps=201.0 p99=6.834099510000001 cpu/req=1402.4us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=4 ---
+    rps=200.8 p99=7.336125 cpu/req=1312.5us hs/s=20.0 reused=1762 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=4 ---
+    rps=200.9 p99=11.967258240000001 cpu/req=2656.9us hs/s=200.9 reused=17912 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=4 ---
+    rps=200.7 p99=9.38929 cpu/req=1942.6us hs/s=100.3 reused=8883 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=4 ---
+    rps=201.3 p99=7.989679 cpu/req=1476.9us hs/s=40.2 reused=3555 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=4 ---
+    rps=201.1 p99=5.82173 cpu/req=1107.0us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=4 ---
+    rps=200.7 p99=8.049923 cpu/req=1408.0us hs/s=20.1 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=4 ---
+    rps=200.3 p99=5.927736 cpu/req=1102.0us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=4 ---
+    rps=200.4 p99=10.997221 cpu/req=2256.5us hs/s=100.2 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=4 ---
+    rps=200.6 p99=14.541331 cpu/req=3357.5us hs/s=200.6 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=4 ---
+    rps=200.4 p99=8.941177 cpu/req=1586.7us hs/s=40.1 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=5 ---
+    rps=200.5 p99=6.9640862000000014 cpu/req=1376.2us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=5 ---
+    rps=200.5 p99=6.187111 cpu/req=1187.7us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=5 ---
+    rps=200.2 p99=5.801555 cpu/req=1129.8us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=5 ---
+    rps=200.4 p99=7.833847170000002 cpu/req=1702.1us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=5 ---
+    rps=200.9 p99=5.432066920000009 cpu/req=1028.4us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=5 ---
+    rps=201.5 p99=11.853977 cpu/req=2552.9us hs/s=201.5 reused=17915 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=5 ---
+    rps=201.1 p99=9.403561 cpu/req=1883.8us hs/s=100.5 reused=8873 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=5 ---
+    rps=201.6 p99=5.76275 cpu/req=1092.3us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=5 ---
+    rps=201.3 p99=7.029985 cpu/req=1296.4us hs/s=20.1 reused=1759 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=5 ---
+    rps=201.5 p99=7.643082800000001 cpu/req=1458.7us hs/s=40.3 reused=3547 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=5 ---
+    rps=201.5 p99=7.705175 cpu/req=1364.9us hs/s=20.1 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=5 ---
+    rps=201.0 p99=14.401259 cpu/req=3329.5us hs/s=201.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=5 ---
+    rps=201.2 p99=11.08935409 cpu/req=2265.2us hs/s=100.6 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=5 ---
+    rps=201.3 p99=5.617401 cpu/req=1101.7us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=5 ---
+    rps=201.3 p99=9.142323640000004 cpu/req=1611.6us hs/s=40.2 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=5 ---
+    rps=200.5 p99=8.874888 cpu/req=1626.3us hs/s=40.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=5 ---
+    rps=200.7 p99=15.010947 cpu/req=3462.8us hs/s=200.7 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=5 ---
+    rps=200.8 p99=7.979203 cpu/req=1393.2us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=5 ---
+    rps=200.8 p99=10.942437620000003 cpu/req=2366.2us hs/s=100.4 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=5 ---
+    rps=200.6 p99=5.78763 cpu/req=1096.7us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=5 ---
+    rps=201.1 p99=12.362269 cpu/req=2677.8us hs/s=201.1 reused=17883 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=5 ---
+    rps=200.6 p99=8.171992 cpu/req=1476.6us hs/s=40.1 reused=3524 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=5 ---
+    rps=200.8 p99=9.672809 cpu/req=1950.8us hs/s=100.4 reused=8866 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=5 ---
+    rps=200.6 p99=5.992764 cpu/req=1099.3us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=5 ---
+    rps=200.7 p99=7.274805 cpu/req=1292.5us hs/s=20.0 reused=1749 errors=0
+Done. Results appended to ./04_results/Summary/sweeps.csv
+No rows with mode=handshake in sweeps.csv
+Warning: analyze_stats.py failed (is .venv set up?)
+Done. Results: 04_results/Summary/sweeps.csv, report: 04_results/Summary/stats_report.md
+########## SESSION 3 (of 3..3) ##########
+Delete old cluster if it exists
+[36mINFO[0m[0000] Deleting cluster 'thesis-cluster'            
+[36mINFO[0m[0003] Deleting 1 attached volumes...               
+[36mINFO[0m[0003] Removing cluster details from default kubeconfig... 
+[36mINFO[0m[0003] Removing standalone kubeconfig file (if there is one)... 
+[36mINFO[0m[0003] Successfully deleted cluster thesis-cluster! 
+Create new cluster 'thesis-cluster'
+[36mINFO[0m[0000] Prep: Network                                
+[36mINFO[0m[0000] Re-using existing network 'k3d-thesis-cluster' (96df9256be5cf75fbd5ba311ee351b23a3a5bb044c37c38f950ce42f99750378) 
+[36mINFO[0m[0000] Created image volume k3d-thesis-cluster-images 
+[36mINFO[0m[0000] Starting new tools node...                   
+[36mINFO[0m[0000] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0001] Creating LoadBalancer 'k3d-thesis-cluster-serverlb' 
+[36mINFO[0m[0001] Using the k3d-tools node to gather environment information 
+[36mINFO[0m[0001] Starting new tools node...                   
+[36mINFO[0m[0002] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0003] Starting cluster 'thesis-cluster'            
+[36mINFO[0m[0003] Starting servers...                          
+[36mINFO[0m[0003] Starting node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0008] Starting agents...                           
+[36mINFO[0m[0008] Starting node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0008] Starting node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0011] Starting helpers...                          
+[36mINFO[0m[0011] Starting node 'k3d-thesis-cluster-serverlb'  
+[36mINFO[0m[0018] Injecting records for hostAliases (incl. host.k3d.internal) and for 5 network members into CoreDNS configmap... 
+[36mINFO[0m[0020] Cluster 'thesis-cluster' created successfully! 
+[36mINFO[0m[0020] You can now use it like this:                
+kubectl cluster-info
+Configuring kubernets api endpoint
+Cluster "k3d-thesis-cluster" set.
+Check if cluster is ready
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   12s   v1.35.5+k3s1
+Checking docker hub reachability
+Docker Hub is not reachable from the node container
+Labeling nodes
+node/k3d-thesis-cluster-agent-0 labeled
+node/k3d-thesis-cluster-agent-1 labeled
+Verifying nodes 
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   12s   v1.35.5+k3s1
+Installing Istio 1.30.2 profile MINIMAL
+        |\          
+        | \         
+        |  \        
+        |   \       
+      /||    \      
+     / ||     \     
+    /  ||      \    
+   /   ||       \   
+  /    ||        \  
+ /     ||         \ 
+/______||__________\
+____________________
+  \__       _____/  
+     \_____/        
+
+
+- Processing resources for Istio core.
+✔ Istio core installed ⛵️
+- Processing resources for Istiod.
+- Processing resources for Istiod. Waiting for Deployment/istio-system/istiod
+✔ Istiod installed 🧠
+- Pruning removed resources
+✔ Installation completeEnabling Istio sidecar injection for default namespace
+namespace/default labeled
+Installing monitoring stack
+serviceaccount/prometheus created
+configmap/prometheus created
+clusterrole.rbac.authorization.k8s.io/prometheus created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+service/prometheus created
+deployment.apps/prometheus created
+configmap/prometheus configured
+deployment.apps/prometheus restarted
+serviceaccount/grafana created
+configmap/grafana created
+service/grafana created
+deployment.apps/grafana created
+configmap/istio-grafana-dashboards created
+configmap/istio-services-grafana-dashboards created
+serviceaccount/kiali created
+configmap/kiali created
+clusterrole.rbac.authorization.k8s.io/kiali created
+clusterrolebinding.rbac.authorization.k8s.io/kiali created
+service/kiali created
+deployment.apps/kiali created
+Deploying backend service
+serviceaccount/httpbin created
+service/httpbin created
+deployment.apps/httpbin created
+Deploying k6 load generator
+deployment.apps/k6-deploy created
+Waiting for backend service to be ready and k6
+Waiting for deployment "httpbin" rollout to finish: 0 of 1 updated replicas are available...
+deployment "httpbin" successfully rolled out
+Waiting for deployment "k6-deploy" rollout to finish: 0 of 1 updated replicas are available...
+deployment "k6-deploy" successfully rolled out
+2026/10/18 19:49:50 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment.txt
+Environment setup complete. Cluster is ready for testing.
+Verify by running: kubectl get pods -A
+pod/httpbin-5b46b7dc4b-sf7z9 condition met
+pod/k6-deploy-855895c75f-hp59m condition met
+K6 pod found: k6-deploy-855895c75f-hp59m
+httpbin pod found: httpbin-5b46b7dc4b-sf7z9
+Processing configuration: mtls1.3-default
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-default
+date:         2026-10-18T19:50:10Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24624; http_reqs......................: 24624 3077.344661/s;
+client_config: SKIP (no client TLS configuration expected)
+client_tls:    no matching TLS fields
+stats_lines:  before=599 after=608
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              SKIP (no client TLS configuration expected)
+Processing configuration: mtls1.2-gcm
+Applying configuration: mtls1.2-gcm
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-k6-client created
+envoyfilter.networking.istio.io/force-cipher-httpbin-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm
+date:         2026-10-18T19:50:29Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 23779; http_reqs......................: 23779 3017.736876/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-GCM-SHA256";
+stats_lines:  before=608 after=610
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-gcm256
+Applying configuration: mtls1.2-gcm256
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/gm256-cipher-suite-client created
+envoyfilter.networking.istio.io/gm256-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm256
+date:         2026-10-18T19:50:48Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 25749; http_reqs......................: 25749 3218.174612/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES256-GCM-SHA384",;
+stats_lines:  before=610 after=611
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 15
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-chacha
+Applying configuration: mtls1.2-chacha
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-chacha
+date:         2026-10-18T19:51:07Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 25089; http_reqs......................: 25089 3135.194489/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-CHACHA20-POLY1305",;
+stats_lines:  before=611 after=612
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 20
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-cbc
+Applying configuration: mtls1.2-cbc
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-cbc
+date:         2026-10-18T19:51:26Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24942; http_reqs......................: 24942 3117.107895/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-SHA256";
+stats_lines:  before=612 after=613
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum
+Applying configuration: mtls1.3-postquantum
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum
+date:         2026-10-18T19:51:45Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24105; http_reqs......................: 24105 3011.162624/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];
+stats_lines:  before=613 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 10
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519
+Applying configuration: mtls1.3-x25519
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/x25519-cipher-client created
+envoyfilter.networking.istio.io/x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519
+date:         2026-10-18T19:52:04Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 25731; http_reqs......................: 25731 3264.113503/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 15
+listener.0.0.0.0_15006.ssl.curves.X25519: 30
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519-full
+Applying configuration: mtls1.3-x25519-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/full-x25519-cipher-client created
+envoyfilter.networking.istio.io/full-x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519-full
+date:         2026-10-18T19:52:23Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24936; http_reqs......................: 24936 3116.494755/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 20
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum-full
+Applying configuration: mtls1.3-postquantum-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum-full
+date:         2026-10-18T19:52:42Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24406; http_reqs......................: 24406 3050.375268/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 25
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+All setups negotiated the expected cryptographic algorithms. Ready for benchmark execution!
+deployment.apps/prometheus scaled
+deployment.apps/grafana scaled
+deployment.apps/kiali scaled
+2026/10/18 19:53:13 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261018_215312.txt
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=1 ---
+    rps=200.4 p99=6.951818 cpu/req=1272.8us hs/s=20.0 reused=1755 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=1 ---
+    rps=200.5 p99=5.458242 cpu/req=1060.2us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=1 ---
+    rps=200.6 p99=7.439027 cpu/req=1453.0us hs/s=40.1 reused=3568 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=1 ---
+    rps=200.4 p99=9.111135 cpu/req=1914.1us hs/s=100.2 reused=8902 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=1 ---
+    rps=200.3 p99=11.348845630000007 cpu/req=2646.0us hs/s=200.3 reused=17933 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=1 ---
+    rps=200.4 p99=5.729014 cpu/req=1085.1us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=1 ---
+    rps=200.8 p99=8.476797 cpu/req=1604.6us hs/s=40.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=1 ---
+    rps=200.5 p99=13.660399 cpu/req=3447.0us hs/s=200.5 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=1 ---
+    rps=200.6 p99=10.459121 cpu/req=2324.1us hs/s=100.3 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=1 ---
+    rps=200.7 p99=7.788494 cpu/req=1364.2us hs/s=20.0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=1 ---
+    rps=200.9 p99=7.345315 cpu/req=1647.7us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=1 ---
+    rps=200.9 p99=6.363125 cpu/req=1372.0us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=1 ---
+    rps=201.0 p99=5.693965 cpu/req=1109.0us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=1 ---
+    rps=201.0 p99=5.267311 cpu/req=1007.6us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=1 ---
+    rps=200.8 p99=5.83208 cpu/req=1175.7us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=1 ---
+    rps=200.3 p99=14.41559 cpu/req=3296.1us hs/s=200.3 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=1 ---
+    rps=200.5 p99=5.626682 cpu/req=1098.3us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=1 ---
+    rps=200.2 p99=8.172853 cpu/req=1356.2us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=1 ---
+    rps=200.6 p99=8.840613 cpu/req=1592.7us hs/s=40.1 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=1 ---
+    rps=200.4 p99=10.182856 cpu/req=2267.7us hs/s=100.2 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=1 ---
+    rps=200.3 p99=10.835067 cpu/req=2516.7us hs/s=200.3 reused=17923 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=1 ---
+    rps=200.4 p99=7.38146 cpu/req=1421.5us hs/s=40.0 reused=3566 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=1 ---
+    rps=200.1 p99=6.884512 cpu/req=1272.5us hs/s=20.0 reused=1780 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=1 ---
+    rps=200.3 p99=9.257027 cpu/req=1879.1us hs/s=100.1 reused=8897 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=1 ---
+    rps=200.6 p99=5.770571 cpu/req=1087.3us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=2 ---
+    rps=200.8 p99=5.409666 cpu/req=1022.3us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=2 ---
+    rps=200.7 p99=5.988906 cpu/req=1175.9us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=2 ---
+    rps=200.5 p99=6.572085 cpu/req=1357.8us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=2 ---
+    rps=200.3 p99=7.635958230000001 cpu/req=1674.4us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=2 ---
+    rps=200.6 p99=5.622081 cpu/req=1088.0us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=2 ---
+    rps=200.9 p99=7.824207 cpu/req=1450.0us hs/s=40.1 reused=3552 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=2 ---
+    rps=200.4 p99=5.741488 cpu/req=1086.9us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=2 ---
+    rps=200.8 p99=6.939066 cpu/req=1275.6us hs/s=20.0 reused=1776 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=2 ---
+    rps=200.7 p99=9.360776 cpu/req=1938.0us hs/s=100.3 reused=8872 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=2 ---
+    rps=200.5 p99=12.184747750000014 cpu/req=2641.9us hs/s=200.5 reused=17923 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=2 ---
+    rps=200.1 p99=8.812428 cpu/req=1837.2us hs/s=100.0 reused=8924 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=2 ---
+    rps=200.3 p99=7.437053 cpu/req=1424.3us hs/s=40.0 reused=3560 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=2 ---
+    rps=200.5 p99=5.674943 cpu/req=1072.9us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=2 ---
+    rps=200.3 p99=6.745887 cpu/req=1256.1us hs/s=20.0 reused=1766 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=2 ---
+    rps=200.5 p99=11.078402 cpu/req=2488.0us hs/s=200.5 reused=17882 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=2 ---
+    rps=200.5 p99=8.49281 cpu/req=1593.3us hs/s=40.1 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=2 ---
+    rps=200.3 p99=10.347945 cpu/req=2248.7us hs/s=100.1 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=2 ---
+    rps=199.9 p99=14.764928 cpu/req=3329.7us hs/s=199.9 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=2 ---
+    rps=200.0 p99=5.704349 cpu/req=1099.0us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=2 ---
+    rps=200.2 p99=7.249796 cpu/req=1349.1us hs/s=20.0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=2 ---
+    rps=200.2 p99=7.406458 cpu/req=1360.8us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=2 ---
+    rps=200.2 p99=4.763261 cpu/req=963.7us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=2 ---
+    rps=200.5 p99=3.90897 cpu/req=1887.0us hs/s=100.2 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=2 ---
+    rps=200.5 p99=4.62604 cpu/req=2918.0us hs/s=200.4 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=2 ---
+    rps=200.5 p99=3.679884 cpu/req=1284.1us hs/s=40.1 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=3 ---
+    rps=200.3 p99=2.73393 cpu/req=1006.1us hs/s=20.0 reused=1822 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=3 ---
+    rps=200.5 p99=3.065734 cpu/req=1482.7us hs/s=100.2 reused=9105 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=3 ---
+    rps=200.5 p99=3.528678 cpu/req=2094.8us hs/s=200.5 reused=18209 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=3 ---
+    rps=200.5 p99=2.987738 cpu/req=1162.9us hs/s=40.1 reused=3640 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=3 ---
+    rps=200.4 p99=2.156633 cpu/req=853.6us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=3 ---
+    rps=200.3 p99=3.872589 cpu/req=1837.2us hs/s=100.1 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=3 ---
+    rps=200.3 p99=3.565048 cpu/req=1263.7us hs/s=40.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=3 ---
+    rps=200.2 p99=3.301639 cpu/req=1055.1us hs/s=20.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=3 ---
+    rps=200.2 p99=4.493333 cpu/req=2739.4us hs/s=200.1 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=3 ---
+    rps=200.2 p99=2.202971 cpu/req=848.4us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=3 ---
+    rps=200.5 p99=2.080251 cpu/req=846.1us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=3 ---
+    rps=200.2 p99=2.618666 cpu/req=984.0us hs/s=20.0 reused=1820 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=3 ---
+    rps=200.3 p99=2.783942 cpu/req=1115.9us hs/s=40.0 reused=3641 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=3 ---
+    rps=200.3 p99=2.970778 cpu/req=1436.5us hs/s=100.1 reused=9107 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=3 ---
+    rps=200.2 p99=3.275042 cpu/req=1971.5us hs/s=200.2 reused=18213 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=3 ---
+    rps=200.4 p99=2.079516 cpu/req=792.0us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=3 ---
+    rps=200.5 p99=2.237842 cpu/req=911.4us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=3 ---
+    rps=200.5 p99=2.549857 cpu/req=1324.5us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=3 ---
+    rps=200.5 p99=2.332572 cpu/req=1053.4us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=3 ---
+    rps=200.5 p99=2.086299 cpu/req=850.7us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=3 ---
+    rps=200.3 p99=4.420988 cpu/req=2874.8us hs/s=200.3 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=3 ---
+    rps=200.6 p99=2.102122 cpu/req=839.9us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=3 ---
+    rps=200.5 p99=3.937467 cpu/req=1890.1us hs/s=100.2 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=3 ---
+    rps=200.5 p99=3.630773 cpu/req=1296.2us hs/s=40.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=3 ---
+    rps=200.5 p99=3.487074 cpu/req=1072.2us hs/s=20.0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=4 ---
+    rps=200.2 p99=2.173215 cpu/req=832.8us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=4 ---
+    rps=200.2 p99=3.519483 cpu/req=1264.0us hs/s=40.0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=4 ---
+    rps=200.3 p99=4.494915 cpu/req=1913.0us hs/s=100.1 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=4 ---
+    rps=200.2 p99=4.157062 cpu/req=2753.7us hs/s=200.2 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=4 ---
+    rps=200.2 p99=3.2932247600000015 cpu/req=1060.8us hs/s=20.0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=4 ---
+    rps=200.6 p99=3.678247 cpu/req=1292.6us hs/s=40.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=4 ---
+    rps=200.5 p99=3.989718 cpu/req=1874.6us hs/s=100.2 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=4 ---
+    rps=200.8 p99=14.057125 cpu/req=3473.9us hs/s=200.8 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=4 ---
+    rps=200.6 p99=5.555388 cpu/req=1088.2us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=4 ---
+    rps=200.3 p99=7.534737 cpu/req=1376.8us hs/s=20.0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=4 ---
+    rps=200.7 p99=6.350553 cpu/req=1255.1us hs/s=20.0 reused=1791 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=4 ---
+    rps=200.4 p99=5.643422 cpu/req=1087.1us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=4 ---
+    rps=200.6 p99=8.858005 cpu/req=1852.4us hs/s=100.3 reused=8903 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=4 ---
+    rps=200.8 p99=7.277692 cpu/req=1434.2us hs/s=40.1 reused=3555 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=4 ---
+    rps=200.8 p99=11.781719790000007 cpu/req=2544.7us hs/s=200.8 reused=17897 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=4 ---
+    rps=200.3 p99=7.779702 cpu/req=1678.0us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=4 ---
+    rps=200.3 p99=5.492806 cpu/req=1121.1us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=4 ---
+    rps=200.5 p99=6.509956 cpu/req=1376.6us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=4 ---
+    rps=200.4 p99=5.394994 cpu/req=1003.3us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=4 ---
+    rps=200.7 p99=5.942573 cpu/req=1168.5us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=4 ---
+    rps=200.1 p99=5.620413 cpu/req=1081.3us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=4 ---
+    rps=200.1 p99=6.875313 cpu/req=1279.1us hs/s=20.0 reused=1771 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=4 ---
+    rps=200.3 p99=9.149984270000001 cpu/req=1920.4us hs/s=100.1 reused=8894 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=4 ---
+    rps=200.6 p99=7.565465 cpu/req=1440.3us hs/s=40.1 reused=3554 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=4 ---
+    rps=200.1 p99=11.818847 cpu/req=2657.6us hs/s=200.1 reused=17923 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=5 ---
+    rps=200.4 p99=7.434436 cpu/req=1676.5us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=10 run=5 ---
+    rps=200.8 p99=5.760109 cpu/req=1105.4us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=0 run=5 ---
+    rps=200.7 p99=5.396383 cpu/req=1025.1us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=5 run=5 ---
+    rps=200.0 p99=5.768724 cpu/req=1175.8us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=200 mrpc=2 run=5 ---
+    rps=200.2 p99=6.520812 cpu/req=1394.1us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=0 run=5 ---
+    rps=201.0 p99=5.637429 cpu/req=1080.2us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=2 run=5 ---
+    rps=200.9 p99=10.825359 cpu/req=2350.3us hs/s=100.5 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=5 run=5 ---
+    rps=200.8 p99=8.786051 cpu/req=1634.2us hs/s=40.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=10 run=5 ---
+    rps=201.0 p99=7.868919 cpu/req=1379.0us hs/s=20.1 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum-full rate=200 mrpc=1 run=5 ---
+    rps=201.3 p99=14.721057 cpu/req=3488.9us hs/s=201.3 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=2 run=5 ---
+    rps=200.7 p99=10.263777 cpu/req=2280.7us hs/s=100.3 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=0 run=5 ---
+    rps=200.3 p99=5.657767 cpu/req=1088.3us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=1 run=5 ---
+    rps=200.4 p99=14.19677107 cpu/req=3355.0us hs/s=200.4 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=10 run=5 ---
+    rps=201.2 p99=7.31354 cpu/req=1361.5us hs/s=20.1 reused=0 errors=0
+--- [mrpc] mtls1.3-x25519-full rate=200 mrpc=5 run=5 ---
+    rps=200.8 p99=8.711699 cpu/req=1597.6us hs/s=40.1 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=2 run=5 ---
+    rps=201.0 p99=8.835249 cpu/req=1899.5us hs/s=100.5 reused=8911 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=5 run=5 ---
+    rps=200.5 p99=7.254294 cpu/req=1427.3us hs/s=40.1 reused=3572 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=10 run=5 ---
+    rps=200.6 p99=6.729982 cpu/req=1261.7us hs/s=20.0 reused=1767 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=1 run=5 ---
+    rps=200.8 p99=11.560022 cpu/req=2551.9us hs/s=200.8 reused=17912 errors=0
+--- [mrpc] mtls1.3-x25519 rate=200 mrpc=0 run=5 ---
+    rps=200.3 p99=5.689482 cpu/req=1094.1us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=0 run=5 ---
+    rps=201.0 p99=5.594975 cpu/req=1095.5us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=2 run=5 ---
+    rps=200.7 p99=9.18269 cpu/req=1929.3us hs/s=100.3 reused=8864 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=10 run=5 ---
+    rps=201.1 p99=6.753606 cpu/req=1279.4us hs/s=20.1 reused=1772 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=1 run=5 ---
+    rps=201.2 p99=11.728009 cpu/req=2636.4us hs/s=201.2 reused=17932 errors=0
+--- [mrpc] mtls1.3-postquantum rate=200 mrpc=5 run=5 ---
+    rps=200.2 p99=7.577172 cpu/req=1459.8us hs/s=40.0 reused=3552 errors=0
+Done. Results appended to ./04_results/Summary/sweeps.csv
+No rows with mode=handshake in sweeps.csv
+Warning: analyze_stats.py failed (is .venv set up?)
+Done. Results: 04_results/Summary/sweeps.csv, report: 04_results/Summary/stats_report.md
+=== 2026-10-19 02:11:49 results saved in 04_results/F1_mrpc_20261018_1303
+=== 2026-10-19 02:11:49 PHASE 2a: classic TLS, handshake per request
+########## SESSION 11 (of 11..11) ##########
+Delete old cluster if it exists
+[36mINFO[0m[0000] Deleting cluster 'thesis-cluster'            
+[36mINFO[0m[0003] Deleting 1 attached volumes...               
+[36mINFO[0m[0003] Removing cluster details from default kubeconfig... 
+[36mINFO[0m[0003] Removing standalone kubeconfig file (if there is one)... 
+[36mINFO[0m[0003] Successfully deleted cluster thesis-cluster! 
+Create new cluster 'thesis-cluster'
+[36mINFO[0m[0000] Prep: Network                                
+[36mINFO[0m[0000] Re-using existing network 'k3d-thesis-cluster' (96df9256be5cf75fbd5ba311ee351b23a3a5bb044c37c38f950ce42f99750378) 
+[36mINFO[0m[0000] Created image volume k3d-thesis-cluster-images 
+[36mINFO[0m[0000] Starting new tools node...                   
+[36mINFO[0m[0000] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0001] Creating LoadBalancer 'k3d-thesis-cluster-serverlb' 
+[36mINFO[0m[0001] Using the k3d-tools node to gather environment information 
+[36mINFO[0m[0001] Starting new tools node...                   
+[36mINFO[0m[0001] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0003] Starting cluster 'thesis-cluster'            
+[36mINFO[0m[0003] Starting servers...                          
+[36mINFO[0m[0003] Starting node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0008] Starting agents...                           
+[36mINFO[0m[0009] Starting node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0009] Starting node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0021] Starting helpers...                          
+[36mINFO[0m[0021] Starting node 'k3d-thesis-cluster-serverlb'  
+[36mINFO[0m[0028] Injecting records for hostAliases (incl. host.k3d.internal) and for 5 network members into CoreDNS configmap... 
+[36mINFO[0m[0030] Cluster 'thesis-cluster' created successfully! 
+[36mINFO[0m[0030] You can now use it like this:                
+kubectl cluster-info
+Configuring kubernets api endpoint
+Cluster "k3d-thesis-cluster" set.
+Check if cluster is ready
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          10s   v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   22s   v1.35.5+k3s1
+Checking docker hub reachability
+Docker Hub is not reachable from the node container
+Labeling nodes
+node/k3d-thesis-cluster-agent-0 labeled
+node/k3d-thesis-cluster-agent-1 labeled
+Verifying nodes 
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          10s   v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          11s   v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   23s   v1.35.5+k3s1
+Installing Istio 1.30.2 profile MINIMAL
+        |\          
+        | \         
+        |  \        
+        |   \       
+      /||    \      
+     / ||     \     
+    /  ||      \    
+   /   ||       \   
+  /    ||        \  
+ /     ||         \ 
+/______||__________\
+____________________
+  \__       _____/  
+     \_____/        
+
+
+- Processing resources for Istio core.
+✔ Istio core installed ⛵️
+- Processing resources for Istiod.
+- Processing resources for Istiod. Waiting for Deployment/istio-system/istiod
+✔ Istiod installed 🧠
+- Pruning removed resources
+✔ Installation completeEnabling Istio sidecar injection for default namespace
+namespace/default labeled
+Installing monitoring stack
+serviceaccount/prometheus created
+configmap/prometheus created
+clusterrole.rbac.authorization.k8s.io/prometheus created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+service/prometheus created
+deployment.apps/prometheus created
+configmap/prometheus configured
+deployment.apps/prometheus restarted
+serviceaccount/grafana created
+configmap/grafana created
+service/grafana created
+deployment.apps/grafana created
+configmap/istio-grafana-dashboards created
+configmap/istio-services-grafana-dashboards created
+serviceaccount/kiali created
+configmap/kiali created
+clusterrole.rbac.authorization.k8s.io/kiali created
+clusterrolebinding.rbac.authorization.k8s.io/kiali created
+service/kiali created
+deployment.apps/kiali created
+Deploying backend service
+serviceaccount/httpbin created
+service/httpbin created
+deployment.apps/httpbin created
+Deploying k6 load generator
+deployment.apps/k6-deploy created
+Waiting for backend service to be ready and k6
+Waiting for deployment "httpbin" rollout to finish: 0 of 1 updated replicas are available...
+deployment "httpbin" successfully rolled out
+deployment "k6-deploy" successfully rolled out
+2026/10/19 00:13:07 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment.txt
+Environment setup complete. Cluster is ready for testing.
+Verify by running: kubectl get pods -A
+pod/httpbin-5b46b7dc4b-dflfg condition met
+pod/k6-deploy-855895c75f-k64zs condition met
+K6 pod found: k6-deploy-855895c75f-k64zs
+httpbin pod found: httpbin-5b46b7dc4b-dflfg
+Processing configuration: mtls1.3-default
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-default
+date:         2026-10-19T00:13:28Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 23862; http_reqs......................: 23862 2982.236502/s;
+client_config: SKIP (no client TLS configuration expected)
+client_tls:    no matching TLS fields
+stats_lines:  before=599 after=608
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              SKIP (no client TLS configuration expected)
+Processing configuration: mtls1.2-gcm
+Applying configuration: mtls1.2-gcm
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-k6-client created
+envoyfilter.networking.istio.io/force-cipher-httpbin-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm
+date:         2026-10-19T00:13:47Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 23796; http_reqs......................: 23796 3005.228985/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-GCM-SHA256";
+stats_lines:  before=608 after=610
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-gcm256
+Applying configuration: mtls1.2-gcm256
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/gm256-cipher-suite-client created
+envoyfilter.networking.istio.io/gm256-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm256
+date:         2026-10-19T00:14:06Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24512; http_reqs......................: 24512 3063.366113/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES256-GCM-SHA384",;
+stats_lines:  before=610 after=611
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 15
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-chacha
+Applying configuration: mtls1.2-chacha
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-chacha
+date:         2026-10-19T00:14:25Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24102; http_reqs......................: 24102 3012.359976/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-CHACHA20-POLY1305",;
+stats_lines:  before=611 after=612
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 20
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-cbc
+Applying configuration: mtls1.2-cbc
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-cbc
+date:         2026-10-19T00:14:45Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24831; http_reqs......................: 24831 3103.241391/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-SHA256";
+stats_lines:  before=612 after=613
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum
+Applying configuration: mtls1.3-postquantum
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum
+date:         2026-10-19T00:15:04Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24691; http_reqs......................: 24691 3085.616427/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];
+stats_lines:  before=613 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 10
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519
+Applying configuration: mtls1.3-x25519
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/x25519-cipher-client created
+envoyfilter.networking.istio.io/x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519
+date:         2026-10-19T00:15:23Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24256; http_reqs......................: 24256 3063.849935/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 15
+listener.0.0.0.0_15006.ssl.curves.X25519: 30
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519-full
+Applying configuration: mtls1.3-x25519-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/full-x25519-cipher-client created
+envoyfilter.networking.istio.io/full-x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519-full
+date:         2026-10-19T00:15:42Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 25261; http_reqs......................: 25261 3156.617872/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 20
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum-full
+Applying configuration: mtls1.3-postquantum-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum-full
+date:         2026-10-19T00:16:01Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24026; http_reqs......................: 24026 3002.434828/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 25
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+All setups negotiated the expected cryptographic algorithms. Ready for benchmark execution!
+deployment.apps/prometheus scaled
+deployment.apps/grafana scaled
+deployment.apps/kiali scaled
+2026/10/19 00:16:32 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261019_021631.txt
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-chacha rate=200 mrpc=1 run=1 ---
+    rps=200.4 p99=10.08773 cpu/req=2370.1us hs/s=200.4 reused=18230 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-gcm rate=200 mrpc=1 run=1 ---
+    rps=200.4 p99=10.494801 cpu/req=2346.5us hs/s=200.4 reused=18243 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-cbc rate=200 mrpc=1 run=1 ---
+    rps=200.5 p99=10.139909 cpu/req=2421.9us hs/s=200.5 reused=18229 errors=0
+--- [mrpc] mtls1.3-default rate=200 mrpc=1 run=1 ---
+    rps=200.4 p99=12.612607410000006 cpu/req=2551.2us hs/s=200.4 reused=17912 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-gcm256 rate=200 mrpc=1 run=1 ---
+    rps=200.3 p99=10.148715 cpu/req=2367.5us hs/s=200.2 reused=18231 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=1 ---
+    rps=200.8 p99=7.559031 cpu/req=1703.5us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-gcm256 rate=200 mrpc=1 run=2 ---
+    rps=200.5 p99=10.249092500000003 cpu/req=2386.2us hs/s=200.5 reused=18232 errors=0
+--- [mrpc] mtls1.3-default rate=200 mrpc=1 run=2 ---
+    rps=200.4 p99=12.233441 cpu/req=2571.7us hs/s=200.4 reused=17928 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-chacha rate=200 mrpc=1 run=2 ---
+    rps=200.8 p99=10.637072 cpu/req=2385.7us hs/s=200.8 reused=18238 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-gcm rate=200 mrpc=1 run=2 ---
+    rps=200.2 p99=10.089367 cpu/req=2384.5us hs/s=200.2 reused=18230 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=2 ---
+    rps=200.9 p99=7.706688 cpu/req=1701.8us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-cbc rate=200 mrpc=1 run=2 ---
+    rps=200.6 p99=10.310405 cpu/req=2427.1us hs/s=200.6 reused=18238 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-chacha rate=200 mrpc=1 run=3 ---
+    rps=200.2 p99=9.969931 cpu/req=2382.4us hs/s=200.2 reused=18241 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-gcm256 rate=200 mrpc=1 run=3 ---
+    rps=200.5 p99=10.161388 cpu/req=2382.1us hs/s=200.5 reused=18237 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-cbc rate=200 mrpc=1 run=3 ---
+    rps=200.1 p99=10.220927610000006 cpu/req=2400.2us hs/s=200.1 reused=18237 errors=0
+--- [mrpc] mtls1.3-default rate=200 mrpc=1 run=3 ---
+    rps=200.2 p99=12.605249 cpu/req=2618.0us hs/s=200.2 reused=17902 errors=0
+--- [mrpc] plaintext rate=200 mrpc=1 run=3 ---
+    rps=200.0 p99=7.896693 cpu/req=1705.7us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-gcm rate=200 mrpc=1 run=3 ---
+    rps=200.6 p99=10.374913 cpu/req=2398.4us hs/s=200.6 reused=18256 errors=0
+Done. Results appended to ./04_results/Summary/sweeps.csv
+No rows with mode=handshake in sweeps.csv
+Warning: analyze_stats.py failed (is .venv set up?)
+Done. Results: 04_results/Summary/sweeps.csv, report: 04_results/Summary/stats_report.md
+=== 2026-10-19 02:57:30 results saved in 04_results/F2a_classic_handshake_20261018_1303
+=== 2026-10-19 02:57:30 PHASE 2b: classic TLS, keep-alive + 1 MB responses
+########## SESSION 12 (of 12..12) ##########
+Delete old cluster if it exists
+[36mINFO[0m[0000] Deleting cluster 'thesis-cluster'            
+[36mINFO[0m[0003] Deleting 1 attached volumes...               
+[36mINFO[0m[0003] Removing cluster details from default kubeconfig... 
+[36mINFO[0m[0003] Removing standalone kubeconfig file (if there is one)... 
+[36mINFO[0m[0003] Successfully deleted cluster thesis-cluster! 
+Create new cluster 'thesis-cluster'
+[36mINFO[0m[0000] Prep: Network                                
+[36mINFO[0m[0000] Re-using existing network 'k3d-thesis-cluster' (96df9256be5cf75fbd5ba311ee351b23a3a5bb044c37c38f950ce42f99750378) 
+[36mINFO[0m[0000] Created image volume k3d-thesis-cluster-images 
+[36mINFO[0m[0000] Starting new tools node...                   
+[36mINFO[0m[0000] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0001] Creating LoadBalancer 'k3d-thesis-cluster-serverlb' 
+[36mINFO[0m[0001] Using the k3d-tools node to gather environment information 
+[36mINFO[0m[0002] Starting new tools node...                   
+[36mINFO[0m[0002] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0003] Starting cluster 'thesis-cluster'            
+[36mINFO[0m[0003] Starting servers...                          
+[36mINFO[0m[0003] Starting node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0008] Starting agents...                           
+[36mINFO[0m[0009] Starting node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0009] Starting node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0011] Starting helpers...                          
+[36mINFO[0m[0011] Starting node 'k3d-thesis-cluster-serverlb'  
+[36mINFO[0m[0018] Injecting records for hostAliases (incl. host.k3d.internal) and for 5 network members into CoreDNS configmap... 
+[36mINFO[0m[0020] Cluster 'thesis-cluster' created successfully! 
+[36mINFO[0m[0020] You can now use it like this:                
+kubectl cluster-info
+Configuring kubernets api endpoint
+Cluster "k3d-thesis-cluster" set.
+Check if cluster is ready
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   12s   v1.35.5+k3s1
+Checking docker hub reachability
+Docker Hub is not reachable from the node container
+Labeling nodes
+node/k3d-thesis-cluster-agent-0 labeled
+node/k3d-thesis-cluster-agent-1 labeled
+Verifying nodes 
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          10s   v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          10s   v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   13s   v1.35.5+k3s1
+Installing Istio 1.30.2 profile MINIMAL
+        |\          
+        | \         
+        |  \        
+        |   \       
+      /||    \      
+     / ||     \     
+    /  ||      \    
+   /   ||       \   
+  /    ||        \  
+ /     ||         \ 
+/______||__________\
+____________________
+  \__       _____/  
+     \_____/        
+
+
+- Processing resources for Istio core.
+✔ Istio core installed ⛵️
+- Processing resources for Istiod.
+- Processing resources for Istiod. Waiting for Deployment/istio-system/istiod
+✔ Istiod installed 🧠
+- Pruning removed resources
+✔ Installation completeEnabling Istio sidecar injection for default namespace
+namespace/default labeled
+Installing monitoring stack
+serviceaccount/prometheus created
+configmap/prometheus created
+clusterrole.rbac.authorization.k8s.io/prometheus created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+service/prometheus created
+deployment.apps/prometheus created
+configmap/prometheus configured
+deployment.apps/prometheus restarted
+serviceaccount/grafana created
+configmap/grafana created
+service/grafana created
+deployment.apps/grafana created
+configmap/istio-grafana-dashboards created
+configmap/istio-services-grafana-dashboards created
+serviceaccount/kiali created
+configmap/kiali created
+clusterrole.rbac.authorization.k8s.io/kiali created
+clusterrolebinding.rbac.authorization.k8s.io/kiali created
+service/kiali created
+deployment.apps/kiali created
+Deploying backend service
+serviceaccount/httpbin created
+service/httpbin created
+deployment.apps/httpbin created
+Deploying k6 load generator
+deployment.apps/k6-deploy created
+Waiting for backend service to be ready and k6
+Waiting for deployment "httpbin" rollout to finish: 0 of 1 updated replicas are available...
+deployment "httpbin" successfully rolled out
+deployment "k6-deploy" successfully rolled out
+2026/10/19 00:58:43 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment.txt
+Environment setup complete. Cluster is ready for testing.
+Verify by running: kubectl get pods -A
+pod/httpbin-5b46b7dc4b-lzdmm condition met
+pod/k6-deploy-855895c75f-mxdkr condition met
+K6 pod found: k6-deploy-855895c75f-mxdkr
+httpbin pod found: httpbin-5b46b7dc4b-lzdmm
+Processing configuration: mtls1.3-default
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-default
+date:         2026-10-19T00:59:03Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24847; http_reqs......................: 24847 3105.380944/s;
+client_config: SKIP (no client TLS configuration expected)
+client_tls:    no matching TLS fields
+stats_lines:  before=599 after=608
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              SKIP (no client TLS configuration expected)
+Processing configuration: mtls1.2-gcm
+Applying configuration: mtls1.2-gcm
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-k6-client created
+envoyfilter.networking.istio.io/force-cipher-httpbin-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm
+date:         2026-10-19T00:59:22Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24591; http_reqs......................: 24591 3073.355473/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-GCM-SHA256";
+stats_lines:  before=608 after=610
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-gcm256
+Applying configuration: mtls1.2-gcm256
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/gm256-cipher-suite-client created
+envoyfilter.networking.istio.io/gm256-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm256
+date:         2026-10-19T00:59:41Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 25092; http_reqs......................: 25092 3156.573402/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES256-GCM-SHA384",;
+stats_lines:  before=610 after=611
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 15
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-chacha
+Applying configuration: mtls1.2-chacha
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-chacha
+date:         2026-10-19T01:00:00Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24917; http_reqs......................: 24917 3114.277697/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-CHACHA20-POLY1305",;
+stats_lines:  before=611 after=612
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 20
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-cbc
+Applying configuration: mtls1.2-cbc
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-cbc
+date:         2026-10-19T01:00:18Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24467; http_reqs......................: 24467 3057.391214/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-SHA256";
+stats_lines:  before=612 after=613
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum
+Applying configuration: mtls1.3-postquantum
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum
+date:         2026-10-19T01:00:38Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24803; http_reqs......................: 24803 3100.031857/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];
+stats_lines:  before=613 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 10
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519
+Applying configuration: mtls1.3-x25519
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/x25519-cipher-client created
+envoyfilter.networking.istio.io/x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519
+date:         2026-10-19T01:00:57Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 25090; http_reqs......................: 25090 3135.897536/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 15
+listener.0.0.0.0_15006.ssl.curves.X25519: 30
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519-full
+Applying configuration: mtls1.3-x25519-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/full-x25519-cipher-client created
+envoyfilter.networking.istio.io/full-x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519-full
+date:         2026-10-19T01:01:16Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24871; http_reqs......................: 24871 3126.991207/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 20
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum-full
+Applying configuration: mtls1.3-postquantum-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum-full
+date:         2026-10-19T01:01:35Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 25556; http_reqs......................: 25556 3193.84701/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 25
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+All setups negotiated the expected cryptographic algorithms. Ready for benchmark execution!
+deployment.apps/prometheus scaled
+deployment.apps/grafana scaled
+deployment.apps/kiali scaled
+2026/10/19 01:02:06 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261019_030205.txt
+--- [mrpc] plaintext rate=100 mrpc=0 run=1 ---
+    rps=100.0 p99=7.35442 cpu/req=1365.3us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-default rate=100 mrpc=0 run=1 ---
+    rps=100.1 p99=7.622954 cpu/req=1513.9us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-gcm rate=100 mrpc=0 run=1 ---
+    rps=100.3 p99=7.758803 cpu/req=1524.7us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-gcm256 rate=100 mrpc=0 run=1 ---
+    rps=100.1 p99=7.947471 cpu/req=1527.1us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-cbc rate=100 mrpc=0 run=1 ---
+    rps=100.0 p99=8.053998 cpu/req=1709.8us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-chacha rate=100 mrpc=0 run=1 ---
+    rps=99.9 p99=7.846989 cpu/req=1579.4us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-cbc rate=100 mrpc=0 run=2 ---
+    rps=100.0 p99=8.094615 cpu/req=1729.4us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-chacha rate=100 mrpc=0 run=2 ---
+    rps=99.9 p99=7.804432 cpu/req=1578.0us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=100 mrpc=0 run=2 ---
+    rps=100.1 p99=7.485675 cpu/req=1352.9us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-gcm rate=100 mrpc=0 run=2 ---
+    rps=100.0 p99=7.65309 cpu/req=1510.8us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-default rate=100 mrpc=0 run=2 ---
+    rps=100.1 p99=7.739214370000002 cpu/req=1529.6us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-gcm256 rate=100 mrpc=0 run=2 ---
+    rps=100.3 p99=7.686643 cpu/req=1508.7us hs/s=0 reused=0 errors=0
+--- [mrpc] plaintext rate=100 mrpc=0 run=3 ---
+    rps=100.0 p99=7.438588 cpu/req=1340.6us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-cbc rate=100 mrpc=0 run=3 ---
+    rps=100.2 p99=7.645056 cpu/req=1737.9us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-gcm rate=100 mrpc=0 run=3 ---
+    rps=100.0 p99=7.781922 cpu/req=1535.6us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-gcm256 rate=100 mrpc=0 run=3 ---
+    rps=100.1 p99=7.742142 cpu/req=1534.0us hs/s=0 reused=0 errors=0
+--- [mrpc] mtls1.3-default rate=100 mrpc=0 run=3 ---
+    rps=100.1 p99=7.796229 cpu/req=1537.5us hs/s=0 reused=0 errors=0
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [mrpc] mtls1.2-chacha rate=100 mrpc=0 run=3 ---
+    rps=100.0 p99=7.776853 cpu/req=1616.5us hs/s=0 reused=0 errors=0
+Done. Results appended to ./04_results/Summary/sweeps.csv
+No rows with mode=handshake in sweeps.csv
+Warning: analyze_stats.py failed (is .venv set up?)
+Done. Results: 04_results/Summary/sweeps.csv, report: 04_results/Summary/stats_report.md
+=== 2026-10-19 03:43:06 results saved in 04_results/F2b_classic_payload_20261018_1303
+=== 2026-10-19 03:43:06 ALL DONE
