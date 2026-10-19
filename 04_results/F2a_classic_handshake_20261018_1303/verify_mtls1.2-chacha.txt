@@ -1,0 +1,17 @@
+setup:        mtls1.2-chacha
+date:         2026-10-19T00:14:25Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 24102; http_reqs......................: 24102 3012.359976/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-CHACHA20-POLY1305",;
+stats_lines:  before=611 after=612
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 20

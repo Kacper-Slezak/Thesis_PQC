@@ -1,0 +1,16 @@
+setup:        mtls1.2-gcm256
+date:         2026-10-18T19:50:48Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 25749; http_reqs......................: 25749 3218.174612/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES256-GCM-SHA384",;
+stats_lines:  before=610 after=611
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 15

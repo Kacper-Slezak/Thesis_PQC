@@ -33,7 +33,7 @@ for S in $(seq "$START_SESSION" "$LAST"); do
 done
 
 # Run statistical analysis on sweep results
-python ./05_analytics/analyze_stats.py handshake \
+python ./05_analytics/analyze_stats.py "$MODE" \  
   || echo "Warning: analyze_stats.py failed (is .venv set up?)"
 
 
