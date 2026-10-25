@@ -89,6 +89,15 @@ counter() {
   echo "$1" | grep -E "$2" | awk -F': ' '{ suma += $2 } END { print suma + 0 }'
 }
 
+# Calibration: time [ms] of a fixed piece of work on the host (same work every time).
+# A higher value means the machine is in its slower state.
+calib_ms() {
+  python3 -c 'import time
+t = time.perf_counter(); s = 0
+for i in range(3000000): s += i * i
+print(round((time.perf_counter() - t) * 1000, 1))'
+}
+
 # Read cgroup CPU usage in microseconds
 cpu_usec() {
   kubectl exec "$1" -c istio-proxy -- grep usage_usec /sys/fs/cgroup/cpu.stat | cut -d' ' -f2

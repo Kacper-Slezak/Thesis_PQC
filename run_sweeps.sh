@@ -3,7 +3,7 @@
 #
 # Usage:
 #   ./run_sweeps.sh handshake [setups...]
-#   ./run_sweeps.sh mrpc      [setups...]
+#   ./run_sweeps.sh grid      [setups...]   # every RATES x MRPCS point, all setups back to back
 #
 # Example:
 #   N_RUNS=10 RATES="200" ./run_sweeps.sh handshake plaintext mtls1.3-x25519 mtls1.3-x25519-full mtls1.3-postquantum-full
@@ -28,8 +28,8 @@ OUT=./04_results/Summary
 CSV=$OUT/sweeps.csv
 
 MODE=$1; shift || true
-if [ "$MODE" != "handshake" ] && [ "$MODE" != "mrpc" ]; then
-  echo "Usage: $0 handshake|mrpc [setup ...]"; exit 1
+if [ "$MODE" != "handshake" ] && [ "$MODE" != "mrpc" ] && [ "$MODE" != "grid" ]; then
+  echo "Usage: $0 handshake|mrpc|grid [setup ...]"; exit 1
 fi
 if [ "$#" -gt 0 ]; then SETUPS=("$@"); else SETUPS=("${ALL_SETUPS[@]}"); fi
 
@@ -41,7 +41,7 @@ trap cleanup_mesh_config EXIT
 
 # CSV header
 if [ ! -f "$CSV" ]; then
-  echo "mode,setup,rate_target,mrpc,fraction,run,window_rps,k6_rps,p50_ms,p95_ms,p99_ms,fail_rate,dropped_iters,client_sidecar_cpu,server_sidecar_cpu,handshakes,handshakes_per_s,session_reused,conn_errors,cpu_per_req_us,cpu_per_handshake_us,netem_rtt_ms,netem_loss_pct,cert_key,timestamp,session" > "$CSV"
+  echo "mode,setup,rate_target,mrpc,fraction,run,window_rps,k6_rps,p50_ms,p95_ms,p99_ms,fail_rate,dropped_iters,client_sidecar_cpu,server_sidecar_cpu,handshakes,handshakes_per_s,session_reused,conn_errors,cpu_per_req_us,cpu_per_handshake_us,netem_rtt_ms,netem_loss_pct,cert_key,timestamp,session,calib_ms" > "$CSV"
 fi
 
 # Warmup traffic after config change
@@ -55,6 +55,8 @@ warmup() {
 one_point() {
   local setup=$1 rate=$2 mrpc=$3 run=$4
   echo "--- [$MODE] $setup rate=$rate mrpc=$mrpc run=$run ---"
+  local calib
+  calib=$(calib_ms)
 
   measure_window "$K6_POD" "$HTTPBIN_POD" "$WARM_S" "$STEADY_S" "$K6_SCRIPT" \
     -e TEST_TYPE=handshake -e RATE="$rate" -e DURATION="${DURATION}s" \
@@ -71,14 +73,33 @@ one_point() {
   fail=$(echo "$summary"    | jq -r '.metrics.http_req_failed.values.rate // 0')
   dropped=$(echo "$summary" | jq -r '.metrics.dropped_iterations.values.count // 0')
 
-  echo "$MODE,$setup,$rate,$mrpc,0,$run,$W_RPS,$k6_rps,$p50,$p95,$p99,$fail,$dropped,$W_CLIENT_CPU,$W_SERVER_CPU,$W_HS,$W_HS_PER_S,$W_REUSED,$W_ERRORS,$W_CPU_PER_REQ_US,$W_CPU_PER_HS_US,0,0,$(cert_key),$(date -u +%FT%TZ),$SESSION" >> "$CSV"
-  echo "    rps=$W_RPS p99=$p99 cpu/req=${W_CPU_PER_REQ_US}us hs/s=$W_HS_PER_S reused=$W_REUSED errors=$W_ERRORS"
+  echo "$MODE,$setup,$rate,$mrpc,0,$run,$W_RPS,$k6_rps,$p50,$p95,$p99,$fail,$dropped,$W_CLIENT_CPU,$W_SERVER_CPU,$W_HS,$W_HS_PER_S,$W_REUSED,$W_ERRORS,$W_CPU_PER_REQ_US,$W_CPU_PER_HS_US,0,0,$(cert_key),$(date -u +%FT%TZ),$SESSION,$calib" >> "$CSV"
+  echo "    rps=$W_RPS p99=$p99 cpu/req=${W_CPU_PER_REQ_US}us hs/s=$W_HS_PER_S reused=$W_REUSED errors=$W_ERRORS  calib=${calib}ms"
   if [ "$setup" = "plaintext" ] && [ "$W_HS" -gt 0 ]; then
     echo "WARNING: plaintext window had $W_HS TLS handshakes - traffic was not plaintext"
   fi
 
   sleep "$COOLDOWN_S"
 }
+
+if [ "$MODE" = "grid" ]; then
+  # For every (rate, mrpc) point all setups are measured back to back (~10 min),
+  # so the setups compared with each other run in the same machine state.
+  for RUN in $(seq 1 "$N_RUNS"); do
+    for RATE in $(printf "%s\n" $RATES | shuf); do
+      for M in $(printf "%s\n" $MRPCS | shuf); do
+        for SETUP in $(printf "%s\n" "${SETUPS[@]}" | shuf); do
+          apply_setup "$SETUP"
+          apply_dr "$SETUP" "$M"
+          warmup
+          one_point "$SETUP" "$RATE" "$M" "$RUN"
+        done
+      done
+    done
+  done
+  echo "Done. Results appended to $CSV"
+  exit 0
+fi
 
 for RUN in $(seq 1 "$N_RUNS"); do
   # Randomize setup order in each run
