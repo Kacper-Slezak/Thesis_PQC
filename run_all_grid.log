@@ -1,0 +1,1773 @@
+=== 2026-10-26 23:35:27 F3 grid: RATES=[100 200 300 400] MRPCS=[1 2 5 0] N_RUNS=2
+########## SESSION 1 (of 1..1) ##########
+Delete old cluster if it exists
+[36mINFO[0m[0000] Deleting cluster 'thesis-cluster'            
+[36mINFO[0m[0005] Deleting 1 attached volumes...               
+[36mINFO[0m[0005] Removing cluster details from default kubeconfig... 
+[36mINFO[0m[0005] Removing standalone kubeconfig file (if there is one)... 
+[36mINFO[0m[0005] Successfully deleted cluster thesis-cluster! 
+Create new cluster 'thesis-cluster'
+[36mINFO[0m[0000] Prep: Network                                
+[36mINFO[0m[0000] Re-using existing network 'k3d-thesis-cluster' (96df9256be5cf75fbd5ba311ee351b23a3a5bb044c37c38f950ce42f99750378) 
+[36mINFO[0m[0000] Created image volume k3d-thesis-cluster-images 
+[36mINFO[0m[0000] Starting new tools node...                   
+[36mINFO[0m[0000] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0001] Creating LoadBalancer 'k3d-thesis-cluster-serverlb' 
+[36mINFO[0m[0001] Using the k3d-tools node to gather environment information 
+[36mINFO[0m[0002] Starting new tools node...                   
+[36mINFO[0m[0002] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0004] Starting cluster 'thesis-cluster'            
+[36mINFO[0m[0004] Starting servers...                          
+[36mINFO[0m[0004] Starting node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0011] Starting agents...                           
+[36mINFO[0m[0012] Starting node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0012] Starting node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0016] Starting helpers...                          
+[36mINFO[0m[0016] Starting node 'k3d-thesis-cluster-serverlb'  
+[36mINFO[0m[0023] Injecting records for hostAliases (incl. host.k3d.internal) and for 5 network members into CoreDNS configmap... 
+[36mINFO[0m[0025] Cluster 'thesis-cluster' created successfully! 
+[36mINFO[0m[0025] You can now use it like this:                
+kubectl cluster-info
+Configuring kubernets api endpoint
+Cluster "k3d-thesis-cluster" set.
+Check if cluster is ready
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          11s   v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          11s   v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   14s   v1.35.5+k3s1
+Checking docker hub reachability
+Docker Hub is not reachable from the node container
+Labeling nodes
+node/k3d-thesis-cluster-agent-0 labeled
+node/k3d-thesis-cluster-agent-1 labeled
+Verifying nodes 
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          12s   v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          12s   v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   15s   v1.35.5+k3s1
+Installing Istio 1.30.2 profile MINIMAL
+        |\          
+        | \         
+        |  \        
+        |   \       
+      /||    \      
+     / ||     \     
+    /  ||      \    
+   /   ||       \   
+  /    ||        \  
+ /     ||         \ 
+/______||__________\
+____________________
+  \__       _____/  
+     \_____/        
+
+
+- Processing resources for Istio core.
+✔ Istio core installed ⛵️
+- Processing resources for Istiod.
+- Processing resources for Istiod. Waiting for Deployment/istio-system/istiod
+✔ Istiod installed 🧠
+- Pruning removed resources
+✔ Installation completeEnabling Istio sidecar injection for default namespace
+namespace/default labeled
+Installing monitoring stack
+serviceaccount/prometheus created
+configmap/prometheus created
+clusterrole.rbac.authorization.k8s.io/prometheus created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+service/prometheus created
+deployment.apps/prometheus created
+configmap/prometheus configured
+deployment.apps/prometheus restarted
+serviceaccount/grafana created
+configmap/grafana created
+service/grafana created
+deployment.apps/grafana created
+configmap/istio-grafana-dashboards created
+configmap/istio-services-grafana-dashboards created
+serviceaccount/kiali created
+configmap/kiali created
+clusterrole.rbac.authorization.k8s.io/kiali created
+clusterrolebinding.rbac.authorization.k8s.io/kiali created
+service/kiali created
+deployment.apps/kiali created
+Deploying backend service
+serviceaccount/httpbin created
+service/httpbin created
+deployment.apps/httpbin created
+Deploying k6 load generator
+deployment.apps/k6-deploy created
+Waiting for backend service to be ready and k6
+Waiting for deployment "httpbin" rollout to finish: 0 of 1 updated replicas are available...
+deployment "httpbin" successfully rolled out
+Waiting for deployment "k6-deploy" rollout to finish: 0 of 1 updated replicas are available...
+deployment "k6-deploy" successfully rolled out
+2026/10/26 22:37:17 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment.txt
+Environment setup complete. Cluster is ready for testing.
+Verify by running: kubectl get pods -A
+pod/httpbin-5b46b7dc4b-2rmv2 condition met
+pod/k6-deploy-855895c75f-gcrbr condition met
+K6 pod found: k6-deploy-855895c75f-gcrbr
+httpbin pod found: httpbin-5b46b7dc4b-2rmv2
+Processing configuration: mtls1.3-default
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-default
+date:         2026-10-26T22:37:39Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 12910; http_reqs......................: 12910 1613.36253/s;
+client_config: SKIP (no client TLS configuration expected)
+client_tls:    no matching TLS fields
+stats_lines:  before=599 after=608
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              SKIP (no client TLS configuration expected)
+Processing configuration: mtls1.2-gcm
+Applying configuration: mtls1.2-gcm
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-k6-client created
+envoyfilter.networking.istio.io/force-cipher-httpbin-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm
+date:         2026-10-26T22:37:58Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 12741; http_reqs......................: 12741 1591.991074/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-GCM-SHA256";
+stats_lines:  before=608 after=610
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-gcm256
+Applying configuration: mtls1.2-gcm256
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/gm256-cipher-suite-client created
+envoyfilter.networking.istio.io/gm256-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm256
+date:         2026-10-26T22:38:18Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 12764; http_reqs......................: 12764 1721.751859/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES256-GCM-SHA384",;
+stats_lines:  before=610 after=611
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 15
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-chacha
+Applying configuration: mtls1.2-chacha
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-chacha
+date:         2026-10-26T22:38:38Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 12685; http_reqs......................: 12685 1584.966806/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-CHACHA20-POLY1305",;
+stats_lines:  before=611 after=612
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 20
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-cbc
+Applying configuration: mtls1.2-cbc
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-cbc
+date:         2026-10-26T22:38:57Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 12485; http_reqs......................: 12485 1560.091797/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-SHA256";
+stats_lines:  before=612 after=613
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum
+Applying configuration: mtls1.3-postquantum
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum
+date:         2026-10-26T22:39:16Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 12963; http_reqs......................: 12963 1745.165818/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];
+stats_lines:  before=613 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 10
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519
+Applying configuration: mtls1.3-x25519
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/x25519-cipher-client created
+envoyfilter.networking.istio.io/x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519
+date:         2026-10-26T22:39:37Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 10521; http_reqs......................: 10521 1314.499908/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 15
+listener.0.0.0.0_15006.ssl.curves.X25519: 30
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519-full
+Applying configuration: mtls1.3-x25519-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/full-x25519-cipher-client created
+envoyfilter.networking.istio.io/full-x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519-full
+date:         2026-10-26T22:39:56Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 11056; http_reqs......................: 11056 1381.210774/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 20
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum-full
+Applying configuration: mtls1.3-postquantum-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum-full
+date:         2026-10-26T22:40:16Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 11179; http_reqs......................: 11179 1537.106171/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 25
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+All setups negotiated the expected cryptographic algorithms. Ready for benchmark execution!
+deployment.apps/prometheus scaled
+deployment.apps/grafana scaled
+deployment.apps/kiali scaled
+2026/10/26 22:40:47 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261026_234047.txt
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=1 run=1 ---
+    rps=205.7 p99=23.351224 cpu/req=4856.3us hs/s=205.7 reused=18227 errors=0  calib=398.2ms
+--- [grid] plaintext rate=200 mrpc=1 run=1 ---
+    rps=203.3 p99=4.337065 cpu/req=2869.5us hs/s=0 reused=0 errors=0  calib=363.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=1 run=1 ---
+    rps=203.6 p99=7.455094 cpu/req=4553.5us hs/s=203.6 reused=18365 errors=0  calib=378.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=1 run=1 ---
+    rps=207.2 p99=10.191168 cpu/req=6449.9us hs/s=207.2 reused=0 errors=0  calib=392.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=1 run=1 ---
+    rps=203.6 p99=10.915847 cpu/req=6722.9us hs/s=203.6 reused=0 errors=0  calib=368.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=5 run=1 ---
+    rps=208.3 p99=5.72857025 cpu/req=2399.7us hs/s=41.6 reused=3648 errors=0  calib=386.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=5 run=1 ---
+    rps=208.2 p99=7.726543 cpu/req=2770.2us hs/s=41.6 reused=0 errors=0  calib=381.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=5 run=1 ---
+    rps=203.9 p99=5.673207 cpu/req=2361.2us hs/s=40.8 reused=3645 errors=0  calib=388.8ms
+--- [grid] plaintext rate=200 mrpc=5 run=1 ---
+    rps=208.5 p99=4.328095 cpu/req=1895.0us hs/s=0 reused=0 errors=0  calib=389.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=5 run=1 ---
+    rps=203.9 p99=8.33620550000002 cpu/req=2815.3us hs/s=40.7 reused=0 errors=0  calib=408.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=0 run=1 ---
+    rps=208.6 p99=3.574497 cpu/req=1755.7us hs/s=0 reused=0 errors=0  calib=377.5ms
+--- [grid] plaintext rate=200 mrpc=0 run=1 ---
+    rps=208.3 p99=7.186292 cpu/req=1931.2us hs/s=0 reused=0 errors=0  calib=377.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=0 run=1 ---
+    rps=200.1 p99=7.973024 cpu/req=2070.9us hs/s=0 reused=0 errors=0  calib=405.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=0 run=1 ---
+    rps=208.1 p99=8.127108 cpu/req=2096.3us hs/s=0 reused=0 errors=0  calib=461.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=0 run=1 ---
+    rps=208.5 p99=7.989369320000001 cpu/req=2093.0us hs/s=0 reused=0 errors=0  calib=423.8ms
+--- [grid] plaintext rate=200 mrpc=2 run=1 ---
+    rps=204.1 p99=9.973042 cpu/req=2714.3us hs/s=0 reused=0 errors=0  calib=383.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=2 run=1 ---
+    rps=208.7 p99=23.076967 cpu/req=4952.8us hs/s=104.3 reused=0 errors=0  calib=419.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=2 run=1 ---
+    rps=204.8 p99=18.56499378000002 cpu/req=3980.3us hs/s=102.4 reused=8642 errors=0  calib=450.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=2 run=1 ---
+    rps=204.4 p99=20.475417 cpu/req=4803.5us hs/s=102.2 reused=0 errors=0  calib=430.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=2 run=1 ---
+    rps=208.8 p99=15.973085 cpu/req=3794.3us hs/s=104.4 reused=8769 errors=0  calib=380.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=1 run=1 ---
+    rps=305.0 p99=173.32719584999975 cpu/req=6237.6us hs/s=305.1 reused=20731 errors=0  calib=398.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 ---
+    rps=313.0 p99=134.072312 cpu/req=6431.3us hs/s=313.1 reused=21598 errors=0  calib=448.6ms
+--- [grid] plaintext rate=300 mrpc=1 run=1 ---
+    rps=313.4 p99=105.78707 cpu/req=4203.3us hs/s=0 reused=0 errors=0  calib=379.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=1 run=1 ---
+    rps=304.3 p99=488.061615 cpu/req=7909.8us hs/s=304.3 reused=0 errors=0  calib=392.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=1 run=1 ---
+    rps=309.9 p99=716.64192891 cpu/req=7644.5us hs/s=309.9 reused=0 errors=0  calib=375.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=2 run=1 ---
+    rps=313.2 p99=30.481292489999785 cpu/req=3974.6us hs/s=156.6 reused=10087 errors=0  calib=416.6ms
+--- [grid] plaintext rate=300 mrpc=2 run=1 ---
+    rps=306.9 p99=10.364485 cpu/req=2643.2us hs/s=0 reused=0 errors=0  calib=385.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=2 run=1 ---
+    rps=318.9 p99=42.195884 cpu/req=4733.9us hs/s=159.4 reused=0 errors=0  calib=419.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=2 run=1 ---
+    rps=306.3 p99=41.917935 cpu/req=4771.7us hs/s=153.1 reused=0 errors=0  calib=434.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 ---
+    rps=314.4 p99=27.312047 cpu/req=4183.8us hs/s=157.2 reused=9228 errors=0  calib=383.0ms
+--- [grid] plaintext rate=300 mrpc=5 run=1 ---
+    rps=314.7 p99=9.647868 cpu/req=2187.4us hs/s=0 reused=0 errors=0  calib=391.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=5 run=1 ---
+    rps=306.8 p99=27.256033 cpu/req=3119.4us hs/s=61.4 reused=0 errors=0  calib=434.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=5 run=1 ---
+    rps=314.5 p99=22.955066 cpu/req=3161.8us hs/s=62.9 reused=0 errors=0  calib=375.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=5 run=1 ---
+    rps=314.6 p99=19.495524 cpu/req=2945.6us hs/s=63.0 reused=3466 errors=0  calib=424.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=5 run=1 ---
+    rps=306.9 p99=19.722517 cpu/req=2865.9us hs/s=61.3 reused=3952 errors=0  calib=453.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=0 run=1 ---
+    rps=314.5 p99=8.894776 cpu/req=1998.6us hs/s=0 reused=0 errors=0  calib=377.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=0 run=1 ---
+    rps=306.8 p99=8.278332 cpu/req=1998.3us hs/s=0 reused=0 errors=0  calib=380.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=0 run=1 ---
+    rps=307.0 p99=8.297574 cpu/req=1989.8us hs/s=0 reused=0 errors=0  calib=402.4ms
+--- [grid] plaintext rate=300 mrpc=0 run=1 ---
+    rps=315.6 p99=7.45423 cpu/req=1855.9us hs/s=0 reused=0 errors=0  calib=404.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=0 run=1 ---
+    rps=307.5 p99=8.180451570000004 cpu/req=1974.5us hs/s=0 reused=0 errors=0  calib=377.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=0 run=1 ---
+    rps=420.1 p99=8.373316319999999 cpu/req=1954.7us hs/s=0 reused=0 errors=0  calib=389.6ms
+--- [grid] plaintext rate=400 mrpc=0 run=1 ---
+    rps=420.1 p99=8.2172 cpu/req=1821.7us hs/s=0 reused=0 errors=0  calib=414.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=0 run=1 ---
+    rps=409.7 p99=8.790507999999997 cpu/req=1961.0us hs/s=0 reused=0 errors=0  calib=443.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=0 run=1 ---
+    rps=420.2 p99=8.960876 cpu/req=1962.6us hs/s=0 reused=0 errors=0  calib=392.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=0 run=1 ---
+    rps=409.7 p99=8.652026 cpu/req=1961.1us hs/s=0 reused=0 errors=0  calib=393.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=5 run=1 ---
+    rps=410.0 p99=36.600295 cpu/req=2845.4us hs/s=82.0 reused=4495 errors=0  calib=380.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=5 run=1 ---
+    rps=420.6 p99=40.630225 cpu/req=3105.3us hs/s=84.1 reused=0 errors=0  calib=375.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=5 run=1 ---
+    rps=409.7 p99=35.288155 cpu/req=3028.6us hs/s=82.0 reused=0 errors=0  calib=421.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=5 run=1 ---
+    rps=420.8 p99=26.647923 cpu/req=2870.2us hs/s=84.1 reused=4594 errors=0  calib=453.7ms
+--- [grid] plaintext rate=400 mrpc=5 run=1 ---
+    rps=421.3 p99=11.039809 cpu/req=2154.9us hs/s=0 reused=0 errors=0  calib=425.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=1 run=1 ---
+time="2026-10-27T00:34:27Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=352.5 p99=3121.40866164 cpu/req=8349.4us hs/s=352.5 reused=0 errors=0  calib=442.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 ---
+time="2026-10-27T00:36:49Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=382.9 p99=2580.1788002100006 cpu/req=7053.3us hs/s=383.0 reused=22193 errors=0  calib=399.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=1 run=1 ---
+time="2026-10-27T00:39:06Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=384.9 p99=2977.98723002 cpu/req=6834.0us hs/s=384.9 reused=22564 errors=0  calib=373.8ms
+--- [grid] plaintext rate=400 mrpc=1 run=1 ---
+    rps=404.9 p99=839.8745233000002 cpu/req=4780.3us hs/s=0 reused=0 errors=0  calib=373.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=1 run=1 ---
+time="2026-10-27T00:43:29Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=367.7 p99=2931.92856494 cpu/req=8029.9us hs/s=367.8 reused=0 errors=0  calib=383.0ms
+--- [grid] plaintext rate=400 mrpc=2 run=1 ---
+    rps=421.5 p99=12.973183 cpu/req=2606.8us hs/s=0 reused=0 errors=0  calib=405.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=2 run=1 ---
+    rps=410.9 p99=45.822296 cpu/req=3937.5us hs/s=205.4 reused=11598 errors=0  calib=436.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=2 run=1 ---
+    rps=421.7 p99=61.611381 cpu/req=4509.8us hs/s=210.8 reused=0 errors=0  calib=418.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=2 run=1 ---
+    rps=421.4 p99=70.27798525999982 cpu/req=4710.3us hs/s=210.7 reused=0 errors=0  calib=389.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 ---
+    rps=410.5 p99=54.610089 cpu/req=4118.3us hs/s=205.2 reused=11099 errors=0  calib=425.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=2 run=1 ---
+    rps=105.6 p99=12.296037 cpu/req=4011.9us hs/s=52.8 reused=4591 errors=0  calib=402.2ms
+--- [grid] plaintext rate=100 mrpc=2 run=1 ---
+    rps=102.7 p99=8.554522 cpu/req=2901.7us hs/s=0 reused=0 errors=0  calib=372.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=2 run=1 ---
+    rps=102.7 p99=14.46834 cpu/req=5035.8us hs/s=51.3 reused=0 errors=0  calib=390.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 ---
+    rps=105.5 p99=12.014813 cpu/req=4105.7us hs/s=52.7 reused=4606 errors=0  calib=388.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=2 run=1 ---
+    rps=102.7 p99=15.239026 cpu/req=5223.7us hs/s=51.3 reused=0 errors=0  calib=373.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=0 run=1 ---
+    rps=105.6 p99=7.56088 cpu/req=2228.2us hs/s=0 reused=0 errors=0  calib=377.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=0 run=1 ---
+    rps=105.6 p99=7.332518 cpu/req=2233.6us hs/s=0 reused=0 errors=0  calib=520.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=0 run=1 ---
+    rps=102.7 p99=7.545241 cpu/req=2247.2us hs/s=0 reused=0 errors=0  calib=377.0ms
+--- [grid] plaintext rate=100 mrpc=0 run=1 ---
+    rps=105.7 p99=7.484418 cpu/req=2052.6us hs/s=0 reused=0 errors=0  calib=390.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=0 run=1 ---
+    rps=105.9 p99=7.252834 cpu/req=2205.9us hs/s=0 reused=0 errors=0  calib=405.4ms
+--- [grid] plaintext rate=100 mrpc=5 run=1 ---
+    rps=102.8 p99=7.89768 cpu/req=2408.6us hs/s=0 reused=0 errors=0  calib=430.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=5 run=1 ---
+    rps=105.6 p99=10.451046 cpu/req=3057.3us hs/s=21.1 reused=1841 errors=0  calib=460.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=5 run=1 ---
+    rps=102.8 p99=9.880928 cpu/req=2956.5us hs/s=20.5 reused=1842 errors=0  calib=388.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=5 run=1 ---
+    rps=102.9 p99=12.91661 cpu/req=3378.1us hs/s=20.5 reused=0 errors=0  calib=456.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=5 run=1 ---
+    rps=105.8 p99=14.095626 cpu/req=3474.0us hs/s=21.1 reused=0 errors=0  calib=385.5ms
+--- [grid] plaintext rate=100 mrpc=1 run=1 ---
+    rps=102.8 p99=9.233807490000002 cpu/req=3589.2us hs/s=0 reused=0 errors=0  calib=389.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=1 run=1 ---
+    rps=105.9 p99=15.926869 cpu/req=5637.9us hs/s=105.9 reused=9156 errors=0  calib=383.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=1 run=1 ---
+    rps=105.8 p99=21.677309400000023 cpu/req=7684.5us hs/s=105.8 reused=0 errors=0  calib=391.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=1 run=1 ---
+    rps=102.8 p99=19.849873 cpu/req=7903.7us hs/s=102.8 reused=0 errors=0  calib=392.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 ---
+    rps=106.0 p99=16.70547 cpu/req=5876.6us hs/s=106.0 reused=9151 errors=0  calib=440.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=0 run=2 ---
+    rps=106.3 p99=7.335649 cpu/req=2214.9us hs/s=0 reused=0 errors=0  calib=376.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=0 run=2 ---
+    rps=102.9 p99=7.416773 cpu/req=2233.4us hs/s=0 reused=0 errors=0  calib=377.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=0 run=2 ---
+    rps=106.1 p99=7.468603 cpu/req=2217.6us hs/s=0 reused=0 errors=0  calib=431.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=0 run=2 ---
+    rps=103.0 p99=7.507963 cpu/req=2243.9us hs/s=0 reused=0 errors=0  calib=409.6ms
+--- [grid] plaintext rate=100 mrpc=0 run=2 ---
+    rps=105.9 p99=7.177429 cpu/req=2113.3us hs/s=0 reused=0 errors=0  calib=386.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=5 run=2 ---
+    rps=106.1 p99=10.262548 cpu/req=3005.5us hs/s=21.2 reused=1838 errors=0  calib=421.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=5 run=2 ---
+    rps=103.0 p99=13.583606 cpu/req=3383.9us hs/s=20.6 reused=0 errors=0  calib=434.0ms
+--- [grid] plaintext rate=100 mrpc=5 run=2 ---
+    rps=106.1 p99=8.131585 cpu/req=2406.4us hs/s=0 reused=0 errors=0  calib=403.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=5 run=2 ---
+    rps=106.1 p99=10.475529 cpu/req=3012.9us hs/s=21.2 reused=1834 errors=0  calib=418.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=5 run=2 ---
+    rps=102.9 p99=13.867033 cpu/req=3479.5us hs/s=20.5 reused=0 errors=0  calib=379.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=2 ---
+    rps=106.2 p99=17.572555 cpu/req=5878.1us hs/s=106.1 reused=9132 errors=0  calib=420.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=1 run=2 ---
+    rps=103.0 p99=18.678645 cpu/req=7606.3us hs/s=103.0 reused=0 errors=0  calib=377.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=1 run=2 ---
+    rps=103.1 p99=21.048088 cpu/req=7948.9us hs/s=103.1 reused=0 errors=0  calib=374.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=1 run=2 ---
+    rps=106.4 p99=15.458754 cpu/req=5613.3us hs/s=106.4 reused=9161 errors=0  calib=410.1ms
+--- [grid] plaintext rate=100 mrpc=1 run=2 ---
+    rps=102.9 p99=9.251156940000001 cpu/req=3574.6us hs/s=0 reused=0 errors=0  calib=441.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=2 run=2 ---
+    rps=106.2 p99=14.502922 cpu/req=5002.2us hs/s=53.1 reused=0 errors=0  calib=396.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=2 run=2 ---
+    rps=106.3 p99=15.099716 cpu/req=5160.5us hs/s=53.1 reused=0 errors=0  calib=407.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=2 run=2 ---
+    rps=103.2 p99=12.202442060000006 cpu/req=3996.8us hs/s=51.6 reused=4607 errors=0  calib=426.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=2 ---
+    rps=106.3 p99=12.209766 cpu/req=4155.1us hs/s=53.1 reused=4589 errors=0  calib=423.6ms
+--- [grid] plaintext rate=100 mrpc=2 run=2 ---
+    rps=103.0 p99=8.789429 cpu/req=2897.9us hs/s=0 reused=0 errors=0  calib=376.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=5 run=2 ---
+    rps=206.3 p99=15.065132 cpu/req=3211.3us hs/s=41.2 reused=0 errors=0  calib=453.1ms
+--- [grid] plaintext rate=200 mrpc=5 run=2 ---
+    rps=212.5 p99=8.44652 cpu/req=2240.7us hs/s=0 reused=0 errors=0  calib=444.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=5 run=2 ---
+    rps=206.2 p99=15.918416 cpu/req=2909.2us hs/s=41.2 reused=3333 errors=0  calib=400.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=5 run=2 ---
+    rps=213.0 p99=19.101282 cpu/req=3310.8us hs/s=42.6 reused=0 errors=0  calib=414.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=5 run=2 ---
+    rps=212.8 p99=12.855870710000005 cpu/req=2806.4us hs/s=42.5 reused=3475 errors=0  calib=415.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=0 run=2 ---
+    rps=206.4 p99=7.763603 cpu/req=2051.9us hs/s=0 reused=0 errors=0  calib=407.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=0 run=2 ---
+    rps=213.4 p99=7.806765 cpu/req=2059.9us hs/s=0 reused=0 errors=0  calib=426.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=0 run=2 ---
+    rps=213.5 p99=7.969406 cpu/req=2062.2us hs/s=0 reused=0 errors=0  calib=390.6ms
+--- [grid] plaintext rate=200 mrpc=0 run=2 ---
+    rps=206.3 p99=7.421447 cpu/req=1908.8us hs/s=0 reused=0 errors=0  calib=418.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=0 run=2 ---
+    rps=213.4 p99=7.671535 cpu/req=2052.2us hs/s=0 reused=0 errors=0  calib=396.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=1 run=2 ---
+    rps=206.5 p99=34.896634 cpu/req=7275.4us hs/s=206.5 reused=0 errors=0  calib=424.5ms
+--- [grid] plaintext rate=200 mrpc=1 run=2 ---
+    rps=206.3 p99=10.927317 cpu/req=3389.8us hs/s=0 reused=0 errors=0  calib=383.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=1 run=2 ---
+    rps=213.3 p99=33.701084 cpu/req=5889.1us hs/s=213.3 reused=16965 errors=0  calib=404.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=1 run=2 ---
+    rps=206.3 p99=43.77229 cpu/req=7635.0us hs/s=206.3 reused=0 errors=0  calib=402.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=1 run=2 ---
+    rps=213.2 p99=28.230203 cpu/req=5483.3us hs/s=213.2 reused=17464 errors=0  calib=398.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=2 run=2 ---
+    rps=213.2 p99=24.658203 cpu/req=5030.2us hs/s=106.5 reused=0 errors=0  calib=390.7ms
+--- [grid] plaintext rate=200 mrpc=2 run=2 ---
+    rps=206.4 p99=9.985299 cpu/req=2700.6us hs/s=0 reused=0 errors=0  calib=427.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=2 run=2 ---
+    rps=213.4 p99=24.62745897 cpu/req=4813.8us hs/s=106.7 reused=0 errors=0  calib=428.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=2 run=2 ---
+    rps=206.6 p99=18.501445090000004 cpu/req=4024.0us hs/s=103.2 reused=8499 errors=0  calib=402.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=2 run=2 ---
+    rps=206.4 p99=17.98062 cpu/req=3811.1us hs/s=103.2 reused=8760 errors=0  calib=434.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=1 run=2 ---
+    rps=319.4 p99=177.25161 cpu/req=6254.7us hs/s=319.4 reused=20750 errors=0  calib=408.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=1 run=2 ---
+    rps=305.5 p99=757.9908432999999 cpu/req=8234.8us hs/s=305.6 reused=0 errors=0  calib=391.5ms
+--- [grid] plaintext rate=300 mrpc=1 run=2 ---
+    rps=320.6 p99=104.20914 cpu/req=4162.5us hs/s=0 reused=0 errors=0  calib=384.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=2 ---
+    rps=319.7 p99=260.054983 cpu/req=6478.9us hs/s=319.7 reused=21549 errors=0  calib=433.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=1 run=2 ---
+    rps=286.0 p99=3194.2727442100013 cpu/req=9709.9us hs/s=286.0 reused=0 errors=0  calib=400.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=0 run=2 ---
+    rps=320.4 p99=8.67794 cpu/req=1994.5us hs/s=0 reused=0 errors=0  calib=428.0ms
+--- [grid] plaintext rate=300 mrpc=0 run=2 ---
+    rps=320.9 p99=8.249085 cpu/req=1850.1us hs/s=0 reused=0 errors=0  calib=468.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=0 run=2 ---
+    rps=310.2 p99=8.821703 cpu/req=2000.8us hs/s=0 reused=2 errors=0  calib=374.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=0 run=2 ---
+    rps=320.9 p99=7.787788 cpu/req=1999.9us hs/s=0 reused=0 errors=0  calib=386.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=0 run=2 ---
+    rps=321.4 p99=8.453139 cpu/req=1983.1us hs/s=0 reused=0 errors=0  calib=406.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=2 ---
+    rps=315.9 p99=30.9985 cpu/req=4163.0us hs/s=157.9 reused=8926 errors=0  calib=453.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=2 run=2 ---
+    rps=321.5 p99=33.017923 cpu/req=4043.5us hs/s=160.7 reused=9688 errors=0  calib=421.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=2 run=2 ---
+    rps=310.1 p99=48.13911088999995 cpu/req=4801.8us hs/s=155.0 reused=0 errors=0  calib=422.4ms
+--- [grid] plaintext rate=300 mrpc=2 run=2 ---
+    rps=309.9 p99=11.523593 cpu/req=2647.5us hs/s=0 reused=0 errors=0  calib=419.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=2 run=2 ---
+    rps=321.1 p99=47.07885972999998 cpu/req=4728.6us hs/s=160.5 reused=0 errors=0  calib=428.6ms
+--- [grid] plaintext rate=300 mrpc=5 run=2 ---
+    rps=310.3 p99=9.580289 cpu/req=2181.8us hs/s=0 reused=0 errors=0  calib=411.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=5 run=2 ---
+    rps=321.0 p99=22.103286 cpu/req=2906.1us hs/s=64.2 reused=3686 errors=0  calib=420.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=5 run=2 ---
+    rps=321.8 p99=22.65677 cpu/req=2878.1us hs/s=64.3 reused=3768 errors=0  calib=379.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=5 run=2 ---
+    rps=310.3 p99=33.13579041999997 cpu/req=3166.8us hs/s=62.0 reused=0 errors=0  calib=381.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=5 run=2 ---
+    rps=321.8 p99=27.644048479999913 cpu/req=3097.2us hs/s=64.3 reused=0 errors=0  calib=482.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=5 run=2 ---
+    rps=414.0 p99=47.16712207999975 cpu/req=2895.7us hs/s=82.8 reused=4443 errors=0  calib=445.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=5 run=2 ---
+    rps=414.6 p99=43.46319800999995 cpu/req=3032.8us hs/s=82.9 reused=0 errors=0  calib=439.7ms
+--- [grid] plaintext rate=400 mrpc=5 run=2 ---
+    rps=429.7 p99=11.810635 cpu/req=2144.1us hs/s=0 reused=0 errors=0  calib=421.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=5 run=2 ---
+    rps=413.4 p99=66.192939 cpu/req=3107.4us hs/s=82.7 reused=0 errors=0  calib=441.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=5 run=2 ---
+    rps=428.7 p99=48.515039 cpu/req=2887.0us hs/s=85.6 reused=4465 errors=0  calib=402.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=0 run=2 ---
+    rps=429.7 p99=10.263613 cpu/req=1993.3us hs/s=0 reused=0 errors=0  calib=411.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=0 run=2 ---
+    rps=409.0 p99=9.536309869999988 cpu/req=1957.6us hs/s=0 reused=0 errors=0  calib=424.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=0 run=2 ---
+    rps=430.0 p99=9.108035829999999 cpu/req=1953.8us hs/s=0 reused=0 errors=0  calib=378.9ms
+--- [grid] plaintext rate=400 mrpc=0 run=2 ---
+    rps=414.2 p99=8.999595 cpu/req=1820.8us hs/s=0 reused=0 errors=0  calib=390.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=0 run=2 ---
+    rps=414.1 p99=12.733449879999938 cpu/req=1957.5us hs/s=0 reused=0 errors=0  calib=444.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=1 run=2 ---
+time="2026-10-27T04:15:26Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=371.0 p99=2985.20490268 cpu/req=8212.0us hs/s=371.1 reused=0 errors=0  calib=412.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=1 run=2 ---
+time="2026-10-27T04:17:45Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=375.5 p99=2446.9118490799992 cpu/req=6738.7us hs/s=375.6 reused=22463 errors=0  calib=414.7ms
+--- [grid] plaintext rate=400 mrpc=1 run=2 ---
+    rps=404.4 p99=1213.1171686 cpu/req=4841.6us hs/s=0 reused=0 errors=0  calib=384.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=1 run=2 ---
+time="2026-10-27T04:22:04Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=372.7 p99=2949.2949804100003 cpu/req=8076.5us hs/s=372.7 reused=0 errors=0  calib=431.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=2 ---
+time="2026-10-27T04:24:24Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=388.0 p99=2721.489543 cpu/req=7163.0us hs/s=388.1 reused=21444 errors=0  calib=381.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=2 run=2 ---
+    rps=414.6 p99=77.220021 cpu/req=4644.1us hs/s=207.2 reused=0 errors=0  calib=416.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=2 ---
+    rps=430.1 p99=56.450252 cpu/req=4098.3us hs/s=215.0 reused=11178 errors=0  calib=414.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=2 run=2 ---
+    rps=430.6 p99=99.565967 cpu/req=4099.7us hs/s=215.3 reused=11259 errors=0  calib=416.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=2 run=2 ---
+    rps=414.2 p99=68.949727 cpu/req=4495.5us hs/s=207.1 reused=0 errors=0  calib=385.3ms
+--- [grid] plaintext rate=400 mrpc=2 run=2 ---
+    rps=430.6 p99=16.520441 cpu/req=2607.3us hs/s=0 reused=0 errors=0  calib=433.6ms
+Done. Results appended to ./04_results/Summary/sweeps.csv
+Traceback (most recent call last):
+  File "/home/kacper/Thesis/Thesis_PQC/./05_analytics/analyze_stats.py", line 66, in <module>
+    df = pd.read_csv(f"{DIR}/sweeps.csv")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kacper/Thesis/Thesis_PQC/.venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 872, in read_csv
+    return _read(filepath_or_buffer, kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kacper/Thesis/Thesis_PQC/.venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 300, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kacper/Thesis/Thesis_PQC/.venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 1643, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kacper/Thesis/Thesis_PQC/.venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 1907, in _make_engine
+    self.handles = get_handle(
+                   ^^^^^^^^^^^
+  File "/home/kacper/Thesis/Thesis_PQC/.venv/lib/python3.12/site-packages/pandas/io/common.py", line 930, in get_handle
+    handle = open(
+             ^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: ' /sweeps.csv'
+!!! 2026-10-27 05:35:42 session 1 failed, continuing
+########## SESSION 2 (of 2..2) ##########
+Delete old cluster if it exists
+[36mINFO[0m[0000] Deleting cluster 'thesis-cluster'            
+[36mINFO[0m[0005] Deleting 1 attached volumes...               
+[36mINFO[0m[0005] Removing cluster details from default kubeconfig... 
+[36mINFO[0m[0005] Removing standalone kubeconfig file (if there is one)... 
+[36mINFO[0m[0005] Successfully deleted cluster thesis-cluster! 
+Create new cluster 'thesis-cluster'
+[36mINFO[0m[0000] Prep: Network                                
+[36mINFO[0m[0000] Re-using existing network 'k3d-thesis-cluster' (96df9256be5cf75fbd5ba311ee351b23a3a5bb044c37c38f950ce42f99750378) 
+[36mINFO[0m[0000] Created image volume k3d-thesis-cluster-images 
+[36mINFO[0m[0000] Starting new tools node...                   
+[36mINFO[0m[0000] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0001] Creating LoadBalancer 'k3d-thesis-cluster-serverlb' 
+[36mINFO[0m[0002] Using the k3d-tools node to gather environment information 
+[36mINFO[0m[0002] Starting new tools node...                   
+[36mINFO[0m[0002] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0004] Starting cluster 'thesis-cluster'            
+[36mINFO[0m[0004] Starting servers...                          
+[36mINFO[0m[0004] Starting node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0013] Starting agents...                           
+[36mINFO[0m[0013] Starting node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0013] Starting node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0017] Starting helpers...                          
+[36mINFO[0m[0018] Starting node 'k3d-thesis-cluster-serverlb'  
+[36mINFO[0m[0024] Injecting records for hostAliases (incl. host.k3d.internal) and for 5 network members into CoreDNS configmap... 
+[36mINFO[0m[0027] Cluster 'thesis-cluster' created successfully! 
+[36mINFO[0m[0027] You can now use it like this:                
+kubectl cluster-info
+Configuring kubernets api endpoint
+Cluster "k3d-thesis-cluster" set.
+Check if cluster is ready
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   13s   v1.35.5+k3s1
+Checking docker hub reachability
+Docker Hub is not reachable from the node container
+Labeling nodes
+node/k3d-thesis-cluster-agent-0 labeled
+node/k3d-thesis-cluster-agent-1 labeled
+Verifying nodes 
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          10s   v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          10s   v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   14s   v1.35.5+k3s1
+Installing Istio 1.30.2 profile MINIMAL
+        |\          
+        | \         
+        |  \        
+        |   \       
+      /||    \      
+     / ||     \     
+    /  ||      \    
+   /   ||       \   
+  /    ||        \  
+ /     ||         \ 
+/______||__________\
+____________________
+  \__       _____/  
+     \_____/        
+
+
+- Processing resources for Istio core.
+✔ Istio core installed ⛵️
+- Processing resources for Istiod.
+- Processing resources for Istiod. Waiting for Deployment/istio-system/istiod
+✔ Istiod installed 🧠
+- Pruning removed resources
+✔ Installation completeEnabling Istio sidecar injection for default namespace
+namespace/default labeled
+Installing monitoring stack
+serviceaccount/prometheus created
+configmap/prometheus created
+clusterrole.rbac.authorization.k8s.io/prometheus created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+service/prometheus created
+deployment.apps/prometheus created
+configmap/prometheus configured
+deployment.apps/prometheus restarted
+serviceaccount/grafana created
+configmap/grafana created
+service/grafana created
+deployment.apps/grafana created
+configmap/istio-grafana-dashboards created
+configmap/istio-services-grafana-dashboards created
+serviceaccount/kiali created
+configmap/kiali created
+clusterrole.rbac.authorization.k8s.io/kiali created
+clusterrolebinding.rbac.authorization.k8s.io/kiali created
+service/kiali created
+deployment.apps/kiali created
+Deploying backend service
+serviceaccount/httpbin created
+service/httpbin created
+deployment.apps/httpbin created
+Deploying k6 load generator
+deployment.apps/k6-deploy created
+Waiting for backend service to be ready and k6
+Waiting for deployment "httpbin" rollout to finish: 0 of 1 updated replicas are available...
+deployment "httpbin" successfully rolled out
+Waiting for deployment "k6-deploy" rollout to finish: 0 of 1 updated replicas are available...
+deployment "k6-deploy" successfully rolled out
+2026/10/27 04:37:32 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment.txt
+Environment setup complete. Cluster is ready for testing.
+Verify by running: kubectl get pods -A
+pod/httpbin-5b46b7dc4b-5b5qn condition met
+pod/k6-deploy-855895c75f-2292r condition met
+K6 pod found: k6-deploy-855895c75f-2292r
+httpbin pod found: httpbin-5b46b7dc4b-5b5qn
+Processing configuration: mtls1.3-default
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-default
+date:         2026-10-27T04:37:54Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 11431; http_reqs......................: 11431 1428.349377/s;
+client_config: SKIP (no client TLS configuration expected)
+client_tls:    no matching TLS fields
+stats_lines:  before=599 after=608
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              SKIP (no client TLS configuration expected)
+Processing configuration: mtls1.2-gcm
+Applying configuration: mtls1.2-gcm
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-k6-client created
+envoyfilter.networking.istio.io/force-cipher-httpbin-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm
+date:         2026-10-27T04:38:13Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 11732; http_reqs......................: 11732 1850.896115/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-GCM-SHA256";
+stats_lines:  before=608 after=610
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-gcm256
+Applying configuration: mtls1.2-gcm256
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/gm256-cipher-suite-client created
+envoyfilter.networking.istio.io/gm256-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-gcm256
+date:         2026-10-27T04:38:33Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 11666; http_reqs......................: 11666 1457.829554/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES256-GCM-SHA384",;
+stats_lines:  before=610 after=611
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 15
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-chacha
+Applying configuration: mtls1.2-chacha
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-chacha
+date:         2026-10-27T04:38:52Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 11405; http_reqs......................: 11405 1424.903597/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-CHACHA20-POLY1305",;
+stats_lines:  before=611 after=612
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 20
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.2-cbc
+Applying configuration: mtls1.2-cbc
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/force-cipher-suite-client created
+envoyfilter.networking.istio.io/force-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.2-cbc
+date:         2026-10-27T04:39:10Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 11354; http_reqs......................: 11354 1792.871212/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-SHA256";
+stats_lines:  before=612 after=613
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum
+Applying configuration: mtls1.3-postquantum
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum
+date:         2026-10-27T04:39:30Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 11467; http_reqs......................: 11467 1432.767142/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];
+stats_lines:  before=613 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 10
+listener.0.0.0.0_15006.ssl.curves.X25519: 25
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519
+Applying configuration: mtls1.3-x25519
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/x25519-cipher-client created
+envoyfilter.networking.istio.io/x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519
+date:         2026-10-27T04:39:49Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 11325; http_reqs......................: 11325 1415.056532/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 15
+listener.0.0.0.0_15006.ssl.curves.X25519: 30
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-x25519-full
+Applying configuration: mtls1.3-x25519-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/full-x25519-cipher-client created
+envoyfilter.networking.istio.io/full-x25519-cipher-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-x25519-full
+date:         2026-10-27T04:40:07Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 11200; http_reqs......................: 11200 1768.235186/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 20
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+Processing configuration: mtls1.3-postquantum-full
+Applying configuration: mtls1.3-postquantum-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-client created
+envoyfilter.networking.istio.io/pqc-cipher-suite-full-server created
+Waiting for configuration to take effect...
+Generating traffic (k6 -> httpbin)...
+setup:        mtls1.3-postquantum-full
+date:         2026-10-27T04:40:27Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 11182; http_reqs......................: 11182 1397.087257/s;
+client_config: PASS (ok)
+client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519MLKEM768";                                ];--;                        "maxSessionKeys": 0;                    };                };
+stats_lines:  before=614 after=614
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 5
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 5
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 25
+listener.0.0.0.0_15006.ssl.curves.X25519: 35
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 10
+>>> Expected cipher counter incremented: PASS
+>>> Expected curve counter incremented:  PASS
+>>> Client proxy TLS config:              PASS (ok)
+All setups negotiated the expected cryptographic algorithms. Ready for benchmark execution!
+deployment.apps/prometheus scaled
+deployment.apps/grafana scaled
+deployment.apps/kiali scaled
+2026/10/27 04:40:56 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261027_054057.txt
+--- [grid] plaintext rate=400 mrpc=5 run=1 ---
+    rps=430.3 p99=10.362762 cpu/req=2112.4us hs/s=0 reused=0 errors=0  calib=424.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=5 run=1 ---
+    rps=414.4 p99=53.73022430999997 cpu/req=3076.4us hs/s=82.9 reused=0 errors=0  calib=382.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=5 run=1 ---
+    rps=431.3 p99=37.335291199999865 cpu/req=2842.6us hs/s=86.2 reused=4537 errors=0  calib=387.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=5 run=1 ---
+    rps=431.0 p99=48.17817792999967 cpu/req=3041.8us hs/s=86.2 reused=0 errors=0  calib=417.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=5 run=1 ---
+    rps=415.4 p99=30.861951 cpu/req=2877.7us hs/s=83.1 reused=4468 errors=0  calib=415.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=2 run=1 ---
+    rps=431.2 p99=71.943521 cpu/req=4476.2us hs/s=215.5 reused=0 errors=0  calib=432.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=2 run=1 ---
+    rps=436.4 p99=70.189774 cpu/req=3919.0us hs/s=218.2 reused=11550 errors=0  calib=415.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 ---
+    rps=415.1 p99=67.553157 cpu/req=4118.7us hs/s=207.5 reused=11228 errors=0  calib=435.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=2 run=1 ---
+    rps=431.0 p99=94.265579 cpu/req=4604.5us hs/s=215.5 reused=0 errors=0  calib=427.4ms
+--- [grid] plaintext rate=400 mrpc=2 run=1 ---
+    rps=415.4 p99=14.949209 cpu/req=2596.8us hs/s=0 reused=0 errors=0  calib=386.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 ---
+time="2026-10-27T05:04:42Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=383.2 p99=2723.9326883599997 cpu/req=7223.0us hs/s=383.2 reused=20622 errors=0  calib=416.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=1 run=1 ---
+time="2026-10-27T05:06:53Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=369.5 p99=3003.2715255999997 cpu/req=8293.7us hs/s=369.6 reused=0 errors=0  calib=414.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=1 run=1 ---
+time="2026-10-27T05:09:13Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=376.2 p99=2500.33839636 cpu/req=6768.8us hs/s=376.2 reused=22033 errors=0  calib=433.3ms
+--- [grid] plaintext rate=400 mrpc=1 run=1 ---
+    rps=409.6 p99=857.3219082 cpu/req=4802.2us hs/s=0 reused=0 errors=0  calib=398.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=1 run=1 ---
+time="2026-10-27T05:13:31Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=375.1 p99=3014.51819318 cpu/req=7917.3us hs/s=375.1 reused=0 errors=0  calib=380.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=0 run=1 ---
+    rps=432.2 p99=8.710237 cpu/req=1964.4us hs/s=0 reused=0 errors=0  calib=421.8ms
+--- [grid] plaintext rate=400 mrpc=0 run=1 ---
+    rps=414.9 p99=9.456129 cpu/req=1831.0us hs/s=0 reused=0 errors=0  calib=457.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=0 run=1 ---
+    rps=432.0 p99=10.25152 cpu/req=1980.1us hs/s=0 reused=0 errors=0  calib=382.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=0 run=1 ---
+    rps=415.5 p99=9.902393 cpu/req=1982.8us hs/s=0 reused=0 errors=0  calib=385.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=0 run=1 ---
+    rps=415.9 p99=9.64360214999999 cpu/req=1980.0us hs/s=0 reused=0 errors=0  calib=443.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 ---
+    rps=324.3 p99=32.674629899999985 cpu/req=4209.5us hs/s=162.1 reused=8884 errors=0  calib=486.9ms
+--- [grid] plaintext rate=300 mrpc=2 run=1 ---
+    rps=311.3 p99=11.961589 cpu/req=2629.8us hs/s=0 reused=0 errors=0  calib=396.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=2 run=1 ---
+    rps=324.4 p99=50.43327 cpu/req=4860.5us hs/s=162.2 reused=0 errors=0  calib=381.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=2 run=1 ---
+    rps=327.0 p99=68.0984277199998 cpu/req=4751.3us hs/s=163.5 reused=0 errors=0  calib=383.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=2 run=1 ---
+    rps=311.6 p99=31.757373 cpu/req=3998.2us hs/s=155.8 reused=9929 errors=0  calib=394.5ms
+--- [grid] plaintext rate=300 mrpc=0 run=1 ---
+    rps=324.5 p99=7.438262 cpu/req=1850.8us hs/s=0 reused=0 errors=0  calib=418.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=0 run=1 ---
+    rps=311.4 p99=8.30525 cpu/req=2003.8us hs/s=0 reused=0 errors=0  calib=425.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=0 run=1 ---
+    rps=312.1 p99=8.335761439999994 cpu/req=2004.3us hs/s=0 reused=0 errors=0  calib=459.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=0 run=1 ---
+    rps=324.5 p99=8.260728 cpu/req=2021.8us hs/s=0 reused=2 errors=0  calib=459.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=0 run=1 ---
+    rps=311.3 p99=8.730095 cpu/req=2005.1us hs/s=0 reused=0 errors=0  calib=391.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=5 run=1 ---
+    rps=324.7 p99=18.639929 cpu/req=2845.4us hs/s=64.9 reused=4028 errors=0  calib=400.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=5 run=1 ---
+    rps=324.6 p99=28.13217 cpu/req=3167.1us hs/s=64.8 reused=0 errors=0  calib=390.0ms
+--- [grid] plaintext rate=300 mrpc=5 run=1 ---
+    rps=311.7 p99=9.663795 cpu/req=2162.7us hs/s=0 reused=0 errors=0  calib=464.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=5 run=1 ---
+    rps=325.2 p99=24.890521 cpu/req=3104.2us hs/s=65.0 reused=0 errors=0  calib=451.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=5 run=1 ---
+    rps=324.8 p99=19.457645 cpu/req=2888.7us hs/s=64.9 reused=3764 errors=0  calib=410.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=1 run=1 ---
+    rps=308.8 p99=648.22363992 cpu/req=6348.0us hs/s=308.9 reused=20559 errors=0  calib=449.8ms
+--- [grid] plaintext rate=300 mrpc=1 run=1 ---
+    rps=325.0 p99=101.048318 cpu/req=4231.1us hs/s=0 reused=0 errors=0  calib=476.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=1 run=1 ---
+    rps=306.9 p99=829.5567433399999 cpu/req=7916.9us hs/s=306.9 reused=0 errors=0  calib=425.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 ---
+    rps=310.9 p99=187.19416 cpu/req=6476.6us hs/s=311.0 reused=21624 errors=0  calib=403.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=1 run=1 ---
+    rps=320.4 p99=810.4062260799993 cpu/req=7669.4us hs/s=320.4 reused=0 errors=0  calib=417.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=0 run=1 ---
+    rps=104.1 p99=7.418148 cpu/req=2256.6us hs/s=0 reused=0 errors=0  calib=394.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=0 run=1 ---
+    rps=104.0 p99=7.55319 cpu/req=2270.6us hs/s=0 reused=0 errors=0  calib=424.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=0 run=1 ---
+    rps=108.4 p99=7.331475 cpu/req=2256.9us hs/s=0 reused=0 errors=0  calib=418.8ms
+--- [grid] plaintext rate=100 mrpc=0 run=1 ---
+    rps=103.8 p99=7.620614 cpu/req=2096.0us hs/s=0 reused=0 errors=0  calib=469.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=0 run=1 ---
+    rps=108.5 p99=7.656114 cpu/req=2272.8us hs/s=0 reused=0 errors=0  calib=404.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=2 run=1 ---
+    rps=108.2 p99=15.658617 cpu/req=5195.1us hs/s=54.1 reused=0 errors=0  calib=406.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=2 run=1 ---
+    rps=104.0 p99=15.326475 cpu/req=5073.2us hs/s=52.0 reused=0 errors=0  calib=390.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 ---
+    rps=108.5 p99=13.871717 cpu/req=4179.8us hs/s=54.2 reused=4552 errors=0  calib=388.6ms
+--- [grid] plaintext rate=100 mrpc=2 run=1 ---
+    rps=104.0 p99=9.032007 cpu/req=2853.6us hs/s=0 reused=0 errors=0  calib=383.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=2 run=1 ---
+    rps=104.0 p99=11.858355 cpu/req=3985.8us hs/s=52.0 reused=4604 errors=0  calib=415.9ms
+--- [grid] plaintext rate=100 mrpc=1 run=1 ---
+    rps=108.5 p99=9.7636 cpu/req=3574.5us hs/s=0 reused=0 errors=0  calib=398.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 ---
+    rps=104.1 p99=18.302757 cpu/req=6172.2us hs/s=104.1 reused=9070 errors=0  calib=442.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=1 run=1 ---
+    rps=108.7 p99=21.048596 cpu/req=7738.3us hs/s=108.7 reused=0 errors=0  calib=411.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=1 run=1 ---
+    rps=108.6 p99=20.438555 cpu/req=7952.9us hs/s=108.6 reused=0 errors=0  calib=409.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=1 run=1 ---
+    rps=104.4 p99=15.382006 cpu/req=5605.2us hs/s=104.4 reused=9199 errors=0  calib=426.4ms
+--- [grid] plaintext rate=100 mrpc=5 run=1 ---
+    rps=108.7 p99=7.949439 cpu/req=2450.9us hs/s=0 reused=0 errors=0  calib=405.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=5 run=1 ---
+    rps=108.7 p99=14.251702 cpu/req=3497.1us hs/s=21.7 reused=0 errors=0  calib=422.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=5 run=1 ---
+    rps=104.2 p99=13.282741 cpu/req=3408.3us hs/s=20.8 reused=0 errors=0  calib=429.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=5 run=1 ---
+    rps=108.7 p99=9.857783480000018 cpu/req=2959.9us hs/s=21.7 reused=1837 errors=0  calib=387.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=5 run=1 ---
+    rps=104.0 p99=13.465275 cpu/req=4941.7us hs/s=20.8 reused=1806 errors=0  calib=672.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=0 run=1 ---
+    rps=208.6 p99=7.873766 cpu/req=2064.0us hs/s=0 reused=0 errors=0  calib=468.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=0 run=1 ---
+    rps=217.7 p99=7.836358 cpu/req=2047.9us hs/s=0 reused=0 errors=0  calib=403.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=0 run=1 ---
+    rps=208.3 p99=7.738855 cpu/req=2059.4us hs/s=0 reused=0 errors=0  calib=405.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=0 run=1 ---
+    rps=217.2 p99=7.692549 cpu/req=2084.4us hs/s=0 reused=0 errors=0  calib=422.9ms
+--- [grid] plaintext rate=200 mrpc=0 run=1 ---
+    rps=217.6 p99=7.654645 cpu/req=1925.8us hs/s=0 reused=0 errors=0  calib=439.4ms
+--- [grid] plaintext rate=200 mrpc=5 run=1 ---
+    rps=208.4 p99=8.845471 cpu/req=2249.0us hs/s=0 reused=0 errors=0  calib=407.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=5 run=1 ---
+    rps=217.4 p99=9.807547 cpu/req=2582.2us hs/s=43.5 reused=3543 errors=0  calib=395.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=5 run=1 ---
+    rps=217.7 p99=6.222396 cpu/req=2429.8us hs/s=43.5 reused=3607 errors=0  calib=412.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=5 run=1 ---
+    rps=208.3 p99=9.163957 cpu/req=2796.4us hs/s=41.6 reused=0 errors=0  calib=383.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=5 run=1 ---
+    rps=217.3 p99=9.445086 cpu/req=2835.0us hs/s=43.4 reused=0 errors=0  calib=406.6ms
+--- [grid] plaintext rate=200 mrpc=1 run=1 ---
+    rps=208.8 p99=4.533759 cpu/req=2886.0us hs/s=0 reused=0 errors=0  calib=399.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=1 run=1 ---
+    rps=217.8 p99=14.139462 cpu/req=4980.6us hs/s=217.8 reused=17812 errors=0  calib=381.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=1 run=1 ---
+    rps=217.7 p99=10.237967 cpu/req=4633.7us hs/s=217.7 reused=18190 errors=0  calib=411.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=1 run=1 ---
+    rps=208.6 p99=16.41861184 cpu/req=6500.5us hs/s=208.6 reused=0 errors=0  calib=381.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=1 run=1 ---
+    rps=217.8 p99=11.53828978 cpu/req=6700.3us hs/s=217.8 reused=0 errors=0  calib=401.6ms
+--- [grid] plaintext rate=200 mrpc=2 run=1 ---
+    rps=217.7 p99=4.105845 cpu/req=2263.3us hs/s=0 reused=0 errors=0  calib=473.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=2 run=1 ---
+    rps=208.5 p99=9.785795 cpu/req=4346.5us hs/s=104.2 reused=0 errors=0  calib=412.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=2 run=1 ---
+    rps=217.6 p99=6.05976 cpu/req=3169.5us hs/s=108.8 reused=9185 errors=0  calib=392.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=2 run=1 ---
+    rps=208.2 p99=6.586812 cpu/req=3328.2us hs/s=104.1 reused=9106 errors=0  calib=413.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=2 run=1 ---
+    rps=217.6 p99=9.363854 cpu/req=4202.3us hs/s=108.8 reused=0 errors=0  calib=422.2ms
+--- [grid] plaintext rate=200 mrpc=5 run=2 ---
+    rps=217.9 p99=8.265895 cpu/req=2256.8us hs/s=0 reused=0 errors=0  calib=410.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=5 run=2 ---
+    rps=208.3 p99=12.766044 cpu/req=2822.1us hs/s=41.6 reused=3491 errors=0  calib=432.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=5 run=2 ---
+    rps=217.4 p99=16.048358 cpu/req=3252.2us hs/s=43.4 reused=0 errors=0  calib=432.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=5 run=2 ---
+    rps=217.5 p99=17.747766410000004 cpu/req=3300.5us hs/s=43.5 reused=0 errors=0  calib=413.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=5 run=2 ---
+    rps=208.3 p99=6.120413310000004 cpu/req=2417.8us hs/s=41.6 reused=3628 errors=0  calib=408.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=2 run=2 ---
+    rps=217.5 p99=9.285938 cpu/req=4193.5us hs/s=108.8 reused=0 errors=0  calib=380.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=2 run=2 ---
+    rps=208.6 p99=10.094728 cpu/req=4371.0us hs/s=104.3 reused=0 errors=0  calib=394.1ms
+--- [grid] plaintext rate=200 mrpc=2 run=2 ---
+    rps=208.1 p99=4.085197 cpu/req=2263.6us hs/s=0 reused=0 errors=0  calib=431.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=2 run=2 ---
+    rps=217.5 p99=6.2990825300000015 cpu/req=3223.6us hs/s=108.7 reused=9174 errors=0  calib=382.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=2 run=2 ---
+    rps=208.5 p99=6.976427 cpu/req=3355.9us hs/s=104.2 reused=9035 errors=0  calib=388.1ms
+--- [grid] plaintext rate=200 mrpc=1 run=2 ---
+    rps=217.7 p99=4.604625 cpu/req=2881.6us hs/s=0 reused=0 errors=0  calib=406.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=1 run=2 ---
+    rps=217.8 p99=9.105588 cpu/req=4926.3us hs/s=217.8 reused=17882 errors=0  calib=394.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=1 run=2 ---
+    rps=208.7 p99=10.949019 cpu/req=6462.2us hs/s=208.7 reused=0 errors=0  calib=409.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=1 run=2 ---
+    rps=217.8 p99=12.047034 cpu/req=6739.7us hs/s=217.8 reused=0 errors=0  calib=381.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=1 run=2 ---
+    rps=208.4 p99=8.325322600000002 cpu/req=4619.2us hs/s=208.4 reused=18267 errors=0  calib=422.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=200 mrpc=0 run=2 ---
+    rps=208.7 p99=3.647849 cpu/req=1735.4us hs/s=0 reused=0 errors=0  calib=384.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=200 mrpc=0 run=2 ---
+    rps=217.8 p99=3.789459 cpu/req=1752.3us hs/s=0 reused=0 errors=0  calib=393.3ms
+--- [grid] plaintext rate=200 mrpc=0 run=2 ---
+    rps=208.3 p99=3.51878 cpu/req=1627.7us hs/s=0 reused=0 errors=0  calib=396.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=200 mrpc=0 run=2 ---
+    rps=217.5 p99=7.456604 cpu/req=2039.9us hs/s=0 reused=0 errors=0  calib=450.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=200 mrpc=0 run=2 ---
+    rps=217.7 p99=7.523307 cpu/req=2040.1us hs/s=0 reused=0 errors=0  calib=398.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=5 run=2 ---
+    rps=104.2 p99=10.030916 cpu/req=2972.1us hs/s=20.8 reused=1846 errors=0  calib=421.0ms
+--- [grid] plaintext rate=100 mrpc=5 run=2 ---
+    rps=108.9 p99=7.925973 cpu/req=2430.2us hs/s=0 reused=0 errors=0  calib=474.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=5 run=2 ---
+    rps=109.1 p99=13.418361 cpu/req=3414.0us hs/s=21.8 reused=0 errors=0  calib=452.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=5 run=2 ---
+    rps=104.2 p99=10.532568 cpu/req=3040.0us hs/s=20.8 reused=1842 errors=0  calib=442.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=5 run=2 ---
+    rps=107.0 p99=14.534942 cpu/req=3479.9us hs/s=21.4 reused=0 errors=0  calib=393.2ms
+--- [grid] plaintext rate=100 mrpc=0 run=2 ---
+    rps=104.4 p99=7.360504 cpu/req=2085.7us hs/s=0 reused=0 errors=0  calib=428.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=0 run=2 ---
+    rps=104.6 p99=7.559865 cpu/req=2243.2us hs/s=0 reused=0 errors=0  calib=393.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=0 run=2 ---
+    rps=109.2 p99=7.466262 cpu/req=2231.9us hs/s=0 reused=0 errors=0  calib=425.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=0 run=2 ---
+    rps=104.4 p99=7.828134 cpu/req=2272.6us hs/s=0 reused=0 errors=0  calib=406.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=0 run=2 ---
+    rps=109.3 p99=7.948888 cpu/req=2248.6us hs/s=0 reused=0 errors=0  calib=395.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=2 run=2 ---
+    rps=109.2 p99=14.877079 cpu/req=4981.9us hs/s=54.6 reused=0 errors=0  calib=400.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=2 ---
+    rps=104.3 p99=12.345632 cpu/req=4115.9us hs/s=52.1 reused=4578 errors=0  calib=385.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=2 run=2 ---
+    rps=109.0 p99=11.797197 cpu/req=3917.3us hs/s=54.5 reused=4612 errors=0  calib=407.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=2 run=2 ---
+    rps=104.6 p99=15.83353 cpu/req=5195.2us hs/s=52.3 reused=0 errors=0  calib=439.7ms
+--- [grid] plaintext rate=100 mrpc=2 run=2 ---
+    rps=104.5 p99=8.370954 cpu/req=2842.3us hs/s=0 reused=0 errors=0  calib=439.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=100 mrpc=1 run=2 ---
+    rps=109.4 p99=14.743132 cpu/req=5475.0us hs/s=109.4 reused=9181 errors=0  calib=411.8ms
+--- [grid] plaintext rate=100 mrpc=1 run=2 ---
+    rps=104.5 p99=9.358523 cpu/req=3547.9us hs/s=0 reused=0 errors=0  calib=426.1ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=2 ---
+    rps=109.4 p99=16.436954 cpu/req=5759.8us hs/s=109.4 reused=9152 errors=0  calib=424.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=100 mrpc=1 run=2 ---
+    rps=109.5 p99=19.612007 cpu/req=7533.0us hs/s=109.5 reused=0 errors=0  calib=456.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=100 mrpc=1 run=2 ---
+    rps=104.6 p99=19.818941 cpu/req=7860.1us hs/s=104.6 reused=0 errors=0  calib=404.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=0 run=2 ---
+    rps=438.4 p99=8.645569 cpu/req=1951.6us hs/s=0 reused=0 errors=0  calib=451.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=0 run=2 ---
+    rps=437.6 p99=10.168961 cpu/req=1956.3us hs/s=0 reused=0 errors=0  calib=469.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=0 run=2 ---
+    rps=428.0 p99=11.11678150999998 cpu/req=2059.7us hs/s=0 reused=0 errors=0  calib=417.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=0 run=2 ---
+    rps=438.6 p99=10.379444739999991 cpu/req=1991.1us hs/s=0 reused=0 errors=0  calib=385.9ms
+--- [grid] plaintext rate=400 mrpc=0 run=2 ---
+    rps=418.4 p99=8.409572 cpu/req=1813.2us hs/s=0 reused=0 errors=0  calib=413.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=2 ---
+    rps=417.3 p99=90.220751 cpu/req=3964.4us hs/s=208.5 reused=11158 errors=0  calib=397.1ms
+--- [grid] plaintext rate=400 mrpc=2 run=2 ---
+    rps=437.7 p99=17.596952 cpu/req=2628.1us hs/s=0 reused=0 errors=0  calib=414.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=2 run=2 ---
+    rps=418.0 p99=91.986526 cpu/req=4609.6us hs/s=209.0 reused=0 errors=0  calib=447.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=2 run=2 ---
+    rps=437.7 p99=72.22223535999997 cpu/req=4428.7us hs/s=218.8 reused=0 errors=0  calib=403.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=2 run=2 ---
+    rps=438.5 p99=76.496335 cpu/req=3876.2us hs/s=219.2 reused=11449 errors=0  calib=386.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=1 run=2 ---
+time="2026-10-27T09:25:22Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=358.3 p99=3020.9473383699997 cpu/req=8202.1us hs/s=358.4 reused=0 errors=0  calib=434.6ms
+--- [grid] plaintext rate=400 mrpc=1 run=2 ---
+    rps=432.7 p99=819.9770122000001 cpu/req=4760.1us hs/s=0 reused=0 errors=0  calib=401.4ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=1 run=2 ---
+time="2026-10-27T09:29:45Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=378.2 p99=3055.8671053599996 cpu/req=8015.8us hs/s=378.3 reused=0 errors=0  calib=391.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=2 ---
+time="2026-10-27T09:31:59Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=368.5 p99=2826.32150685 cpu/req=7422.6us hs/s=368.5 reused=20201 errors=0  calib=444.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=1 run=2 ---
+time="2026-10-27T09:34:12Z" level=warning msg="Insufficient VUs, reached 800 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=main
+    rps=393.1 p99=2686.37699862 cpu/req=6761.2us hs/s=393.2 reused=21569 errors=0  calib=465.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=400 mrpc=5 run=2 ---
+    rps=438.6 p99=45.622726999999884 cpu/req=3055.2us hs/s=87.7 reused=0 errors=0  calib=402.7ms
+--- [grid] plaintext rate=400 mrpc=5 run=2 ---
+    rps=418.5 p99=12.322869 cpu/req=2142.7us hs/s=0 reused=0 errors=0  calib=476.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=400 mrpc=5 run=2 ---
+    rps=438.7 p99=58.49573160999998 cpu/req=3062.4us hs/s=87.5 reused=0 errors=0  calib=401.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=400 mrpc=5 run=2 ---
+    rps=440.4 p99=31.975846 cpu/req=2835.3us hs/s=88.1 reused=4677 errors=0  calib=410.6ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=5 run=2 ---
+    rps=418.9 p99=49.170056 cpu/req=2914.5us hs/s=83.7 reused=4403 errors=0  calib=399.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=2 run=2 ---
+    rps=329.3 p99=47.25612 cpu/req=4706.4us hs/s=164.6 reused=0 errors=0  calib=402.5ms
+--- [grid] plaintext rate=300 mrpc=2 run=2 ---
+    rps=329.0 p99=12.00271 cpu/req=2679.3us hs/s=0 reused=0 errors=0  calib=393.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=2 ---
+    rps=313.4 p99=42.57924251999979 cpu/req=4149.0us hs/s=156.6 reused=9273 errors=0  calib=402.8ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=2 run=2 ---
+    rps=329.5 p99=28.721581 cpu/req=3955.4us hs/s=164.7 reused=9845 errors=0  calib=455.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=2 run=2 ---
+    rps=317.0 p99=68.095563 cpu/req=4968.7us hs/s=158.5 reused=0 errors=0  calib=384.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=0 run=2 ---
+    rps=322.5 p99=10.70759 cpu/req=2028.8us hs/s=0 reused=0 errors=0  calib=515.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=0 run=2 ---
+    rps=327.7 p99=8.410063 cpu/req=1989.4us hs/s=0 reused=0 errors=0  calib=421.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=0 run=2 ---
+    rps=327.9 p99=8.506715 cpu/req=1982.1us hs/s=0 reused=0 errors=0  calib=420.5ms
+--- [grid] plaintext rate=300 mrpc=0 run=2 ---
+    rps=313.3 p99=7.651501 cpu/req=1850.5us hs/s=0 reused=0 errors=0  calib=408.0ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=0 run=2 ---
+    rps=314.5 p99=8.897521 cpu/req=2000.2us hs/s=0 reused=0 errors=0  calib=493.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=1 run=2 ---
+    rps=324.1 p99=894.5274109600001 cpu/req=7725.5us hs/s=324.2 reused=0 errors=0  calib=419.7ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=1 run=2 ---
+    rps=327.8 p99=161.757573 cpu/req=6366.2us hs/s=327.9 reused=20721 errors=0  calib=451.2ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=1 run=2 ---
+    rps=307.2 p99=975.5986232000001 cpu/req=7958.0us hs/s=307.2 reused=0 errors=0  calib=408.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=2 ---
+    rps=311.7 p99=374.187205 cpu/req=6451.9us hs/s=311.8 reused=21598 errors=0  calib=433.2ms
+--- [grid] plaintext rate=300 mrpc=1 run=2 ---
+    rps=322.1 p99=185.08584807999992 cpu/req=4211.4us hs/s=0 reused=0 errors=0  calib=418.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519-full rate=300 mrpc=5 run=2 ---
+    rps=329.3 p99=24.472282 cpu/req=3112.6us hs/s=65.8 reused=0 errors=0  calib=416.5ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=5 run=2 ---
+    rps=314.1 p99=22.513005 cpu/req=2951.4us hs/s=62.8 reused=3675 errors=0  calib=460.9ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-x25519 rate=300 mrpc=5 run=2 ---
+    rps=312.1 p99=19.607367 cpu/req=2830.4us hs/s=62.4 reused=3998 errors=0  calib=394.3ms
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum-full rate=300 mrpc=5 run=2 ---
+    rps=330.5 p99=26.15753493 cpu/req=3222.8us hs/s=66.0 reused=0 errors=0  calib=475.8ms
+--- [grid] plaintext rate=300 mrpc=5 run=2 ---
+    rps=329.9 p99=10.351246 cpu/req=2208.4us hs/s=0 reused=0 errors=0  calib=426.3ms
+Done. Results appended to ./04_results/Summary/sweeps.csv
+Traceback (most recent call last):
+  File "/home/kacper/Thesis/Thesis_PQC/./05_analytics/analyze_stats.py", line 66, in <module>
+    df = pd.read_csv(f"{DIR}/sweeps.csv")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kacper/Thesis/Thesis_PQC/.venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 872, in read_csv
+    return _read(filepath_or_buffer, kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kacper/Thesis/Thesis_PQC/.venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 300, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kacper/Thesis/Thesis_PQC/.venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 1643, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kacper/Thesis/Thesis_PQC/.venv/lib/python3.12/site-packages/pandas/io/parsers/readers.py", line 1907, in _make_engine
+    self.handles = get_handle(
+                   ^^^^^^^^^^^
+  File "/home/kacper/Thesis/Thesis_PQC/.venv/lib/python3.12/site-packages/pandas/io/common.py", line 930, in get_handle
+    handle = open(
+             ^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: ' /sweeps.csv'
+!!! 2026-10-27 11:29:22 session 2 failed, continuing
+########## SESSION 3 (of 3..3) ##########
+Delete old cluster if it exists
+[36mINFO[0m[0000] Deleting cluster 'thesis-cluster'            
+[36mINFO[0m[0008] Deleting 1 attached volumes...               
+[36mINFO[0m[0008] Removing cluster details from default kubeconfig... 
+[36mINFO[0m[0008] Removing standalone kubeconfig file (if there is one)... 
+[36mINFO[0m[0008] Successfully deleted cluster thesis-cluster! 
+Create new cluster 'thesis-cluster'
+[36mINFO[0m[0000] Prep: Network                                
+[36mINFO[0m[0000] Re-using existing network 'k3d-thesis-cluster' (96df9256be5cf75fbd5ba311ee351b23a3a5bb044c37c38f950ce42f99750378) 
+[36mINFO[0m[0000] Created image volume k3d-thesis-cluster-images 
+[36mINFO[0m[0000] Starting new tools node...                   
+[36mINFO[0m[0000] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0001] Creating LoadBalancer 'k3d-thesis-cluster-serverlb' 
+[36mINFO[0m[0002] Using the k3d-tools node to gather environment information 
+[36mINFO[0m[0002] Starting new tools node...                   
+[36mINFO[0m[0002] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0004] Starting cluster 'thesis-cluster'            
+[36mINFO[0m[0004] Starting servers...                          
+[36mINFO[0m[0004] Starting node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0013] Starting agents...                           
+[36mINFO[0m[0013] Starting node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0013] Starting node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0018] Starting helpers...                          
+[36mINFO[0m[0018] Starting node 'k3d-thesis-cluster-serverlb'  
+[36mINFO[0m[0025] Injecting records for hostAliases (incl. host.k3d.internal) and for 5 network members into CoreDNS configmap... 
+[36mINFO[0m[0027] Cluster 'thesis-cluster' created successfully! 
+[36mINFO[0m[0027] You can now use it like this:                
+kubectl cluster-info
+Configuring kubernets api endpoint
+Cluster "k3d-thesis-cluster" set.
+Check if cluster is ready
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          11s   v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          11s   v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   15s   v1.35.5+k3s1
+Checking docker hub reachability
+Docker Hub is not reachable from the node container
+Labeling nodes
+node/k3d-thesis-cluster-agent-0 labeled
+node/k3d-thesis-cluster-agent-1 labeled
+Verifying nodes 
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          10s   v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          10s   v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   14s   v1.35.5+k3s1
+Installing Istio 1.30.2 profile MINIMAL
+        |\          
+        | \         
+        |  \        
+        |   \       
+      /||    \      
+     / ||     \     
+    /  ||      \    
+   /   ||       \   
+  /    ||        \  
+ /     ||         \ 
+/______||__________\
+____________________
+  \__       _____/  
+     \_____/        
+
+
+- Processing resources for Istio core.
+✔ Istio core installed ⛵️
+- Processing resources for Istiod.
+- Processing resources for Istiod. Waiting for Deployment/istio-system/istiod
+✔ Istiod installed 🧠
+- Pruning removed resources
+✔ Installation completeEnabling Istio sidecar injection for default namespace
+namespace/default labeled
+Installing monitoring stack
+Unable to connect to the server: dial tcp: lookup raw.githubusercontent.com on 10.255.255.254:53: read udp 10.255.255.254:49541->10.255.255.254:53: i/o timeout
+!!! 2026-10-27 11:31:19 session 3 failed, continuing
+=== 2026-10-27 11:31:19 results saved in 04_results/F3_grid_20261026_2335
+Dropping 29 windows with k6 errors, dropped iterations or plaintext handshakes
+Machine state from calibration benchmark (clusters 1.12x apart): 117 of 291 windows slow
+  paired_same_state.csv (87 comparisons)
+  states_timeline.png / .pdf
+  boxplots_r100.png / .pdf
+  boxplots_r200.png / .pdf
+  boxplots_r300.png / .pdf
+  boxplots_r400.png / .pdf
+  cpu_vs_mrpc.png / .pdf
+  cpu_vs_rate.png / .pdf
+  pqc_overhead.png / .pdf
+  latency_vs_connections.png / .pdf
+Figures in 04_results/F3_grid_20261026_2335/plots
+=== 2026-10-27 11:31:43 ALL DONE
