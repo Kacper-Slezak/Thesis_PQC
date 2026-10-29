@@ -1,0 +1,16 @@
+date:            2026-10-28T14:29:41Z
+git_commit:      baf12de-dirty
+kernel:          6.6.87.2-microsoft-standard-WSL2
+cpu_model:       AMD Ryzen AI 9 HX 370 w/ Radeon 890M
+cpu_threads:     20
+aes_ni:          yes
+avx2:            yes
+ram:             19Gi
+docker:          
+k3d:             k3d version v5.9.0
+istioctl:        client version: 1.30.2
+istio_requested: 1.30.2
+istiod_image:    
+envoy:           
+backend_image:   
+k6:              

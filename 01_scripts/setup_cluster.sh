@@ -77,7 +77,7 @@ echo "Enabling Istio sidecar injection for default namespace"
 kubectl label namespace default istio-injection=enabled --overwrite
 
 echo "Installing monitoring stack"
-kubectl apply -f "https://raw.githubusercontent.com/istio/istio/release-${ISTIO_VERSION%.*}/samples/addons/prometheus.yaml"
+kubectl apply -f 02_manifests/addons/prometheus.yaml
 
 kubectl get configmap prometheus -n istio-system -o yaml \
   | sed -e 's/scrape_interval: .*/scrape_interval: 5s/' \
@@ -87,8 +87,8 @@ kubectl get configmap prometheus -n istio-system -o yaml \
 
 kubectl rollout restart deployment prometheus -n istio-system
 
-kubectl apply -f "https://raw.githubusercontent.com/istio/istio/release-${ISTIO_VERSION%.*}/samples/addons/grafana.yaml"
-kubectl apply -f "https://raw.githubusercontent.com/istio/istio/release-${ISTIO_VERSION%.*}/samples/addons/kiali.yaml"
+kubectl apply -f 02_manifests/addons/grafana.yaml
+kubectl apply -f 02_manifests/addons/kiali.yaml
 
 echo "Deploying backend service"
 kubectl apply -f 02_manifests/backend.yaml
