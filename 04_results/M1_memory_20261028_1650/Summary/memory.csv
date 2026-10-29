@@ -1,0 +1,1 @@
+setup,run,conns_target,sample,client_conns,server_conns,client_envoy_alloc_b,client_envoy_heap_b,client_cg_current_b,client_cg_anon_b,client_cg_sock_b,server_envoy_alloc_b,server_envoy_heap_b,server_cg_current_b,server_cg_anon_b,server_cg_sock_b,k6_fail_rate,timestamp,session
