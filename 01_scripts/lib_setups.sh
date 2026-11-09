@@ -34,7 +34,15 @@ apply_setup() {
     mtls1.3-postquantum-full) ef=envoyfilter_pqc_full.yaml ;;
     *) echo "Unknown setup '$setup_name'" >&2; return 1 ;;
   esac
-  [ -n "$ef" ] && kubectl apply -f "./02_manifests/$ef" >/dev/null
+  if [ -n "$ef" ] && [ -n "${MAX_SESSION_KEYS:-}" ] && \
+     { [ "$setup_name" = "mtls1.3-x25519" ] || [ "$setup_name" = "mtls1.3-postquantum" ]; }; then
+    # Client (UpstreamTlsContext) is the first common_tls_context in the manifest
+    awk -v n="$MAX_SESSION_KEYS" '!done && /^ *common_tls_context:/ {
+        match($0, /^ */); printf "%*smax_session_keys: %s\n", RLENGTH, "", n; done = 1 } { print }' \
+      "./02_manifests/$ef" | kubectl apply -f - >/dev/null
+  elif [ -n "$ef" ]; then
+    kubectl apply -f "./02_manifests/$ef" >/dev/null
+  fi
   sleep 15
 }
 
@@ -103,6 +111,26 @@ cpu_usec() {
   kubectl exec "$1" -c istio-proxy -- grep usage_usec /sys/fs/cgroup/cpu.stat | cut -d' ' -f2
 }
 
+# Memory of the istio-proxy container in one exec: Envoy allocator and heap (/memory)
+# and cgroup memory.current, all in bytes. Sets ${p}_ALLOC, ${p}_HEAP, ${p}_CG.
+mem_snapshot() {
+  local pod=$1 p=$2 out
+  out=$(kubectl exec "$pod" -c istio-proxy -- sh -c \
+    'curl -s localhost:15000/memory; echo; echo "cgroup_current: $(cat /sys/fs/cgroup/memory.current)"')
+  printf -v "${p}_ALLOC" '%s' "$(echo "$out" | grep -o '"allocated": *"[0-9]*"' | grep -o '[0-9][0-9]*')"
+  printf -v "${p}_HEAP"  '%s' "$(echo "$out" | grep -o '"heap_size": *"[0-9]*"' | grep -o '[0-9][0-9]*')"
+  printf -v "${p}_CG"    '%s' "$(echo "$out" | awk '/^cgroup_current:/ {print $2}')"
+}
+
+# Mean and max of two byte counts, in MiB: prints "mean,max"
+mem_pair_mib() {
+  if [ -z "$1" ] || [ -z "$2" ]; then echo ","; return; fi
+  echo "$1 $2" | awk '{ m = ($1 > $2) ? $1 : $2; printf "%.2f,%.2f", ($1 + $2) / 2 / 1048576, m / 1048576 }'
+}
+
+# CSV columns written by measure_window for memory (see W_MEM)
+MEM_COLS="mem_alloc_client_mib,mem_alloc_client_max_mib,mem_heap_client_mib,mem_heap_client_max_mib,mem_cg_client_mib,mem_cg_client_max_mib,mem_alloc_server_mib,mem_alloc_server_max_mib,mem_heap_server_mib,mem_heap_server_max_mib,mem_cg_server_mib,mem_cg_server_max_mib"
+
 # Regex filters for Envoy stats
 RE_REQUESTS='^cluster\.inbound\|[0-9]+\|\|;?\.upstream_rq_total:'
 RE_HANDSHAKE='\.ssl\.handshake:'
@@ -142,6 +170,9 @@ measure_window() {
   sleep "$warm"
 
   local t0 t1
+  # Memory is read outside the CPU window: before the CPU snapshot at t0, after it at t1
+  mem_snapshot "$k6pod" MC0
+  mem_snapshot "$srv"   MS0
   t0=$(date +%s.%N)
   W_START=$(date -u +%Y-%m-%dT%H:%M:%SZ)
   snapshot "$k6pod" C0
@@ -153,6 +184,8 @@ measure_window() {
   W_END=$(date -u +%Y-%m-%dT%H:%M:%SZ)
   snapshot "$k6pod" C1
   snapshot "$srv"   S1
+  mem_snapshot "$k6pod" MC1
+  mem_snapshot "$srv"   MS1
 
   wait "$k6_pid" || echo "Warning: k6 exited with an error"
 
@@ -176,6 +209,7 @@ measure_window() {
   W_SERVER_CPU=$(divide "$cpu_server" "$(echo "$W_DUR * 1000000" | bc)" 3)
   W_CPU_PER_REQ_US=$(divide "$cpu_total" "$requests")
   W_CPU_PER_HS_US=$(divide "$cpu_total" "$W_HS")
+  W_MEM="$(mem_pair_mib "$MC0_ALLOC" "$MC1_ALLOC"),$(mem_pair_mib "$MC0_HEAP" "$MC1_HEAP"),$(mem_pair_mib "$MC0_CG" "$MC1_CG"),$(mem_pair_mib "$MS0_ALLOC" "$MS1_ALLOC"),$(mem_pair_mib "$MS0_HEAP" "$MS1_HEAP"),$(mem_pair_mib "$MS0_CG" "$MS1_CG")"
   W_CURVES="X25519=${W_CURVE_X25519};X25519MLKEM768=${W_CURVE_MLKEM};all=${W_CURVE_ALL}"
 }
 
