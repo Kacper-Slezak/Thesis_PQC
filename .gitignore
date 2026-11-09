@@ -5,3 +5,6 @@ __pycache__/
 
 # lokalna kopia, nie w repo
 /PROGRESS.md
+
+# istioctl release unpacked locally (see setup_cluster.sh)
+/istio-*/
