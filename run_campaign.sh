@@ -7,6 +7,9 @@
 #   SESSIONS=1 N_RUNS=1 ./run_campaign.sh               # quick test run
 set -eo pipefail
 cd "$(dirname "$0")"
+# istioctl matching the cluster version (used by setup_cluster, verify_ciphers, record_env)
+for d in ./istio-*/bin; do [ -x "$d/istioctl" ] && PATH="$PWD/${d#./}:$PATH"; done
+export PATH
 
 SESSIONS="${SESSIONS:-3}"            # number of cluster sessions
 START_SESSION="${START_SESSION:-1}"  # starting session index

@@ -2,7 +2,11 @@
 
 set -eo pipefail
 
-ISTIO_VERSION="1.30.2"
+ISTIO_VERSION="1.31.4"
+
+# Use the istioctl unpacked in the repo (not committed), if present
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+[ -x "$REPO_ROOT/istio-$ISTIO_VERSION/bin/istioctl" ] && PATH="$REPO_ROOT/istio-$ISTIO_VERSION/bin:$PATH"
 
 AGENTS="2"
 CLIENT_CPUSET="${CLIENT_CPUSET:-}"
