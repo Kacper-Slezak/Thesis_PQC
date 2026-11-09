@@ -15,6 +15,10 @@ STAMP=$(date +%Y%m%d_%H%M)
 MAIN_SETUPS="plaintext mtls1.3-x25519 mtls1.3-x25519-full mtls1.3-postquantum mtls1.3-postquantum-full"
 CLASSIC_SETUPS="plaintext mtls1.3-default mtls1.2-gcm mtls1.2-gcm256 mtls1.2-chacha mtls1.2-cbc"
 export SETTLE_S=20
+# Client ticket slots for the resumed arms (mtls1.3-x25519, mtls1.3-postquantum, also the canary).
+# R1 (04_results/R1_resumption_20261109_1931): with the Envoy default of 1 the resumed share falls
+# to 0.85 at 400 req/s, mrpc=1; with 16 it is >= 0.998 everywhere, so the resumed arm is clean.
+export MAX_SESSION_KEYS=16
 
 # Summary/ must be empty at the start of each phase: the scripts append to its CSV files
 finish_phase() {
