@@ -1,0 +1,35 @@
+OpenSSL 3.5.9 29 Sep 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)
+== rsa2048
+                               keygen    encaps    decaps keygens/s  encaps/s  decaps/s
+                    rsa2048 0.075385s 0.000032s 0.000471s      13.3   31139.0    2123.6
+                               keygen     signs    verify keygens/s    sign/s  verify/s
+                    rsa2048 0.072195s 0.000461s 0.000031s      13.9    2169.9   32215.7
+== ecdsap256
+compiler: cc -fPIC -pthread -m64 -Wa,--noexecstack -Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -g -Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -g -Wa,--noexecstack -DOPENSSL_USE_NODELETE -DL_ENDIAN -DOPENSSL_PIC -DOPENSSL_BUILDING_OPENSSL -DNDEBUG
+CPUINFO: OPENSSL_ia32cap=0xfed83203078bffff:0x00405fc6f1bf07a9:0x0000003000000110:0x0000000000000000:0x0000000000000000
+                              sign    verify    sign/s verify/s
+ 256 bits ecdsa (nistp256)   0.0000s   0.0001s  31473.5  11025.8
+== ed25519
+compiler: cc -fPIC -pthread -m64 -Wa,--noexecstack -Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -g -Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -g -Wa,--noexecstack -DOPENSSL_USE_NODELETE -DL_ENDIAN -DOPENSSL_PIC -DOPENSSL_BUILDING_OPENSSL -DNDEBUG
+CPUINFO: OPENSSL_ia32cap=0xfed83203078bffff:0x00405fc6f1bf07a9:0x0000003000000110:0x0000000000000000:0x0000000000000000
+                              sign    verify    sign/s verify/s
+ 253 bits EdDSA (Ed25519)   0.0000s   0.0001s  20190.5   7365.5
+== mldsa65
+speed: Unknown algorithm mldsa65
+== ML-DSA-44
+compiler: cc -fPIC -pthread -m64 -Wa,--noexecstack -Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -g -Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -g -Wa,--noexecstack -DOPENSSL_USE_NODELETE -DL_ENDIAN -DOPENSSL_PIC -DOPENSSL_BUILDING_OPENSSL -DNDEBUG
+CPUINFO: OPENSSL_ia32cap=0xfed83203078bffff:0x00405fc6f1bf07a9:0x0000003000000110:0x0000000000000000:0x0000000000000000
+                               keygen     signs    verify keygens/s    sign/s  verify/s
+                  ML-DSA-44 0.000187s 0.001162s 0.000207s    5337.5     860.7    4828.4
+== ML-DSA-65
+compiler: cc -fPIC -pthread -m64 -Wa,--noexecstack -Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -g -Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -g -Wa,--noexecstack -DOPENSSL_USE_NODELETE -DL_ENDIAN -DOPENSSL_PIC -DOPENSSL_BUILDING_OPENSSL -DNDEBUG
+CPUINFO: OPENSSL_ia32cap=0xfed83203078bffff:0x00405fc6f1bf07a9:0x0000003000000110:0x0000000000000000:0x0000000000000000
+                               keygen     signs    verify keygens/s    sign/s  verify/s
+                  ML-DSA-65 0.000330s 0.001699s 0.000327s    3031.1     588.7    3053.6
+== ML-DSA-87
+compiler: cc -fPIC -pthread -m64 -Wa,--noexecstack -Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -g -Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -g -Wa,--noexecstack -DOPENSSL_USE_NODELETE -DL_ENDIAN -DOPENSSL_PIC -DOPENSSL_BUILDING_OPENSSL -DNDEBUG
+CPUINFO: OPENSSL_ia32cap=0xfed83203078bffff:0x00405fc6f1bf07a9:0x0000003000000110:0x0000000000000000:0x0000000000000000
+                               keygen     signs    verify keygens/s    sign/s  verify/s
+                  ML-DSA-87 0.000460s 0.002045s 0.000483s    2173.0     488.9    2070.7
+== nazwy algorytmów znane przez speed (dsa/kem):
+ -kem-algorithms        Benchmark KEM algorithms

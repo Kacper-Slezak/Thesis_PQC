@@ -1,0 +1,36 @@
+== rsa  (SEND_ROOT=0)
+            Public Key Algorithm: rsaEncryption
+        Signature Algorithm: sha256WithRSAEncryption
+    Signature Algorithm: sha256WithRSAEncryption
+  ca.crt               1127 B
+  server.crt           1281 B
+  server.key           1704 B
+  server.chain.pem     1281 B
+  client.crt           1281 B
+  client.key           1704 B
+  client.chain.pem     1281 B
+  DER server.crt: 905 B
+== ecdsa  (SEND_ROOT=0)
+            Public Key Algorithm: id-ecPublicKey
+        Signature Algorithm: ecdsa-with-SHA256
+    Signature Algorithm: ecdsa-with-SHA256
+  ca.crt                591 B
+  server.crt            745 B
+  server.key            241 B
+  server.chain.pem      745 B
+  client.crt            745 B
+  client.key            241 B
+  client.chain.pem      745 B
+  DER server.crt: 508 B
+== mldsa  (SEND_ROOT=0)
+            Public Key Algorithm: ML-DSA-65
+        Signature Algorithm: ML-DSA-65
+    Signature Algorithm: ML-DSA-65
+  ca.crt               7534 B
+  server.crt           7684 B
+  server.key            128 B
+  server.chain.pem     7684 B
+  client.crt           7684 B
+  client.key            128 B
+  client.chain.pem     7684 B
+  DER server.crt: 5634 B

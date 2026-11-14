@@ -1,0 +1,35 @@
+admin:
+  address: {socket_address: {address: 127.0.0.1, port_value: 19901}}
+static_resources:
+  listeners:
+  - name: tls_in
+    address: {socket_address: {address: 127.0.0.1, port_value: 18443}}
+    filter_chains:
+    - transport_socket:
+        name: envoy.transport_sockets.tls
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+          common_tls_context:
+            tls_params:
+              tls_minimum_protocol_version: TLSv1_3
+              tls_maximum_protocol_version: TLSv1_3
+              ecdh_curves: ["X25519MLKEM768", "X25519"]
+            tls_certificates:
+            - certificate_chain: {filename: /w/mldsa_srv.crt}
+              private_key: {filename: /w/mldsa_srv.key}
+      filters:
+      - name: envoy.filters.network.http_connection_manager
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: srv
+          route_config:
+            virtual_hosts:
+            - name: all
+              domains: ["*"]
+              routes:
+              - match: {prefix: "/"}
+                direct_response: {status: 200, body: {inline_string: "ok\n"}}
+          http_filters:
+          - name: envoy.filters.http.router
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router

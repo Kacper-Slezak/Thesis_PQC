@@ -1,0 +1,24 @@
+# 2026-11-07T16:50:35Z
+--- istioctl version
+client version: 1.31.4
+control plane version: 1.31.4
+data plane version: 1.31.4 (2 proxies)
+--- obraz sidecara (k6)
+
+--- envoy w sidecarze klienta
+
+/usr/local/bin/envoy  version: defdcd65d0c035b54b324dc6ed4ef258e22bf94d/1.39.7-dev/Clean/RELEASE/BoringSSL
+
+--- envoy w sidecarze serwera
+
+/usr/local/bin/envoy  version: defdcd65d0c035b54b324dc6ed4ef258e22bf94d/1.39.7-dev/Clean/RELEASE/BoringSSL
+
+--- pilot-agent (wersja Go)
+2026/11/07 16:50:38 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+clientVersion:
+  golang_version: go1.26.10
+  revision: a079f649cbcb984cd8d9330699e165b89ff1f6a1
+  status: Clean
+  tag: 1.31.4
+  version: 1.31.4
+

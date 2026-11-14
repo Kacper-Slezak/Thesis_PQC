@@ -86,9 +86,22 @@ expected_curve() {
   esac
 }
 
+# kubectl exec with retries for short reads: the kubelet exec stream sometimes drops (EOF)
+# under load, and one failed read must not end a 10 h session. Output is buffered, so a
+# failed attempt never leaks partial output.
+kx() {
+  local i out
+  for i in 1 2 3; do
+    if out=$(kubectl exec "$@"); then printf '%s\n' "$out"; return 0; fi
+    echo "Warning: kubectl exec failed (try $i/3), retrying" >&2
+    sleep 2
+  done
+  return 1
+}
+
 # Dump Envoy stats from localhost:15000
 stats_dump() {
-  kubectl exec "$1" -c istio-proxy -- \
+  kx "$1" -c istio-proxy -- \
     curl -s -G localhost:15000/stats --data-urlencode 'filter=ssl\.|upstream_rq_total'
 }
 
@@ -108,14 +121,14 @@ print(round((time.perf_counter() - t) * 1000, 1))'
 
 # Read cgroup CPU usage in microseconds
 cpu_usec() {
-  kubectl exec "$1" -c istio-proxy -- grep usage_usec /sys/fs/cgroup/cpu.stat | cut -d' ' -f2
+  kx "$1" -c istio-proxy -- grep usage_usec /sys/fs/cgroup/cpu.stat | cut -d' ' -f2
 }
 
 # Memory of the istio-proxy container in one exec: Envoy allocator and heap (/memory)
 # and cgroup memory.current, all in bytes. Sets ${p}_ALLOC, ${p}_HEAP, ${p}_CG.
 mem_snapshot() {
   local pod=$1 p=$2 out
-  out=$(kubectl exec "$pod" -c istio-proxy -- sh -c \
+  out=$(kx "$pod" -c istio-proxy -- sh -c \
     'curl -s localhost:15000/memory; echo; echo "cgroup_current: $(cat /sys/fs/cgroup/memory.current)"')
   printf -v "${p}_ALLOC" '%s' "$(echo "$out" | grep -o '"allocated": *"[0-9]*"' | grep -o '[0-9][0-9]*')"
   printf -v "${p}_HEAP"  '%s' "$(echo "$out" | grep -o '"heap_size": *"[0-9]*"' | grep -o '[0-9][0-9]*')"
@@ -216,7 +229,7 @@ measure_window() {
 # Verify curve and save evidence to CSV
 record_evidence() {
   local setup=$1 label=$2
-  local file=./04_results/Summary/curve_evidence.csv
+  local file=${OUT:-./04_results/Summary}/curve_evidence.csv
   local exp verdict="n/a"
 
   [ "$setup" = "plaintext" ] && return 0

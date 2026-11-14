@@ -1,0 +1,16 @@
+     75 MLDSA
+     43 MLDSA87
+     43 MLDSA44
+     42 MLDSA65
+     41 mldsa12
+     24 mldsa
+     11 X25519MLKEM768
+      9 mldsa87
+      9 mldsa44
+      8 mldsa65
+      1 ml-dsa-87
+      1 ml-dsa-65
+      1 ml-dsa-44
+      1 ML-DSA-87
+      1 ML-DSA-65
+      1 ML-DSA-44

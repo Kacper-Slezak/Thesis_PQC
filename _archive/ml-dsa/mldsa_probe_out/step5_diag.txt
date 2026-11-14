@@ -1,0 +1,13 @@
+== krok 1: czy oba Envoye żyją? (powinny być dwa razy LIVE)
+LIVE
+LIVE
+== krok 2: żądanie przez klienta (HTTP -> TLS -> serwer)
+upstream connect error or disconnect/reset before headers. reset reason: remote connection failure
+HTTP 503
+== statystyki TLS serwera (tylko niezerowe)
+listener.127.0.0.1_18443.ssl.connection_error: 1
+== statystyki TLS klienta (tylko niezerowe)
+cluster.pq_srv.ssl.fail_verify_error: 1
+== logi (pierwsze linie)
+[2026-11-07 14:29:32.760][7][warning][main] [external/envoy/source/server/server.cc:1031] There is no configured limit to the number of allowed active downstream connections. Configure a limit in `envoy.resource_monitors.global_downstream_max_connections` resource monitor.
+[2026-11-07 14:29:32.760][8][warning][main] [external/envoy/source/server/server.cc:1031] There is no configured limit to the number of allowed active downstream connections. Configure a limit in `envoy.resource_monitors.global_downstream_max_connections` resource monitor.

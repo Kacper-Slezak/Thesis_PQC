@@ -1,0 +1,119 @@
+smoke: alg=rsa mode=full   2026-11-07T16:52:36Z
+k6: exit=0  http_reqs=715  http_req_failed=0.00%
+serwer: handshake=715  session_reused=0  curves(MLKEM768/wszystkie)=715/715
+klient: handshake=715
+bledy TLS (connection_error + fail_verify, oba sidecary)=0
+sigalgs: mldsa65=0  wszystkie=1430
+PASS/FAIL: traffic=PASS tls_wlaczony=PASS kex_pq=PASS sigalg=PASS bledy=PASS wznowienie=PASS
+--- delta licznikow SERWER (niezerowe)
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 715
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 715
+listener.0.0.0.0_15006.ssl.handshake: 715
+listener.0.0.0.0_15006.ssl.sigalgs.rsa_pss_rsae_sha256: 715
+listener.0.0.0.0_15006.ssl.versions.TLSv1.3: 715
+--- delta licznikow KLIENT (niezerowe)
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.ciphers.TLS_AES_128_GCM_SHA256: 715
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.curves.X25519MLKEM768: 715
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.handshake: 715
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.sigalgs.rsa_pss_rsae_sha256: 715
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.versions.TLSv1.3: 715
+--- wyjscie k6 (skrot)
+    http_req_duration..............: avg=5.48ms  min=2.62ms  med=5.46ms  max=8.18ms  p(90)=6.63ms p(95)=7.04ms 
+    http_req_failed................: 0.00%  0 out of 715
+    http_reqs......................: 715    88.964626/s
+
+================ DIAGNOSTYKA
+### /certs w sidecarze klienta (co Envoy faktycznie zaladowal)
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+### /certs w sidecarze serwera
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+/etc/f4/rsa/ca.crt  serial=1bd91b8bc6416264533873c73a94722f7794f979  waznosc_dni=89  SAN=
+/etc/f4/rsa/tls.crt  serial=46c0b1061c05dadbbf42f8725fdc9fc1c3e0aa5d  waznosc_dni=89  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+### lancuchy filtrow serwera na porcie 8080 (virtualInbound)
+nazwa=0.0.0.0_8080 match={"destinationPort":8080,"transportProtocol":"raw_buffer"} transport_socket=envoy.transport_sockets.tls
+### klaster klienta -> httpbin (transport_socket)
+{
+  "name": "outbound|8000||httpbin.default.svc.cluster.local",
+  "transportSocket": "envoy.transport_sockets.tls",
+  "tls": {
+    "maxSessionKeys": 0,
+    "params": {
+      "tlsMinimumProtocolVersion": "TLSv1_3",
+      "tlsMaximumProtocolVersion": "TLSv1_3",
+      "ecdhCurves": [
+        "X25519MLKEM768"
+      ]
+    },
+    "certs": [
+      {
+        "certificateChain": {
+          "filename": "/etc/f4/rsa/tls.crt"
+        },
+        "privateKey": {
+          "filename": "[redacted]"
+        }
+      }
+    ],
+    "ca": {
+      "filename": "/etc/f4/rsa/ca.crt"
+    }
+  }
+}
+### istiod: bledy EnvoyFilter (ostatnie 5 min)
+2026-11-07T16:50:06.715458Z	info	krt	crdclient/informer/EnvoyFilter synced	owner=crdclient/informer/EnvoyFilter
+2026-11-07T16:50:06.715474Z	info	krt	aggregate/EnvoyFilter synced
+2026-11-07T16:50:06.715543Z	info	krt	aggregate/EnvoyFilter synced
+2026-11-07T16:50:07.077098Z	info	validationController	Not ready to switch validation to fail-closed: dummy invalid config not rejected
+2026-11-07T16:50:08.688766Z	info	validationController	Endpoint successfully rejected invalid config. Switching to fail-close.
+2026-11-07T16:50:48.168834Z	info	ads	Push debounce stable[25] 2 for config EnvoyFilter/default/pqc-cipher-suite-full-client and 1 more configs: 100.824769ms since last change, 110.707885ms since last push, forced=false
+2026-11-07T16:51:25.617331Z	info	ads	Push debounce stable[28] 2 for config EnvoyFilter/default/pqc-cipher-suite-full-client and 1 more configs: 100.247102ms since last change, 103.892406ms since last push, forced=false
+2026-11-07T16:51:25.831180Z	info	ads	Push debounce stable[29] 2 for config EnvoyFilter/default/pqc-cipher-suite-client and 1 more configs: 100.993307ms since last change, 107.605478ms since last push, forced=false
+2026-11-07T16:52:01.742762Z	info	ads	Push debounce stable[30] 2 for config EnvoyFilter/default/pqc-cipher-suite-client and 1 more configs: 100.935083ms since last change, 108.565466ms since last push, forced=false
+2026-11-07T16:52:02.031328Z	info	ads	Push debounce stable[31] 3 for config EnvoyFilter/default/f4-rsa-full-client and 2 more configs: 100.063378ms since last change, 206.206301ms since last push, forced=false
+### logi sidecarow (ostatnie 3 min, tylko TLS/blędy)
+-- k6-deploy-6b7fc485fc-c8qrz
+2026-11-07T16:50:43.501218Z	info	FLAG: --proxyLogLevel="warning"
+2026-11-07T16:50:43.501815Z	info	Apply proxy config from env {"proxyStatsMatcher":{"inclusionRegexps":[".*ssl.*",".*tls.*","cluster.inbound.*upstream_rq_total"]}}
+  - ".*ssl.*"
+  - ".*tls.*"
+controlPlaneAuthPolicy: MUTUAL_TLS
+  - .*ssl.*
+  - .*tls.*
+2026-11-07T16:50:43.512398Z	info	Using CA istiod.istio-system.svc:15012 cert with certs: var/run/secrets/istio/root-cert.pem
+2026-11-07T16:50:43.521082Z	info	Envoy command: [-c etc/istio/proxy/envoy-rev.json --drain-time-s 45 --drain-strategy immediate --local-address-ip-version v4 --file-flush-interval-msec 1000 --disable-hot-restart --allow-unknown-static-fields -l warning --component-log-level misc:error --skip-deprecated-logs --concurrency 2]
+2026-11-07T16:50:43.525128Z	info	sds	Starting SDS server for workload certificates, will listen on "var/run/secrets/workload-spiffe-uds/socket"
+2026-11-07T16:50:43.608587Z	info	cache	generated new workload certificate	resourceName=default latency=85.234844ms ttl=23h59m59.391418431s
+2026-11-07T16:50:43.661152Z	info	cache	returned workload certificate from cache	ttl=23h59m59.338853719s
+-- httpbin-7db4ddb44-xjltl
+2026-11-07T16:50:43.502137Z	info	FLAG: --proxyLogLevel="warning"
+2026-11-07T16:50:43.502653Z	info	Apply proxy config from env {"proxyStatsMatcher":{"inclusionRegexps":[".*ssl.*",".*tls.*","cluster.inbound.*upstream_rq_total"]}}
+  - ".*ssl.*"
+  - ".*tls.*"
+controlPlaneAuthPolicy: MUTUAL_TLS
+  - .*ssl.*
+  - .*tls.*
+2026-11-07T16:50:43.518863Z	info	Using CA istiod.istio-system.svc:15012 cert with certs: var/run/secrets/istio/root-cert.pem
+2026-11-07T16:50:43.530250Z	info	Envoy command: [-c etc/istio/proxy/envoy-rev.json --drain-time-s 45 --drain-strategy immediate --local-address-ip-version v4 --file-flush-interval-msec 1000 --disable-hot-restart --allow-unknown-static-fields -l warning --component-log-level misc:error --skip-deprecated-logs --concurrency 2]
+2026-11-07T16:50:43.538323Z	info	sds	Starting SDS server for workload certificates, will listen on "var/run/secrets/workload-spiffe-uds/socket"
+2026-11-07T16:50:43.581175Z	info	cache	generated new workload certificate	resourceName=default latency=53.96471ms ttl=23h59m59.418833555s
+2026-11-07T16:50:43.690166Z	info	cache	returned workload certificate from cache	ttl=23h59m59.309837963s

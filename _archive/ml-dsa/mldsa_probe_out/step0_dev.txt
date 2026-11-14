@@ -1,0 +1,3 @@
+
+/usr/local/bin/envoy  version: 6ebcdc8f548050f225471f937df0a0c966c2188d/1.41.0-dev/Clean/RELEASE/BoringSSL
+

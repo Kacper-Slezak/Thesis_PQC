@@ -1,0 +1,44 @@
+== krok 1: czy oba Envoye żyją? (powinny być dwa razy LIVE)
+HTTP/1.1 200 OK
+content-type: text/plain; charset=UTF-8
+cache-control: no-cache, max-age=0
+x-content-type-options: nosniff
+date: Sat, 07 Nov 2026 14:37:17 GMT
+server: envoy
+connection: close
+transfer-encoding: chunked
+
+5
+LIVE
+
+0
+
+HTTP/1.1 200 OK
+content-type: text/plain; charset=UTF-8
+cache-control: no-cache, max-age=0
+x-content-type-options: nosniff
+date: Sat, 07 Nov 2026 14:37:17 GMT
+server: envoy
+connection: close
+transfer-encoding: chunked
+
+5
+LIVE
+
+0
+
+== krok 2: żądanie przez klienta (HTTP -> TLS -> serwer)
+HTTP/1.1 503 Service Unavailable
+content-length: 98
+content-type: text/plain
+date: Sat, 07 Nov 2026 14:37:17 GMT
+server: envoy
+connection: close
+
+upstream connect error or disconnect/reset before headers. reset reason: remote connection failure== statystyki TLS serwera (tylko niezerowe)
+listener.127.0.0.1_18443.ssl.connection_error: 1
+== statystyki TLS klienta (tylko niezerowe)
+cluster.pq_srv.ssl.connection_error: 1
+== logi (pierwsze linie)
+[2026-11-07 14:37:12.656][7][warning][main] [source/server/server.cc:1071] There is no configured limit to the number of allowed active downstream connections. Configure a limit in `envoy.resource_monitors.global_downstream_max_connections` resource monitor.
+[2026-11-07 14:37:12.657][8][warning][main] [source/server/server.cc:1071] There is no configured limit to the number of allowed active downstream connections. Configure a limit in `envoy.resource_monitors.global_downstream_max_connections` resource monitor.

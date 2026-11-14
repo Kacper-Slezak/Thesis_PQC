@@ -1,0 +1,15 @@
+
+######## 2026-11-07 17:48:04  SPRAWDZENIE ŚRODOWISKA
+OK: narzędzia są, istioctl 1.31.4, docker działa.
+
+Ten przebieg:
+  1. KASUJE klaster 'thesis-cluster' i zakłada nowy na Istio 1.31.4 (ok. 10-15 min),
+  2. generuje certyfikaty, wdraża je, robi test dymny (ok. 15-20 min),
+  3. uruchamia wstępną kampanię F4 (ok. 1-1,5 h, o ile nie SKIP_BENCH=1).
+Kontynuować? [t/N] 
+######## 2026-11-07 17:48:11  KROK: cluster
+01_scripts/f4_run_all.sh: line 34: ./01_scripts/f4_proto.sh: Permission denied
+-------- cluster: koniec po 0 s, kod=126
+
+!!!!!!!! krok 'cluster' nie powiódł się (kod 126). Pliki do wgrania: 04_results/F4_proto/ (w tym ten log).
+Log: 04_results/F4_proto/run_all_20261107_174804.log

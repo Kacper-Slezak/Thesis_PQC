@@ -1,0 +1,8 @@
+client_hello       5869
+client_hello_psk   5687
+server_hello       5868
+server_hello_psk   5686
+incomplete         1
+offer_share        0.969   (ClientHello with PSK / ClientHello)
+accept_share       0.969   (ServerHello with PSK / ServerHello)
+accept_of_offers   1.000

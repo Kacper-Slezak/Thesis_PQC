@@ -1,0 +1,129 @@
+OpenSSL 3.5.9 29 Sep 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)
+================ s_client 
+Connecting to 127.0.0.1
+CONNECTED(00000003)
+depth=1 CN=probe-ca
+verify return:1
+depth=0 CN=localhost
+verify return:1
+---
+Certificate chain
+ 0 s:CN=localhost
+   i:CN=probe-ca
+   a:PKEY: ML-DSA-65, 15616 (bit); sigalg: ML-DSA-65
+   v:NotBefore: Nov  7 14:22:53 2026 GMT; NotAfter: Nov 14 14:22:53 2026 GMT
+---
+Server certificate
+-----BEGIN CERTIFICATE-----
+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
+================ s_client -sigalgs mldsa65
+Connecting to 127.0.0.1
+CONNECTED(00000003)
+depth=1 CN=probe-ca
+verify return:1
+depth=0 CN=localhost
+verify return:1
+---
+Certificate chain
+ 0 s:CN=localhost
+   i:CN=probe-ca
+   a:PKEY: ML-DSA-65, 15616 (bit); sigalg: ML-DSA-65
+   v:NotBefore: Nov  7 14:22:53 2026 GMT; NotAfter: Nov 14 14:22:53 2026 GMT
+---
+Server certificate
+-----BEGIN CERTIFICATE-----
+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
+================ log serwera Envoya (linie TLS)
+[2026-11-07 14:40:55.142][1][info][main] [source/server/server.cc:478]   envoy.tls.upstream_certificate_selectors: envoy.tls.certificate_selectors.dynamic_modules, envoy.tls.certificate_selectors.on_demand_secret
+[2026-11-07 14:40:55.142][1][info][main] [source/server/server.cc:478]   envoy.tls_handshakers: envoy.tls.handshakers.dynamic_modules
+[2026-11-07 14:40:55.142][1][info][main] [source/server/server.cc:478]   envoy.tls.upstream_certificate_mappers: envoy.tls.certificate_mappers.static_name, envoy.tls.upstream_certificate_mappers.filter_state_override
+[2026-11-07 14:40:55.142][1][info][main] [source/server/server.cc:478]   envoy.tls.certificate_selectors: envoy.tls.certificate_selectors.dynamic_modules, envoy.tls.certificate_selectors.on_demand_secret
+[2026-11-07 14:40:55.142][1][info][main] [source/server/server.cc:478]   envoy.tls.certificate_mappers: envoy.tls.certificate_mappers.sni, envoy.tls.certificate_mappers.static_name

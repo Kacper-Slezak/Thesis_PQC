@@ -1,0 +1,95 @@
+smoke: alg=ecdsa mode=full   2026-11-07T16:53:48Z
+k6: exit=0  http_reqs=725  http_req_failed=0.00%
+serwer: handshake=725  session_reused=0  curves(MLKEM768/wszystkie)=725/725
+klient: handshake=725
+bledy TLS (connection_error + fail_verify, oba sidecary)=0
+sigalgs: mldsa65=0  wszystkie=1450
+PASS/FAIL: traffic=PASS tls_wlaczony=PASS kex_pq=PASS sigalg=PASS bledy=PASS wznowienie=PASS
+--- delta licznikow SERWER (niezerowe)
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 725
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 725
+listener.0.0.0.0_15006.ssl.handshake: 725
+listener.0.0.0.0_15006.ssl.sigalgs.ecdsa_secp256r1_sha256: 725
+listener.0.0.0.0_15006.ssl.versions.TLSv1.3: 725
+--- delta licznikow KLIENT (niezerowe)
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.ciphers.TLS_AES_128_GCM_SHA256: 725
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.curves.X25519MLKEM768: 725
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.handshake: 725
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.sigalgs.ecdsa_secp256r1_sha256: 725
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.versions.TLSv1.3: 725
+--- wyjscie k6 (skrot)
+    http_req_duration..............: avg=4.5ms   min=2.45ms  med=4.47ms  max=7.27ms  p(90)=5.33ms  p(95)=5.56ms 
+    http_req_failed................: 0.00%  0 out of 725
+    http_reqs......................: 725    90.589764/s
+
+================ DIAGNOSTYKA
+### /certs w sidecarze klienta (co Envoy faktycznie zaladowal)
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+### /certs w sidecarze serwera
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+/etc/f4/rsa/ca.crt  serial=1bd91b8bc6416264533873c73a94722f7794f979  waznosc_dni=89  SAN=
+/etc/f4/rsa/tls.crt  serial=46c0b1061c05dadbbf42f8725fdc9fc1c3e0aa5d  waznosc_dni=89  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+### lancuchy filtrow serwera na porcie 8080 (virtualInbound)
+nazwa=0.0.0.0_8080 match={"destinationPort":8080,"transportProtocol":"raw_buffer"} transport_socket=envoy.transport_sockets.tls
+### klaster klienta -> httpbin (transport_socket)
+{
+  "name": "outbound|8000||httpbin.default.svc.cluster.local",
+  "transportSocket": "envoy.transport_sockets.tls",
+  "tls": {
+    "maxSessionKeys": 0,
+    "params": {
+      "tlsMinimumProtocolVersion": "TLSv1_3",
+      "tlsMaximumProtocolVersion": "TLSv1_3",
+      "ecdhCurves": [
+        "X25519MLKEM768"
+      ]
+    },
+    "certs": [
+      {
+        "certificateChain": {
+          "filename": "/etc/f4/ecdsa/tls.crt"
+        },
+        "privateKey": {
+          "filename": "[redacted]"
+        }
+      }
+    ],
+    "ca": {
+      "filename": "/etc/f4/ecdsa/ca.crt"
+    }
+  }
+}
+### istiod: bledy EnvoyFilter (ostatnie 5 min)
+2026-11-07T16:50:08.688766Z	info	validationController	Endpoint successfully rejected invalid config. Switching to fail-close.
+2026-11-07T16:50:48.168834Z	info	ads	Push debounce stable[25] 2 for config EnvoyFilter/default/pqc-cipher-suite-full-client and 1 more configs: 100.824769ms since last change, 110.707885ms since last push, forced=false
+2026-11-07T16:51:25.617331Z	info	ads	Push debounce stable[28] 2 for config EnvoyFilter/default/pqc-cipher-suite-full-client and 1 more configs: 100.247102ms since last change, 103.892406ms since last push, forced=false
+2026-11-07T16:51:25.831180Z	info	ads	Push debounce stable[29] 2 for config EnvoyFilter/default/pqc-cipher-suite-client and 1 more configs: 100.993307ms since last change, 107.605478ms since last push, forced=false
+2026-11-07T16:52:01.742762Z	info	ads	Push debounce stable[30] 2 for config EnvoyFilter/default/pqc-cipher-suite-client and 1 more configs: 100.935083ms since last change, 108.565466ms since last push, forced=false
+2026-11-07T16:52:02.031328Z	info	ads	Push debounce stable[31] 3 for config EnvoyFilter/default/f4-rsa-full-client and 2 more configs: 100.063378ms since last change, 206.206301ms since last push, forced=false
+2026-11-07T16:52:38.453079Z	info	ads	Push debounce stable[33] 2 for config EnvoyFilter/default/f4-rsa-full-client and 1 more configs: 100.111065ms since last change, 103.335326ms since last push, forced=false
+2026-11-07T16:52:38.285106Z	info	ads	Push debounce stable[34] 2 for config EnvoyFilter/default/f4-rsa-resumed-client and 1 more configs: 100.660042ms since last change, 107.725024ms since last push, forced=false
+2026-11-07T16:53:13.125770Z	info	ads	Push debounce stable[35] 2 for config EnvoyFilter/default/f4-rsa-resumed-client and 1 more configs: 100.073897ms since last change, 107.878047ms since last push, forced=false
+2026-11-07T16:53:13.482092Z	info	ads	Push debounce stable[36] 2 for config EnvoyFilter/default/f4-ecdsa-full-client and 1 more configs: 101.14696ms since last change, 109.143214ms since last push, forced=false
+### logi sidecarow (ostatnie 3 min, tylko TLS/blędy)
+-- k6-deploy-6b7fc485fc-c8qrz
+-- httpbin-7db4ddb44-xjltl
