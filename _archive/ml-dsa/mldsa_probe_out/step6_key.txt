@@ -1,0 +1,8 @@
+OpenSSL 3.5.9 29 Sep 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)
+rozmiar klucza przed/po (B):
+128 mldsa_srv.key
+5604 mldsa_srv.key.seed_priv.orig
+kontrola: klucz publiczny z klucza prywatnego == klucz publiczny z certyfikatu?
+SHA2-256(stdin)= 9eb00eba0ddfb2e9858e5e7774a67afa42ae94c14bbff5ee89a8fae84427dc81
+SHA2-256(stdin)= 9eb00eba0ddfb2e9858e5e7774a67afa42ae94c14bbff5ee89a8fae84427dc81
+ZGODNE

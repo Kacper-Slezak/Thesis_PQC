@@ -1,0 +1,28 @@
+=================== DestinationRule MUTUAL z plikami f4/rsa (sciezka przez pilot-agent/SDS)
+--- istioctl proxy-config secret (klient)
+RESOURCE NAME                                         TYPE           STATUS     VALID CERT     SERIAL NUMBER                                NOT AFTER                NOT BEFORE
+default                                               Cert Chain     ACTIVE     true           fcbb3127b553f54bde9e35dfe95b806c             2026-11-08T16:50:43Z     2026-11-07T16:48:43Z
+file-cert:/etc/f4/rsa/tls.crt~/etc/f4/rsa/tls.key     Cert Chain     ACTIVE     true           46c0b1061c05dadbbf42f8725fdc9fc1c3e0aa5e     2027-02-05T16:50:39Z     2026-11-07T16:50:39Z
+file-root:/etc/f4/rsa/ca.crt                          CA             ACTIVE     true           1bd91b8bc6416264533873c73a94722f7794f979     2027-02-05T16:50:39Z     2026-11-07T16:50:39Z
+ROOTCA                                                CA             ACTIVE     true           3642fb27737e6ede45d7ee6ac7395626             2036-11-04T16:50:05Z     2026-11-07T16:50:05Z
+--- log pilot-agenta (klient), ostatnie 3 min
+2026-11-07T16:55:38.813321Z	info	cache	adding watcher for symlink certificate /etc/f4/rsa/ca.crt -> /etc/f4/rsa/..data/ca.crt
+2026-11-07T16:55:38.813374Z	info	cache	read certificate from file	resource=file-root:/etc/f4/rsa/ca.crt
+2026-11-07T16:55:38.813643Z	info	cache	adding watcher for symlink certificate /etc/f4/rsa/tls.crt -> /etc/f4/rsa/..data/tls.crt
+2026-11-07T16:55:38.813691Z	info	cache	read certificate from file	resource=file-cert:/etc/f4/rsa/tls.crt~/etc/f4/rsa/tls.key
+=================== DestinationRule MUTUAL z plikami f4/mldsa (sciezka przez pilot-agent/SDS)
+--- istioctl proxy-config secret (klient)
+RESOURCE NAME                                             TYPE           STATUS      VALID CERT     SERIAL NUMBER                                NOT AFTER                NOT BEFORE
+file-cert:/etc/f4/mldsa/tls.crt~/etc/f4/mldsa/tls.key                    WARMING     false                                                                                
+default                                                   Cert Chain     ACTIVE      true           fcbb3127b553f54bde9e35dfe95b806c             2026-11-08T16:50:43Z     2026-11-07T16:48:43Z
+file-root:/etc/f4/mldsa/ca.crt                            CA             ACTIVE      true           2e7d7e6fae1f85b3f44a9f019180e4684e0afdc8     2027-02-05T16:50:40Z     2026-11-07T16:50:40Z
+ROOTCA                                                    CA             ACTIVE      true           3642fb27737e6ede45d7ee6ac7395626             2036-11-04T16:50:05Z     2026-11-07T16:50:05Z
+--- log pilot-agenta (klient), ostatnie 3 min
+2026-11-07T16:55:38.813321Z	info	cache	adding watcher for symlink certificate /etc/f4/rsa/ca.crt -> /etc/f4/rsa/..data/ca.crt
+2026-11-07T16:55:38.813374Z	info	cache	read certificate from file	resource=file-root:/etc/f4/rsa/ca.crt
+2026-11-07T16:55:38.813643Z	info	cache	adding watcher for symlink certificate /etc/f4/rsa/tls.crt -> /etc/f4/rsa/..data/tls.crt
+2026-11-07T16:55:38.813691Z	info	cache	read certificate from file	resource=file-cert:/etc/f4/rsa/tls.crt~/etc/f4/rsa/tls.key
+2026-11-07T16:55:59.655564Z	info	cache	adding watcher for symlink certificate /etc/f4/mldsa/ca.crt -> /etc/f4/mldsa/..data/ca.crt
+2026-11-07T16:55:59.655610Z	info	cache	read certificate from file	resource=file-root:/etc/f4/mldsa/ca.crt
+2026-11-07T16:56:08.440165Z	error	cache	resource:file-cert:/etc/f4/mldsa/tls.crt~/etc/f4/mldsa/tls.key failed to generate secret for proxy from file: context deadline exceeded with last error: tls: failed to parse private key
+2026-11-07T16:56:08.440644Z	warning	envoy config external/envoy/source/extensions/config_subscription/grpc/grpc_stream.h:189	StreamSecrets gRPC config stream to sds-grpc closed: 2, failed to generate secret for file-cert:/etc/f4/mldsa/tls.crt~/etc/f4/mldsa/tls.key: context deadline exceeded with last error: tls: failed to parse private key{via_upstream}	thread=14

@@ -104,7 +104,7 @@ echo "Waiting for backend service to be ready and k6"
 
 check_rollout() {
   local deploy=$1 app=$2
-  if ! kubectl rollout status "deployment/$deploy" -n default --timeout=240s; then
+  if ! kubectl rollout status "deployment/$deploy" -n default --timeout=600s; then
     echo "Deploy rollout timed out. Diagnostics"
     kubectl get pods -n default -l "app=$app" -o wide
     kubectl describe pods -n default -l "app=$app" | tail -40

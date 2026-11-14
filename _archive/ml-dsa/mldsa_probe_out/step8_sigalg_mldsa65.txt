@@ -1,0 +1,70 @@
+== krok 1: czy oba Envoye żyją? (powinny być dwa razy LIVE)
+HTTP/1.1 200 OK
+content-type: text/plain; charset=UTF-8
+cache-control: no-cache, max-age=0
+x-content-type-options: nosniff
+date: Sat, 07 Nov 2026 15:51:10 GMT
+server: envoy
+connection: close
+transfer-encoding: chunked
+
+5
+LIVE
+
+0
+
+HTTP/1.1 200 OK
+content-type: text/plain; charset=UTF-8
+cache-control: no-cache, max-age=0
+x-content-type-options: nosniff
+date: Sat, 07 Nov 2026 15:51:10 GMT
+server: envoy
+connection: close
+transfer-encoding: chunked
+
+5
+LIVE
+
+0
+
+== krok 2: żądanie przez klienta (HTTP -> TLS -> serwer)
+HTTP/1.1 200 OK
+content-length: 3
+content-type: text/plain
+date: Sat, 07 Nov 2026 15:51:10 GMT
+server: envoy
+x-envoy-upstream-service-time: 4
+connection: close
+
+ok
+== statystyki TLS serwera (tylko niezerowe)
+listener.127.0.0.1_18443.ssl.curves.X25519MLKEM768: 1
+listener.127.0.0.1_18443.ssl.handshake: 1
+listener.127.0.0.1_18443.ssl.versions.TLSv1.3: 1
+== statystyki TLS klienta (tylko niezerowe)
+cluster.pq_srv.ssl.curves.X25519MLKEM768: 1
+cluster.pq_srv.ssl.handshake: 1
+cluster.pq_srv.ssl.sigalgs.mldsa65: 1
+cluster.pq_srv.ssl.versions.TLSv1.3: 1
+== logi (pierwsze linie)
+[2026-11-07 15:51:05.727][7][info][main] [source/server/server.cc:474] initializing epoch 0 (base id=0, hot restart version=disabled)
+[2026-11-07 15:51:05.728][7][info][main] [source/server/server.cc:476] statically linked extensions:
+[2026-11-07 15:51:05.728][7][info][main] [source/server/server.cc:478]   envoy.config_mux: envoy.config_mux.delta_grpc_mux_factory, envoy.config_mux.grpc_mux_factory, envoy.config_mux.new_grpc_mux_factory, envoy.config_mux.sotw_grpc_mux_factory
+[2026-11-07 15:51:05.728][7][info][main] [source/server/server.cc:478]   envoy.queue_policy: envoy.queue_policy.adaptive_lifo, envoy.queue_policy.fifo
+[2026-11-07 15:51:05.727][8][info][main] [source/server/server.cc:474] initializing epoch 0 (base id=0, hot restart version=disabled)
+[2026-11-07 15:51:05.728][8][info][main] [source/server/server.cc:476] statically linked extensions:
+[2026-11-07 15:51:05.728][8][info][main] [source/server/server.cc:478]   envoy.config_mux: envoy.config_mux.delta_grpc_mux_factory, envoy.config_mux.grpc_mux_factory, envoy.config_mux.new_grpc_mux_factory, envoy.config_mux.sotw_grpc_mux_factory
+[2026-11-07 15:51:05.728][8][info][main] [source/server/server.cc:478]   envoy.queue_policy: envoy.queue_policy.adaptive_lifo, envoy.queue_policy.fifo
+== krytyczne błędy / odmowy startu (jeśli są)
+== logi serwera: linie o TLS/SSL (sensowne przy LOGLVL=debug)
+[2026-11-07 15:51:05.728][7][info][main] [source/server/server.cc:478]   envoy.tls.upstream_certificate_selectors: envoy.tls.certificate_selectors.dynamic_modules, envoy.tls.certificate_selectors.on_demand_secret
+[2026-11-07 15:51:05.728][7][info][main] [source/server/server.cc:478]   envoy.tls_handshakers: envoy.tls.handshakers.dynamic_modules
+[2026-11-07 15:51:05.728][7][info][main] [source/server/server.cc:478]   envoy.tls.upstream_certificate_mappers: envoy.tls.certificate_mappers.static_name, envoy.tls.upstream_certificate_mappers.filter_state_override
+[2026-11-07 15:51:05.728][7][info][main] [source/server/server.cc:478]   envoy.tls.certificate_selectors: envoy.tls.certificate_selectors.dynamic_modules, envoy.tls.certificate_selectors.on_demand_secret
+[2026-11-07 15:51:05.729][7][info][main] [source/server/server.cc:478]   envoy.tls.certificate_mappers: envoy.tls.certificate_mappers.sni, envoy.tls.certificate_mappers.static_name
+== logi klienta: linie o TLS/SSL
+[2026-11-07 15:51:05.728][8][info][main] [source/server/server.cc:478]   envoy.tls.upstream_certificate_selectors: envoy.tls.certificate_selectors.dynamic_modules, envoy.tls.certificate_selectors.on_demand_secret
+[2026-11-07 15:51:05.728][8][info][main] [source/server/server.cc:478]   envoy.tls_handshakers: envoy.tls.handshakers.dynamic_modules
+[2026-11-07 15:51:05.728][8][info][main] [source/server/server.cc:478]   envoy.tls.upstream_certificate_mappers: envoy.tls.certificate_mappers.static_name, envoy.tls.upstream_certificate_mappers.filter_state_override
+[2026-11-07 15:51:05.728][8][info][main] [source/server/server.cc:478]   envoy.tls.certificate_selectors: envoy.tls.certificate_selectors.dynamic_modules, envoy.tls.certificate_selectors.on_demand_secret
+[2026-11-07 15:51:05.729][8][info][main] [source/server/server.cc:478]   envoy.tls.certificate_mappers: envoy.tls.certificate_mappers.sni, envoy.tls.certificate_mappers.static_name

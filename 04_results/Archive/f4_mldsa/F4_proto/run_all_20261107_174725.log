@@ -1,0 +1,7 @@
+
+######## 2026-11-07 17:47:25  SPRAWDZENIE ŚRODOWISKA
+
+!!!!!!!! istioctl to '1.30.2', a potrzebny 1.31.4
+  curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.31.4 TARGET_ARCH=x86_64 sh -
+  export PATH=$PWD/istio-1.31.4/bin:$PATH
+Log: 04_results/F4_proto/run_all_20261107_174725.log

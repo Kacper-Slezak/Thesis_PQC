@@ -1,0 +1,15 @@
+/etc/f4/ecdsa
+total 12
+-rw-r--r-- 1 root root 591 Nov  7 16:50 ca.crt
+-rw-r--r-- 1 root root 745 Nov  7 16:50 tls.crt
+-rw-r--r-- 1 root root 241 Nov  7 16:50 tls.key
+/etc/f4/mldsa
+total 20
+-rw-r--r-- 1 root root 7534 Nov  7 16:50 ca.crt
+-rw-r--r-- 1 root root 7684 Nov  7 16:50 tls.crt
+-rw-r--r-- 1 root root  128 Nov  7 16:50 tls.key
+/etc/f4/rsa
+total 12
+-rw-r--r-- 1 root root 1127 Nov  7 16:50 ca.crt
+-rw-r--r-- 1 root root 1281 Nov  7 16:50 tls.crt
+-rw-r--r-- 1 root root 1704 Nov  7 16:50 tls.key

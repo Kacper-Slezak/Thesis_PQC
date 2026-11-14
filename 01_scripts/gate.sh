@@ -4,11 +4,11 @@
 #
 #   gate_session  : once per session - warm up under load, then GATE_SESSION_N canary windows
 #                   must all lie within +-GATE_PCT of their median and have CV <= GATE_CV_PCT
-#   gate_enter    : canary before a block, within +-GATE_PCT of the reference for this
-#                   (rate, mrpc) in this session (median of accepted entry canaries)
+#   gate_enter    : canary before a block; only records the deviation from the reference for
+#                   this (rate, mrpc) in this session (machine state), does not wait
 #   gate_exit     : canary after a block, within +-GATE_PCT of the entry canary
-# Waiting is bounded (GATE_SESSION_MAX_S, GATE_BLOCK_MAX_S); after that the run goes on and
-# the block is flagged, so a 2-day campaign never stalls.
+# A block whose exit canary is off is measured again right away (run_sweeps.sh). Session gate
+# waiting is bounded by GATE_SESSION_MAX_S, so a 2-day campaign never stalls.
 #
 # Sourced by run_sweeps.sh after lib_setups.sh. Needs: K6_POD, HTTPBIN_POD, K6_SCRIPT, WARM_S,
 # STEADY_S, DURATION, SESSION, OUT, warmup(), optional TARGET_URL.
@@ -17,7 +17,6 @@ GATE="${GATE:-1}"                                  # 0 = no gate at all
 GATE_PCT="${GATE_PCT:-5}"                          # allowed deviation [%]
 GATE_CV_PCT="${GATE_CV_PCT:-3}"                    # session gate: max coefficient of variation [%]
 GATE_WAIT_S="${GATE_WAIT_S:-120}"                  # pause before measuring again [s]
-GATE_BLOCK_MAX_S="${GATE_BLOCK_MAX_S:-1800}"       # block entry: give up after [s]
 GATE_SESSION="${GATE_SESSION:-1}"                  # 0 = skip the session gate
 GATE_SESSION_WARM_S="${GATE_SESSION_WARM_S:-600}"  # session gate: warm-up under load [s]
 GATE_SESSION_N="${GATE_SESSION_N:-5}"              # session gate: canary windows per try
@@ -105,33 +104,27 @@ gate_session() {
   done
 }
 
-# Sets GATE_ENTRY (off|first|ok|timeout), GATE_ENTRY_DEV, GATE_ENTRY_US
+# Entry canary: records the machine state before the block, never waits.
+# The pilot (04_results/Pilot_turbo_20261110) showed two persistent machine levels ~25% apart,
+# lasting hours, so waiting for a cross-block reference only cost time. What matters for the
+# paired comparison is that the whole block runs in one state, which gate_exit checks.
+# Sets GATE_ENTRY (off|first|ok|shifted), GATE_ENTRY_DEV (vs. this session's reference), GATE_ENTRY_US
 gate_enter() {
   local run=$1 block=$2 combo=$3 rate=$4 mrpc=$5
   GATE_ENTRY=off GATE_ENTRY_DEV="" GATE_ENTRY_US=""
   [ "$GATE" = 1 ] || return 0
-  local ref glob dev dg start=$SECONDS try=0
+  local ref glob dev dg=""
   ref=$(gate_ref "$combo" "$SESSION")
   glob=$(gate_ref "$combo" "")
-  while :; do
-    try=$(( try + 1 ))
-    canary_window "$rate" "$mrpc"
-    dg=""; [ -n "$glob" ] && dg=$(dev_pct "$CANARY_US" "$glob")
-    if [ -z "$ref" ]; then
-      GATE_ENTRY=first; dev=0.00
-    else
-      dev=$(dev_pct "$CANARY_US" "$ref")
-      if within "$dev" "$GATE_PCT"; then GATE_ENTRY=ok
-      elif [ $(( SECONDS - start )) -ge "$GATE_BLOCK_MAX_S" ]; then GATE_ENTRY=timeout
-      else
-        gate_log "$run" "$block" enter "$try" "$rate" "$mrpc" "$ref" "$dev" "$dg" wait "$CANARY_CALIB"
-        echo "    gate: canary ${dev}% from reference, waiting ${GATE_WAIT_S}s"
-        sleep "$GATE_WAIT_S"; continue
-      fi
-    fi
-    break
-  done
-  gate_log "$run" "$block" enter "$try" "$rate" "$mrpc" "$ref" "$dev" "$dg" "$GATE_ENTRY" "$CANARY_CALIB"
+  canary_window "$rate" "$mrpc"
+  [ -n "$glob" ] && dg=$(dev_pct "$CANARY_US" "$glob")
+  if [ -z "$ref" ]; then
+    GATE_ENTRY=first; dev=0.00
+  else
+    dev=$(dev_pct "$CANARY_US" "$ref")
+    if within "$dev" "$GATE_PCT"; then GATE_ENTRY=ok; else GATE_ENTRY=shifted; fi
+  fi
+  gate_log "$run" "$block" enter 1 "$rate" "$mrpc" "$ref" "$dev" "$dg" "$GATE_ENTRY" "$CANARY_CALIB"
   GATE_ENTRY_DEV=$dev GATE_ENTRY_US=$CANARY_US
   if [ "$GATE_ENTRY" = first ] || [ "$GATE_ENTRY" = ok ]; then
     echo "$SESSION,$combo,$CANARY_US" >> "$GATE_REF"

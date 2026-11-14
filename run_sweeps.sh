@@ -9,7 +9,7 @@
 # Every mode measures in blocks: block = one (rate, mrpc) point with all setups in random
 # order, framed by the stability gate (01_scripts/gate.sh; GATE=0 turns it off). A block whose
 # exit canary is off is kept in the CSV as block_status=rejected and measured again.
-# Finished blocks go to Summary/done_blocks.txt, so a restarted script skips them.
+# Finished blocks go to $OUT/done_blocks.txt, so a restarted script skips them.
 #
 # Example:
 #   N_RUNS=10 RATES="200" ./run_sweeps.sh handshake plaintext mtls1.3-x25519 mtls1.3-x25519-full mtls1.3-postquantum-full
@@ -29,10 +29,12 @@ MRPC_RATE="${MRPC_RATE:-200}"      # mrpc mode: target rate [req/s]
 SESSION="${SESSION:-1}"            # session ID
 BLOCK_RETRIES="${BLOCK_RETRIES:-2}" # extra attempts for a block rejected by the exit gate
 EXCLUDE="${EXCLUDE-300:1 400:1}"   # grid mode: rate:mrpc points to skip (overloaded in F3)
+CALIB_MIN="${CALIB_MIN:-0}"        # before each block wait while calib_ms < this [ms] (turbo back on); 0 = off
+CALIB_WAIT_MAX_S="${CALIB_WAIT_MAX_S:-7200}"  # give up (exit 1) after waiting this long [s]
 
 STEADY_S=$(( DURATION - WARM_S - COOL_S ))   # measurement window duration
 K6_SCRIPT=./03_test_scripts/main_k6_scenarios.js
-OUT=./04_results/Summary
+OUT="${OUT_DIR:-./04_results/Summary}"   # results directory (CSV files are appended)
 CSV=$OUT/sweeps.csv
 DONE=$OUT/done_blocks.txt
 ROWS=$OUT/.block_rows.tmp
@@ -106,6 +108,23 @@ combos() {
   esac
 }
 
+# Turbo guard: Windows can switch turbo back on mid-session (s3, 2026-11-12: calib ~166 ms
+# for the whole session although 383 ms at start). Wait before a block until calib_ms is back.
+calib_guard() {
+  [ "$CALIB_MIN" != 0 ] || return 0
+  local start=$SECONDS c
+  while :; do
+    c=$(for i in 1 2 3; do calib_ms; done | sort -g | sed -n 2p)
+    awk -v c="$c" -v m="$CALIB_MIN" 'BEGIN { exit !(c >= m) }' && return 0
+    if [ $(( SECONDS - start )) -ge "$CALIB_WAIT_MAX_S" ]; then
+      echo "!!! calib_ms=$c ms < $CALIB_MIN ms for ${CALIB_WAIT_MAX_S}s: turbo still on, stopping" >&2
+      exit 1
+    fi
+    echo "!!! $(date '+%F %T') calib_ms=$c ms < $CALIB_MIN ms: turbo looks ON, run stabilize.ps1; waiting"
+    sleep 60
+  done
+}
+
 # One block: entry gate, all setups in random order, exit gate; repeated when rejected
 run_block() {
   local run=$1 combo=$2 rate=${2%%:*} mrpc=${2##*:} prefix attempt status
@@ -115,6 +134,7 @@ run_block() {
   while :; do
     attempt=$(( attempt + 1 ))
     local block="${prefix}_a${attempt}" setup
+    calib_guard
     echo "=== block $block ($(date '+%F %T')) ==="
     gate_enter "$run" "$block" "$combo" "$rate" "$mrpc"
     : > "$ROWS"

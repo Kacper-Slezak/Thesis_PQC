@@ -1,0 +1,98 @@
+Unable to find image 'envoyproxy/envoy:v1.40-latest' locally
+v1.40-latest: Pulling from envoyproxy/envoy
+4f4fb700ef54: Pulling fs layer
+347b6fcff69a: Pulling fs layer
+b1685d53c571: Pulling fs layer
+16f746176d10: Pulling fs layer
+6439c78c1744: Pulling fs layer
+24f018f26592: Pulling fs layer
+ae6cb4c3bd4a: Pulling fs layer
+0b33c1ebbdcc: Pulling fs layer
+4f4fb700ef54: Already exists
+4f4fb700ef54: Pull complete
+347b6fcff69a: Download complete
+6439c78c1744: Download complete
+24f018f26592: Download complete
+ae6cb4c3bd4a: Download complete
+0b33c1ebbdcc: Download complete
+16f746176d10: Download complete
+24f018f26592: Pull complete
+ae6cb4c3bd4a: Pull complete
+0b33c1ebbdcc: Pull complete
+347b6fcff69a: Pull complete
+6439c78c1744: Pull complete
+16f746176d10: Pull complete
+b1685d53c571: Download complete
+b1685d53c571: Pull complete
+Digest: sha256:8de97e654644827d62afdbf7e1d3dc9fee01a8690d410dd1c63a30dc6b6cecbb
+Status: Downloaded newer image for envoyproxy/envoy:v1.40-latest
+== krok 1: czy oba Envoye żyją? (powinny być dwa razy LIVE)
+HTTP/1.1 200 OK
+content-type: text/plain; charset=UTF-8
+cache-control: no-cache, max-age=0
+x-content-type-options: nosniff
+date: Sat, 07 Nov 2026 16:21:41 GMT
+server: envoy
+connection: close
+transfer-encoding: chunked
+
+5
+LIVE
+
+0
+
+HTTP/1.1 200 OK
+content-type: text/plain; charset=UTF-8
+cache-control: no-cache, max-age=0
+x-content-type-options: nosniff
+date: Sat, 07 Nov 2026 16:21:41 GMT
+server: envoy
+connection: close
+transfer-encoding: chunked
+
+5
+LIVE
+
+0
+
+== krok 2: żądanie przez klienta (HTTP -> TLS -> serwer)
+HTTP/1.1 200 OK
+content-length: 3
+content-type: text/plain
+date: Sat, 07 Nov 2026 16:21:41 GMT
+server: envoy
+x-envoy-upstream-service-time: 1
+connection: close
+
+ok
+== statystyki TLS serwera (tylko niezerowe)
+listener.127.0.0.1_18443.ssl.curves.X25519MLKEM768: 1
+listener.127.0.0.1_18443.ssl.handshake: 1
+listener.127.0.0.1_18443.ssl.versions.TLSv1.3: 1
+== statystyki TLS klienta (tylko niezerowe)
+cluster.pq_srv.ssl.curves.X25519MLKEM768: 1
+cluster.pq_srv.ssl.handshake: 1
+cluster.pq_srv.ssl.sigalgs.mldsa65: 1
+cluster.pq_srv.ssl.versions.TLSv1.3: 1
+== logi (pierwsze linie)
+[2026-11-07 16:21:36.575][7][info][main] [source/server/server.cc:463] initializing epoch 0 (base id=0, hot restart version=disabled)
+[2026-11-07 16:21:36.575][7][info][main] [source/server/server.cc:465] statically linked extensions:
+[2026-11-07 16:21:36.575][7][info][main] [source/server/server.cc:467]   envoy.upstreams: envoy.filters.connection_pools.tcp.generic
+[2026-11-07 16:21:36.575][7][info][main] [source/server/server.cc:467]   envoy.clusters: envoy.cluster.dns, envoy.cluster.eds, envoy.cluster.logical_dns, envoy.cluster.original_dst, envoy.cluster.static, envoy.cluster.strict_dns, envoy.clusters.aggregate, envoy.clusters.composite, envoy.clusters.dynamic_forward_proxy, envoy.clusters.dynamic_modules, envoy.clusters.mcp_multicluster, envoy.clusters.redis, envoy.clusters.reverse_connection
+[2026-11-07 16:21:36.577][8][info][main] [source/server/server.cc:463] initializing epoch 0 (base id=0, hot restart version=disabled)
+[2026-11-07 16:21:36.577][8][info][main] [source/server/server.cc:465] statically linked extensions:
+[2026-11-07 16:21:36.577][8][info][main] [source/server/server.cc:467]   envoy.upstreams: envoy.filters.connection_pools.tcp.generic
+[2026-11-07 16:21:36.577][8][info][main] [source/server/server.cc:467]   envoy.clusters: envoy.cluster.dns, envoy.cluster.eds, envoy.cluster.logical_dns, envoy.cluster.original_dst, envoy.cluster.static, envoy.cluster.strict_dns, envoy.clusters.aggregate, envoy.clusters.composite, envoy.clusters.dynamic_forward_proxy, envoy.clusters.dynamic_modules, envoy.clusters.mcp_multicluster, envoy.clusters.redis, envoy.clusters.reverse_connection
+== krytyczne błędy / odmowy startu (jeśli są)
+== logi serwera: linie o TLS/SSL (sensowne przy LOGLVL=debug)
+[2026-11-07 16:21:36.575][7][info][main] [source/server/server.cc:467]   envoy.tls.upstream_certificate_mappers: envoy.tls.certificate_mappers.static_name, envoy.tls.upstream_certificate_mappers.filter_state_override
+[2026-11-07 16:21:36.575][7][info][main] [source/server/server.cc:467]   envoy.tls.certificate_mappers: envoy.tls.certificate_mappers.sni, envoy.tls.certificate_mappers.static_name
+[2026-11-07 16:21:36.575][7][info][main] [source/server/server.cc:467]   envoy.tls_handshakers: envoy.tls.handshakers.dynamic_modules
+[2026-11-07 16:21:36.575][7][info][main] [source/server/server.cc:467]   envoy.tls.certificate_selectors: envoy.tls.certificate_selectors.on_demand_secret
+[2026-11-07 16:21:36.575][7][info][main] [source/server/server.cc:467]   envoy.tls.upstream_certificate_selectors: envoy.tls.certificate_selectors.on_demand_secret
+== logi klienta: linie o TLS/SSL
+[2026-11-07 16:21:36.577][8][info][main] [source/server/server.cc:467]   envoy.tls.upstream_certificate_mappers: envoy.tls.certificate_mappers.static_name, envoy.tls.upstream_certificate_mappers.filter_state_override
+[2026-11-07 16:21:36.577][8][info][main] [source/server/server.cc:467]   envoy.tls.certificate_mappers: envoy.tls.certificate_mappers.sni, envoy.tls.certificate_mappers.static_name
+[2026-11-07 16:21:36.577][8][info][main] [source/server/server.cc:467]   envoy.tls_handshakers: envoy.tls.handshakers.dynamic_modules
+[2026-11-07 16:21:36.577][8][info][main] [source/server/server.cc:467]   envoy.tls.certificate_selectors: envoy.tls.certificate_selectors.on_demand_secret
+[2026-11-07 16:21:36.577][8][info][main] [source/server/server.cc:467]   envoy.tls.upstream_certificate_selectors: envoy.tls.certificate_selectors.on_demand_secret

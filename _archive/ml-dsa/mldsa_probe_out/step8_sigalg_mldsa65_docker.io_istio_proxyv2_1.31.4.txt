@@ -1,0 +1,28 @@
+== krok 1: czy oba Envoye żyją? (powinny być dwa razy LIVE)
+LIVE
+LIVE
+== krok 2: żądanie przez klienta (HTTP -> TLS -> serwer)
+ok
+
+HTTP 200
+== statystyki TLS serwera (tylko niezerowe)
+listener.127.0.0.1_18443.ssl.curves.X25519MLKEM768: 1
+listener.127.0.0.1_18443.ssl.handshake: 1
+listener.127.0.0.1_18443.ssl.versions.TLSv1.3: 1
+== statystyki TLS klienta (tylko niezerowe)
+cluster.pq_srv.ssl.curves.X25519MLKEM768: 1
+cluster.pq_srv.ssl.handshake: 1
+cluster.pq_srv.ssl.sigalgs.mldsa65: 1
+cluster.pq_srv.ssl.versions.TLSv1.3: 1
+== logi (pierwsze linie)
+[2026-11-07 16:21:26.288][7][info][main] [external/envoy/source/server/server.cc:467] initializing epoch 0 (base id=0, hot restart version=disabled)
+[2026-11-07 16:21:26.288][7][info][main] [external/envoy/source/server/server.cc:469] statically linked extensions:
+[2026-11-07 16:21:26.288][7][info][main] [external/envoy/source/server/server.cc:471]   envoy.retry_priorities: envoy.retry_priorities.previous_priorities
+[2026-11-07 16:21:26.288][7][info][main] [external/envoy/source/server/server.cc:471]   envoy.string_matcher: envoy.string_matcher.lua
+[2026-11-07 16:21:26.288][8][info][main] [external/envoy/source/server/server.cc:467] initializing epoch 0 (base id=0, hot restart version=disabled)
+[2026-11-07 16:21:26.288][8][info][main] [external/envoy/source/server/server.cc:469] statically linked extensions:
+[2026-11-07 16:21:26.288][8][info][main] [external/envoy/source/server/server.cc:471]   envoy.retry_priorities: envoy.retry_priorities.previous_priorities
+[2026-11-07 16:21:26.288][8][info][main] [external/envoy/source/server/server.cc:471]   envoy.string_matcher: envoy.string_matcher.lua
+== krytyczne błędy / odmowy startu (jeśli są)
+== logi serwera: linie o TLS/SSL (sensowne przy LOGLVL=debug)
+== logi klienta: linie o TLS/SSL
