@@ -1,0 +1,14 @@
+setup:        mtls1.3-default
+date:         2026-11-15T06:20:57Z
+k6_exit:      0
+k6:            http_req_failed................: 0.00% 0 out of 10722; http_reqs......................: 10722 1353.582349/s;
+client_config: SKIP (no client TLS configuration expected)
+client_tls:    no matching TLS fields
+stats_lines:  before=583 after=592
+diagnosis:    ok
+--- delta (after - before, non-zero only) ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5
+--- cumulative after ---
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 5
+listener.0.0.0.0_15006.ssl.curves.X25519: 5

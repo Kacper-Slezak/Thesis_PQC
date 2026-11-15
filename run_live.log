@@ -1,0 +1,35 @@
+=== monitoring on
+deployment.apps/prometheus scaled
+deployment.apps/grafana scaled
+deployment.apps/kiali scaled
+deployment "prometheus" successfully rolled out
+deployment "grafana" successfully rolled out
+2026/11/15 10:18:35 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to 04_results/Live_20261115_1118/environment.txt
+=== k6: 200 req/s for 1860s (mrpc=1 per phase), 6 phases x 300s
+--- 11:19:31 phase 1: plaintext
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- 11:24:48 phase 2: mtls1.3-x25519-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- 11:30:07 phase 3: mtls1.3-postquantum-full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- 11:35:24 phase 4: mtls1.3-x25519
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- 11:40:42 phase 5: mtls1.3-postquantum
+--- 11:45:59 phase 6: plaintext
+=== export from Prometheus
+  cpu: success 2 series
+  memory: success 6 series
+  envoy_alloc: success 2 series
+  rps: success 1 series
+  p50: success 1 series
+  p99: success 1 series
+  handshakes: success 1 series
+  reused: success 1 series
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+KeyError: 'data'
+  curves: 
+  mtls: success 2 series
+Done: 04_results/Live_20261115_1118  (plots: .venv/bin/python -I 05_analytics/plot_live.py 04_results/Live_20261115_1118)
+Grafana is still running for screenshots; afterwards: ./01_scripts/quiet_mode.sh on
