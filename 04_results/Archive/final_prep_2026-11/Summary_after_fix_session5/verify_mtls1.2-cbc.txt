@@ -1,7 +1,7 @@
 setup:        mtls1.2-cbc
-date:         2026-11-15T06:22:18Z
+date:         2026-11-15T13:43:06Z
 k6_exit:      0
-k6:            http_req_failed................: 0.00% 0 out of 11694; http_reqs......................: 11694 1461.132547/s;
+k6:            http_req_failed................: 0.00% 0 out of 12710; http_reqs......................: 12710 1891.249326/s;
 client_config: PASS (ok)
 client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-AES128-SHA256";
 stats_lines:  before=596 after=597

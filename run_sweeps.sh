@@ -29,6 +29,7 @@ MRPC_RATE="${MRPC_RATE:-200}"      # mrpc mode: target rate [req/s]
 SESSION="${SESSION:-1}"            # session ID
 BLOCK_RETRIES="${BLOCK_RETRIES:-2}" # extra attempts for a block rejected by the exit gate
 EXCLUDE="${EXCLUDE-300:1 400:1}"   # grid mode: rate:mrpc points to skip (overloaded in F3)
+ONLY="${ONLY:-}"                   # grid mode: measure only these rate:mrpc points (re-measured blocks)
 CALIB_MIN="${CALIB_MIN:-0}"        # before each block wait while calib_ms < this [ms] (turbo back on); 0 = off
 CALIB_WAIT_MAX_S="${CALIB_WAIT_MAX_S:-7200}"  # give up (exit 1) after waiting this long [s]
 
@@ -101,7 +102,9 @@ combos() {
   local r m
   case $MODE in
     grid)      for r in $RATES; do for m in $MRPCS; do
-                 case " $EXCLUDE " in *" $r:$m "*) ;; *) echo "$r:$m" ;; esac
+                 case " $EXCLUDE " in *" $r:$m "*) continue ;; esac
+                 [ -z "$ONLY" ] || case " $ONLY " in *" $r:$m "*) ;; *) continue ;; esac
+                 echo "$r:$m"
                done; done ;;
     mrpc)      for m in $MRPCS; do echo "$MRPC_RATE:$m"; done ;;
     handshake) for r in $RATES; do echo "$r:1"; done ;;
@@ -120,7 +123,7 @@ calib_guard() {
       echo "!!! calib_ms=$c ms < $CALIB_MIN ms for ${CALIB_WAIT_MAX_S}s: turbo still on, stopping" >&2
       exit 1
     fi
-    echo "!!! $(date '+%F %T') calib_ms=$c ms < $CALIB_MIN ms: turbo looks ON, run stabilize.ps1; waiting"
+    echo "!!! $(date '+%F %T') calib_ms=$c ms < $CALIB_MIN ms: turbo looks ON, run 01_scripts/windows/stabilize_windows.ps1; waiting"
     sleep 60
   done
 }

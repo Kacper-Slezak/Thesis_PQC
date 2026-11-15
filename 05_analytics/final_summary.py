@@ -10,6 +10,7 @@ and reported; the tables show mean over all runs and the median as a robust chec
 Usage: python3 -I 05_analytics/final_summary.py [04_results/Final_grid] [extra_dir_for_turbo_check]
 """
 import csv
+import os
 import statistics as st
 import sys
 from collections import Counter, defaultdict
@@ -19,12 +20,41 @@ X, XF, PQ, PQF, PL = ("mtls1.3-x25519", "mtls1.3-x25519-full", "mtls1.3-postquan
                       "mtls1.3-postquantum-full", "plaintext")
 
 
-def load(d):
+def load(d, replace=True):
+    """-> (ok rows, blocks); blocks: (session, run, rate, mrpc) -> setup -> row.
+    replacements.csv (orig_session,orig_run,rate,mrpc,repl_session,repl_run) maps a re-measured
+    block onto the key of the block it replaces; with replace=False the originals are returned."""
     rows = [r for r in csv.DictReader(open(f"{d}/sweeps.csv")) if r["block_status"] == "ok"]
-    blocks = defaultdict(dict)                       # (session, run, rate, mrpc) -> setup -> row
+    blocks = defaultdict(dict)
     for r in rows:
         blocks[(r["session"], r["run"], int(r["rate_target"]), int(r["mrpc"]))][r["setup"]] = r
+    path = f"{d}/replacements.csv"
+    repl_keys = set()
+    if os.path.exists(path):
+        for m in csv.DictReader(open(path)):
+            new = (m["repl_session"], m["repl_run"], int(m["rate"]), int(m["mrpc"]))
+            old = (m["orig_session"], m["orig_run"], int(m["rate"]), int(m["mrpc"]))
+            repl_keys.add(new)
+            if replace and new in blocks:
+                blocks[old] = blocks[new]
+    for k in repl_keys:                              # replacement blocks never count as runs of their own
+        blocks.pop(k, None)
+    blocks = {k: dict(v, _key=k) for k, v in blocks.items()}   # every block knows its own key
     return rows, blocks
+
+
+def hs_cost(blocks, b, a, ref, val=lambda r: float(r["cpu_per_req_us"])):
+    """CPU per handshake [us] of setup a over setup ref in block b (mrpc = m):
+        [(a - ref)(m) - (a - ref)(keep-alive)] * m
+    The keep-alive block of the same run and offered load removes the per-request part of the
+    difference (record encryption, ~140 us/request for TLS vs plaintext), which would otherwise
+    be multiplied by m. With ref = plaintext this is the cost of one TLS handshake; with
+    ref = X25519 it is the post-quantum add-on per handshake. None if no keep-alive partner."""
+    s, r, rate, m = b["_key"]
+    ka = blocks.get((s, r, rate, 0))
+    if m == 0 or ka is None:
+        return None
+    return ((val(b[a]) - val(b[ref])) - (val(ka[a]) - val(ka[ref]))) * m
 
 
 def f(r, k):
@@ -100,15 +130,16 @@ def table_pct(blocks, pairs, drop=frozenset(), title=""):
 
 
 def table_handshake_cost(blocks, drop):
-    """CPU per handshake [us] = (setup - plaintext) per request x requests per handshake (mrpc)."""
-    print("## Cost of one handshake (both sidecars) [us] = (TLS - plaintext) x mrpc, mean ± 95% CI")
+    """CPU per handshake [us], see hs_cost()."""
+    print("## Cost of one handshake (both sidecars) [us] = [(TLS - plaintext)(mrpc) - (TLS - plaintext)(keep-alive)] x mrpc,"
+          " mean ± 95% CI")
     print(f"{'point':>8} | {'X25519 full':>14} | {'PQ full':>14} | {'PQ - X full':>12} | {'X resumed':>14} | {'PQ resumed':>14} | {'PQ - X res':>12}")
     for p in points(blocks):
         if p[1] == 0:
             continue
         ks = [k for k in blocks if k[2:] == p and k not in drop]
-        c = lambda s: [(f(blocks[k][s], "cpu_per_req_us") - f(blocks[k][PL], "cpu_per_req_us")) * p[1] for k in ks]
-        d = lambda a, b: [(f(blocks[k][a], "cpu_per_req_us") - f(blocks[k][b], "cpu_per_req_us")) * p[1] for k in ks]
+        c = lambda s: [v for k in ks if (v := hs_cost(blocks, blocks[k], s, PL)) is not None]
+        d = lambda a, b: [v for k in ks if (v := hs_cost(blocks, blocks[k], a, b)) is not None]
         cells = [ci(c(XF)), ci(c(PQF)), ci(d(PQF, XF)), ci(c(X)), ci(c(PQ)), ci(d(PQ, X))]
         print(f"{label(p):>8} | " + " | ".join(f"{m:7.0f} ±{h:4.0f}" for m, h in cells))
     print()

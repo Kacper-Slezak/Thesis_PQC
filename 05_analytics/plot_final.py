@@ -27,7 +27,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from final_summary import PL, PQ, PQF, T95, X, XF, load, outliers  # noqa: E402
+from final_summary import PL, PQ, PQF, T95, X, XF, hs_cost, load, outliers  # noqa: E402
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--grid", default="04_results/Final_grid")
@@ -253,21 +253,21 @@ def fig_handshake_cost():
     for j, (s, lab) in enumerate(bars):
         _, c, ls, _ = STYLE[s]
         for i, m in enumerate([1, 2, 5]):
-            mu, h = ci(per_run(m, lambda b, s=s, m=m: (cpu(b[s]) - cpu(b[PL])) * m))
+            mu, h = ci(per_run(m, lambda b, s=s: hs_cost(B, b, s, PL)))
             ax.bar(i + (j - 1.5) * w, mu / 1000, w * 0.9, yerr=h / 1000, color=c,
                    hatch="////" if ls == "--" else None, edgecolor="white", linewidth=0.6,
                    label=lab if i == 0 else None, error_kw={"ecolor": INK2, "lw": 1})
             if j in (1, 3):
                 a, b = (PQF, XF) if j == 1 else (PQ, X)
-                d, dh = ci(per_run(m, lambda x, a=a, b=b, m=m: (cpu(x[a]) - cpu(x[b])) * m))
+                d, dh = ci(per_run(m, lambda x, a=a, b=b: hs_cost(B, x, a, b)))
                 ax.text(i + (j - 1.5) * w, (mu + h) / 1000 + 0.12, f"+{d:.0f}\n±{dh:.0f} µs",
                         ha="center", va="bottom", fontsize=6.5, color=INK2)
     xcat(ax, ["1", "2", "5"], XL_MRPC)
     ax.set_ylabel("sidecar CPU per handshake [ms]")
     ax.set_ylim(0, 6.3)
     ax.legend(frameon=False, ncol=2, loc="upper left")
-    title(ax, "CPU cost of one handshake (both sidecars), averaged over offered loads, mean ± 95% CI, n = 8 runs\n"
-              "labels: post-quantum add-on per handshake", fontsize=8.5)
+    title(ax, "CPU cost of one handshake (both sidecars, per-request keep-alive part removed), averaged over offered loads,\n"
+              "mean ± 95% CI, n = 8 runs; labels: post-quantum add-on per handshake", fontsize=8.5)
     save(fig, "f3_handshake_cost")
 
 
@@ -276,10 +276,10 @@ def fig_pq_addon_points():
     fig, ax = plt.subplots(figsize=(7.4, 3.2))
     pts = [(r, m) for m in (1, 2, 5) for r in RATES if at(r, m)]
     for j, (a, b, lab, c, mk) in enumerate(((PQF, XF, "full handshake", ORANGE, "o"), (PQ, X, "resumed handshake", ORANGE, "^"))):
-        ys, es = zip(*[ci([(cpu(x[a]) - cpu(x[b])) * m for x in at(r, m)]) for r, m in pts])
+        ys, es = zip(*[ci([hs_cost(B, x, a, b) for x in at(r, m)]) for r, m in pts])
         ax.errorbar([i + (j - 0.5) * 0.2 for i in range(len(pts))], ys, yerr=es, color=c, ls="none", marker=mk,
                     mfc="white" if j else c, label=lab)
-    allv = [(cpu(x[PQF]) - cpu(x[XF])) * m for r, m in pts for x in at(r, m)]
+    allv = [hs_cost(B, x, PQF, XF) for r, m in pts for x in at(r, m)]
     ax.axhline(st.mean(allv), color=INK2, lw=0.8, ls=":")
     ax.axhline(0, color=INK2, lw=0.8)
     xcat(ax, [f"{r}\nmrpc {m}" for r, m in pts], "grid point (offered load [req/s], mrpc)")
@@ -308,8 +308,7 @@ def fig_cpu_split():
     ax = axes[1]
     for i, (k, nm) in enumerate((("client_sidecar_cpu", "client"), ("server_sidecar_cpu", "server"))):
         for j, (a, b, lab, mk) in enumerate(((PQF, XF, "full", "o"), (PQ, X, "resumed", "^"))):
-            v = [side(x, a, k) - side(x, b, k) for r in RATES for x in at(r, 1)]
-            mu, h = ci(per_run(1, lambda x, a=a, b=b, k=k: side(x, a, k) - side(x, b, k)))
+            mu, h = ci(per_run(1, lambda x, a=a, b=b, k=k: hs_cost(B, x, a, b, val=lambda r, k=k: float(r[k]) * 1e6 / float(r["window_rps"]))))
             ax.errorbar([i + (j - 0.5) * 0.2], [mu], yerr=[h], color=ORANGE, marker=mk, mfc="white" if j else ORANGE,
                         ls="none", label=f"{lab} handshake" if i == 0 else None)
     ax.axhline(0, color=INK2, lw=0.8)

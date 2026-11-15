@@ -1,7 +1,7 @@
 setup:        mtls1.3-x25519-full
-date:         2026-11-15T06:23:17Z
+date:         2026-11-15T13:44:04Z
 k6_exit:      0
-k6:            http_req_failed................: 0.00% 0 out of 12287; http_reqs......................: 12287 1535.208721/s;
+k6:            http_req_failed................: 0.00% 0 out of 12934; http_reqs......................: 12934 1928.865203/s;
 client_config: PASS (ok)
 client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_3",;                                "tlsMaximumProtocolVersion": "TLSv1_3",;                                "ecdhCurves": [;                                    "X25519";                                ];--;                        "maxSessionKeys": 0;                    };                };
 stats_lines:  before=598 after=598
