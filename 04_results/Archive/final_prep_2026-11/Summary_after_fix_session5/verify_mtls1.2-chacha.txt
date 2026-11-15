@@ -1,7 +1,7 @@
 setup:        mtls1.2-chacha
-date:         2026-11-15T06:21:58Z
+date:         2026-11-15T13:42:48Z
 k6_exit:      0
-k6:            http_req_failed................: 0.00% 0 out of 11830; http_reqs......................: 11830 1490.322543/s;
+k6:            http_req_failed................: 0.00% 0 out of 12757; http_reqs......................: 12757 1594.127218/s;
 client_config: PASS (ok)
 client_tls:                                    "tlsMinimumProtocolVersion": "TLSv1_2",;                                "tlsMaximumProtocolVersion": "TLSv1_2",;                                "cipherSuites": [;                                    "ECDHE-RSA-CHACHA20-POLY1305",;
 stats_lines:  before=595 after=596

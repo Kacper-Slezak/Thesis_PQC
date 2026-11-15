@@ -32,3 +32,5 @@ run_memory.sh -> _archive/old_scripts/run_memory.sh
 04_results/Pilot_turbo_20261110 -> 04_results/Archive/final_prep_2026-11/Pilot_turbo_20261110
 04_results/Final_grid_backup_20261113 -> 04_results/Archive/final_prep_2026-11/Final_grid_backup_20261113
 04_results/Summary/* -> 04_results/Archive/final_prep_2026-11/Summary_last_session/
+04_results/Summary -> 04_results/Archive/final_prep_2026-11/Summary_after_fix_session5   (2026-11-15)
+04_results/Final_grid_s3_turbo -> 04_results/Archive/final_prep_2026-11/Final_grid_s3_turbo   (2026-11-15)

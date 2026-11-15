@@ -1,5 +1,4 @@
-matplotlib
-pandas
-seaborn
-scipy
-numpy
+# Analysis scripts in 05_analytics use only the Python standard library and matplotlib.
+# pandas / scipy / seaborn were used only by the archived F1-F3 scripts (_archive/old_scripts).
+matplotlib==3.11.2
+numpy==2.5.4

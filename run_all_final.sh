@@ -9,7 +9,7 @@
 # measured again. Memory and CPU are recorded in every window.
 # Each phase appends to its own fixed directory, so parts can run on different days.
 # A step that was interrupted can simply be run again: finished blocks are skipped.
-# Before every part: stabilize.ps1 on Windows (turbo off), check calib_ms ~400 ms.
+# Before every part: 01_scripts/windows/stabilize_windows.ps1 on Windows (turbo off), check calib_ms ~400 ms.
 #
 # Usage:
 #   ./run_all_final.sh s1 2>&1 | tee -a run_all_final.log      # one part
@@ -39,13 +39,13 @@ session() {
   return 1
 }
 
-# Turbo check: with turbo off (stabilize.ps1) calib_ms was 380-430 ms in F3, with turbo on
+# Turbo check: with turbo off (stabilize_windows.ps1) calib_ms was 380-430 ms in F3, with turbo on
 # 150-250 ms (pilot 2026-11-10, two machine states ~25% apart). Refuse to start with turbo on.
 source ./01_scripts/lib_setups.sh
 CALIB=$(for i in 1 2 3; do calib_ms; done | sort -g | sed -n 2p)
 echo "=== $(date '+%F %T') calib_ms median of 3: $CALIB ms"
 if [ "${ALLOW_TURBO:-0}" != 1 ] && awk -v c="$CALIB" 'BEGIN { exit !(c < 300) }'; then
-  echo "calib_ms=$CALIB ms < 300 ms: turbo looks ON. Run stabilize.ps1 first (or ALLOW_TURBO=1)."
+  echo "calib_ms=$CALIB ms < 300 ms: turbo looks ON. Run 01_scripts/windows/stabilize_windows.ps1 first (or ALLOW_TURBO=1)."
   exit 1
 fi
 
@@ -56,6 +56,11 @@ for STEP in $STEPS; do
     s[1-4])
       session "${STEP#s}" OUT_DIR="$R/Final_grid" MODE=grid N_RUNS=2 \
         RATES="100 200 300 400" MRPCS="1 2 5 0" SETUPS="$MAIN_SETUPS" ;;
+    fix)
+      # re-measure the 4 blocks where the machine state flipped inside the block (PQ resumed arm
+      # off by 5-43%); they replace the originals via 04_results/Final_grid/replacements.csv
+      session 5 OUT_DIR="$R/Final_grid" MODE=grid N_RUNS=1 \
+        RATES="300 400" MRPCS="2 5 0" ONLY="400:2 400:0 300:2 300:5" SETUPS="$MAIN_SETUPS" ;;
     f2a)
       session 11 OUT_DIR="$R/Final_F2a_classic_handshake" MODE=mrpc MRPCS=1 MRPC_RATE=200 \
         N_RUNS=8 SETUPS="$CLASSIC_SETUPS" ;;
@@ -63,7 +68,7 @@ for STEP in $STEPS; do
       session 12 OUT_DIR="$R/Final_F2b_classic_payload" MODE=mrpc MRPCS=0 MRPC_RATE=100 \
         N_RUNS=8 SETUPS="$CLASSIC_SETUPS" \
         TARGET_URL=http://httpbin.default.svc.cluster.local:8000/bytes/1000000 ;;
-    *) echo "Unknown step '$STEP' (use s1 s2 s3 s4 f2a f2b)"; exit 1 ;;
+    *) echo "Unknown step '$STEP' (use s1 s2 s3 s4 fix f2a f2b)"; exit 1 ;;
   esac || echo "!!! $(date '+%F %T') step $STEP failed twice"
   echo "=== $(date '+%F %T') STEP $STEP finished"
 done
