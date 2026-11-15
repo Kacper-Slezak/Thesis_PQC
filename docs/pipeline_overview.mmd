@@ -1,0 +1,55 @@
+flowchart TB
+    %% Data flow of the final campaign: measurement -> CSV -> analysis -> results
+
+    subgraph M["1. Measurement (bash, k3d cluster)"]
+        direction LR
+        RAF["run_all_final.sh<br/>steps s1..s4, fix, f2a, f2b<br/>turbo check, max_session_keys=16"]
+        RC["run_campaign.sh<br/>fresh cluster, verify_ciphers,<br/>monitoring off"]
+        RS["run_sweeps.sh<br/>session gate, runs, blocks<br/>calib_guard, run_block, one_point"]
+        LIB["lib_setups.sh<br/>apply_setup, apply_dr,<br/>measure_window, snapshot,<br/>mem_snapshot, record_evidence"]
+        GATE["gate.sh<br/>gate_session, gate_enter,<br/>gate_exit (+-5%)"]
+        RAF --> RC --> RS
+        RS --> LIB
+        RS --> GATE
+    end
+
+    subgraph D["2. Data (04_results/Final_grid)"]
+        direction LR
+        SW[("sweeps.csv<br/>1 row = 1 window<br/>CPU, handshakes, latency, memory")]
+        GC[("gate.csv<br/>1 row = 1 canary window")]
+        CE[("curve_evidence.csv<br/>PASS / FAIL per window")]
+        TECH[("done_blocks.txt, gate_ref.csv<br/>resume after crash")]
+        REP[("replacements.csv<br/>written by hand:<br/>4 re-measured blocks")]
+    end
+
+    subgraph A["3. Analysis (Python, stdlib + matplotlib)"]
+        direction TB
+        FS["final_summary.py<br/>load, quality, outliers,<br/>tables, hs_cost"]
+        PF["plot_final.py<br/>imports load, outliers, hs_cost"]
+        FS -. same data, same rules .-> PF
+    end
+
+    subgraph R["4. Results"]
+        direction LR
+        SUM["summary.txt<br/>all tables"]
+        PL["plots/ (with titles)<br/>plots_latex/ (no titles)<br/>single/ (one panel per file)"]
+    end
+
+    RS --> SW
+    GATE --> GC
+    LIB --> CE
+    RS --> TECH
+    SW --> FS
+    REP --> FS
+    CE --> FS
+    GC --> PF
+    FS --> SUM
+    PF --> PL
+
+    subgraph O["Other experiments"]
+        direction LR
+        F2["run_all_final.sh f2a / f2b<br/>-> Final_F2a, Final_F2b"] --> PF2["plot_f2.py"]
+        R1["run_resumption.sh (R1)<br/>-> R1_resumption"] --> PFR1["plot_final.py f8"]
+        R2["run_r2_capture.sh (R2)<br/>-> R2_capture/*.pcap"] --> PSK["r2_psk_count.py"]
+        LV["run_live.sh<br/>-> Live/phases.csv, prom_*.json"] --> PLV["plot_live.py"]
+    end

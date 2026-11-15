@@ -1,0 +1,25 @@
+smoke: alg=native mode=resumed   2026-11-07T16:52:01Z
+k6: exit=0  http_reqs=732  http_req_failed=0.00%
+serwer: handshake=732  session_reused=360  curves(MLKEM768/wszystkie)=732/732
+klient: handshake=732
+bledy TLS (connection_error + fail_verify, oba sidecary)=0
+sigalgs: mldsa65=0  wszystkie=1464
+PASS/FAIL: traffic=PASS tls_wlaczony=PASS kex_pq=PASS sigalg=PASS bledy=PASS wznowienie=PASS
+--- delta licznikow SERWER (niezerowe)
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 732
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 732
+listener.0.0.0.0_15006.ssl.handshake: 732
+listener.0.0.0.0_15006.ssl.session_reused: 360
+listener.0.0.0.0_15006.ssl.sigalgs.rsa_pss_rsae_sha256: 732
+listener.0.0.0.0_15006.ssl.versions.TLSv1.3: 732
+--- delta licznikow KLIENT (niezerowe)
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.ciphers.TLS_AES_128_GCM_SHA256: 732
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.curves.X25519MLKEM768: 732
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.handshake: 732
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.session_reused: 360
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.sigalgs.rsa_pss_rsae_sha256: 732
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.versions.TLSv1.3: 732
+--- wyjscie k6 (skrot)
+    http_req_duration..............: avg=4.13ms  min=1.82ms  med=4.05ms  max=7.55ms  p(90)=5.9ms   p(95)=6.29ms 
+    http_req_failed................: 0.00%  0 out of 732
+    http_reqs......................: 732    91.08927/s

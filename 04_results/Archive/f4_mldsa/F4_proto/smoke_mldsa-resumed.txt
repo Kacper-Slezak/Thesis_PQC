@@ -1,0 +1,25 @@
+smoke: alg=mldsa mode=resumed   2026-11-07T16:55:36Z
+k6: exit=0  http_reqs=725  http_req_failed=0.00%
+serwer: handshake=725  session_reused=244  curves(MLKEM768/wszystkie)=725/725
+klient: handshake=725
+bledy TLS (connection_error + fail_verify, oba sidecary)=0
+sigalgs: mldsa65=1450  wszystkie=1450
+PASS/FAIL: traffic=PASS tls_wlaczony=PASS kex_pq=PASS sigalg=PASS bledy=PASS wznowienie=PASS
+--- delta licznikow SERWER (niezerowe)
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 725
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 725
+listener.0.0.0.0_15006.ssl.handshake: 725
+listener.0.0.0.0_15006.ssl.session_reused: 244
+listener.0.0.0.0_15006.ssl.sigalgs.mldsa65: 725
+listener.0.0.0.0_15006.ssl.versions.TLSv1.3: 725
+--- delta licznikow KLIENT (niezerowe)
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.ciphers.TLS_AES_128_GCM_SHA256: 725
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.curves.X25519MLKEM768: 725
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.handshake: 725
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.session_reused: 244
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.sigalgs.mldsa65: 725
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.versions.TLSv1.3: 725
+--- wyjscie k6 (skrot)
+    http_req_duration..............: avg=4.52ms  min=2ms     med=4.39ms  max=10.95ms p(90)=5.96ms  p(95)=6.77ms 
+    http_req_failed................: 0.00%  0 out of 725
+    http_reqs......................: 725    107.03517/s

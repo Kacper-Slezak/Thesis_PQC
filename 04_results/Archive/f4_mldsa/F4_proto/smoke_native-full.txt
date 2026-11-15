@@ -1,0 +1,103 @@
+smoke: alg=native mode=full   2026-11-07T16:51:23Z
+k6: exit=0  http_reqs=716  http_req_failed=0.00%
+serwer: handshake=716  session_reused=0  curves(MLKEM768/wszystkie)=716/716
+klient: handshake=716
+bledy TLS (connection_error + fail_verify, oba sidecary)=0
+sigalgs: mldsa65=0  wszystkie=1432
+PASS/FAIL: traffic=PASS tls_wlaczony=PASS kex_pq=PASS sigalg=PASS bledy=PASS wznowienie=PASS
+--- delta licznikow SERWER (niezerowe)
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 716
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 716
+listener.0.0.0.0_15006.ssl.handshake: 716
+listener.0.0.0.0_15006.ssl.sigalgs.rsa_pss_rsae_sha256: 716
+listener.0.0.0.0_15006.ssl.versions.TLSv1.3: 716
+--- delta licznikow KLIENT (niezerowe)
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.ciphers.TLS_AES_128_GCM_SHA256: 716
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.curves.X25519MLKEM768: 716
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.handshake: 716
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.sigalgs.rsa_pss_rsae_sha256: 716
+cluster.outbound|8000||httpbin.default.svc.cluster.local;.ssl.versions.TLSv1.3: 716
+--- wyjscie k6 (skrot)
+    http_req_duration..............: avg=5.32ms min=2.76ms  med=5.18ms  max=13.4ms  p(90)=6.72ms  p(95)=7.31ms 
+    http_req_failed................: 0.00%  0 out of 716
+    http_reqs......................: 716    89.231653/s
+
+================ DIAGNOSTYKA
+### /certs w sidecarze klienta (co Envoy faktycznie zaladowal)
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=fcbb3127b553f54bde9e35dfe95b806c  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/default
+### /certs w sidecarze serwera
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+<inline>  serial=3642fb27737e6ede45d7ee6ac7395626  waznosc_dni=3649  SAN=
+<inline>  serial=1f7c29f21b5c65f8eb6b4925ea935a27  waznosc_dni=0  SAN=spiffe://cluster.local/ns/default/sa/httpbin
+### lancuchy filtrow serwera na porcie 8080 (virtualInbound)
+nazwa=0.0.0.0_8080 match={"destinationPort":8080,"transportProtocol":"tls","applicationProtocols":["istio","istio-peer-exchange","istio-http/1.0","istio-http/1.1","istio-h2"]} transport_socket=envoy.transport_sockets.tls
+nazwa=0.0.0.0_8080 match={"destinationPort":8080,"transportProtocol":"raw_buffer"} transport_socket=BRAK
+### klaster klienta -> httpbin (transport_socket)
+{
+  "name": "outbound|8000||httpbin.default.svc.cluster.local",
+  "transportSocket": null,
+  "tls": {
+    "maxSessionKeys": null,
+    "params": null,
+    "certs": null,
+    "ca": null
+  }
+}
+### istiod: bledy EnvoyFilter (ostatnie 5 min)
+2026-11-07T16:50:06.451255Z	info	kube	controller "networking.istio.io/v1alpha3/EnvoyFilter" is syncing...	controller=crd-controller
+2026-11-07T16:50:06.552378Z	info	kube	controller "networking.istio.io/v1alpha3/EnvoyFilter" is syncing...	controller=crd-controller
+2026-11-07T16:50:06.653274Z	info	kube	controller "networking.istio.io/v1alpha3/EnvoyFilter" is syncing...	controller=crd-controller
+2026-11-07T16:50:06.715367Z	info	sync complete	name=crdclient/informer/EnvoyFilter attempt=19 time=1.336908178s
+2026-11-07T16:50:06.715458Z	info	krt	crdclient/informer/EnvoyFilter synced	owner=crdclient/informer/EnvoyFilter
+2026-11-07T16:50:06.715474Z	info	krt	aggregate/EnvoyFilter synced
+2026-11-07T16:50:06.715543Z	info	krt	aggregate/EnvoyFilter synced
+2026-11-07T16:50:07.077098Z	info	validationController	Not ready to switch validation to fail-closed: dummy invalid config not rejected
+2026-11-07T16:50:08.688766Z	info	validationController	Endpoint successfully rejected invalid config. Switching to fail-close.
+2026-11-07T16:50:48.168834Z	info	ads	Push debounce stable[25] 2 for config EnvoyFilter/default/pqc-cipher-suite-full-client and 1 more configs: 100.824769ms since last change, 110.707885ms since last push, forced=false
+### logi sidecarow (ostatnie 3 min, tylko TLS/blędy)
+-- k6-deploy-6b7fc485fc-c8qrz
+2026-11-07T16:50:43.501218Z	info	FLAG: --proxyLogLevel="warning"
+2026-11-07T16:50:43.501815Z	info	Apply proxy config from env {"proxyStatsMatcher":{"inclusionRegexps":[".*ssl.*",".*tls.*","cluster.inbound.*upstream_rq_total"]}}
+  - ".*ssl.*"
+  - ".*tls.*"
+controlPlaneAuthPolicy: MUTUAL_TLS
+  - .*ssl.*
+  - .*tls.*
+2026-11-07T16:50:43.512398Z	info	Using CA istiod.istio-system.svc:15012 cert with certs: var/run/secrets/istio/root-cert.pem
+2026-11-07T16:50:43.521082Z	info	Envoy command: [-c etc/istio/proxy/envoy-rev.json --drain-time-s 45 --drain-strategy immediate --local-address-ip-version v4 --file-flush-interval-msec 1000 --disable-hot-restart --allow-unknown-static-fields -l warning --component-log-level misc:error --skip-deprecated-logs --concurrency 2]
+2026-11-07T16:50:43.525128Z	info	sds	Starting SDS server for workload certificates, will listen on "var/run/secrets/workload-spiffe-uds/socket"
+2026-11-07T16:50:43.608587Z	info	cache	generated new workload certificate	resourceName=default latency=85.234844ms ttl=23h59m59.391418431s
+2026-11-07T16:50:43.661152Z	info	cache	returned workload certificate from cache	ttl=23h59m59.338853719s
+-- httpbin-7db4ddb44-xjltl
+2026-11-07T16:50:43.502137Z	info	FLAG: --proxyLogLevel="warning"
+2026-11-07T16:50:43.502653Z	info	Apply proxy config from env {"proxyStatsMatcher":{"inclusionRegexps":[".*ssl.*",".*tls.*","cluster.inbound.*upstream_rq_total"]}}
+  - ".*ssl.*"
+  - ".*tls.*"
+controlPlaneAuthPolicy: MUTUAL_TLS
+  - .*ssl.*
+  - .*tls.*
+2026-11-07T16:50:43.518863Z	info	Using CA istiod.istio-system.svc:15012 cert with certs: var/run/secrets/istio/root-cert.pem
+2026-11-07T16:50:43.530250Z	info	Envoy command: [-c etc/istio/proxy/envoy-rev.json --drain-time-s 45 --drain-strategy immediate --local-address-ip-version v4 --file-flush-interval-msec 1000 --disable-hot-restart --allow-unknown-static-fields -l warning --component-log-level misc:error --skip-deprecated-logs --concurrency 2]
+2026-11-07T16:50:43.538323Z	info	sds	Starting SDS server for workload certificates, will listen on "var/run/secrets/workload-spiffe-uds/socket"
+2026-11-07T16:50:43.581175Z	info	cache	generated new workload certificate	resourceName=default latency=53.96471ms ttl=23h59m59.418833555s
+2026-11-07T16:50:43.690166Z	info	cache	returned workload certificate from cache	ttl=23h59m59.309837963s

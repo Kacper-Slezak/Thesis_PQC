@@ -1,0 +1,487 @@
+
+######## 2026-11-07 17:49:26  SPRAWDZENIE ŚRODOWISKA
+OK: narzędzia są, istioctl 1.31.4, docker działa.
+
+Ten przebieg:
+  1. KASUJE klaster 'thesis-cluster' i zakłada nowy na Istio 1.31.4 (ok. 10-15 min),
+  2. generuje certyfikaty, wdraża je, robi test dymny (ok. 15-20 min),
+  3. uruchamia wstępną kampanię F4 (ok. 1-1,5 h, o ile nie SKIP_BENCH=1).
+Kontynuować? [t/N] 
+######## 2026-11-07 17:49:27  KROK: cluster
+UWAGA: to USUNIE klaster 'thesis-cluster' (a z nim wszystko, co w nim jest) i zalozy nowy na Istio 1.31.4.
+Delete old cluster if it exists
+[36mINFO[0m[0000] Deleting cluster 'thesis-cluster'            
+[36mINFO[0m[0001] Deleting 1 attached volumes...               
+[36mINFO[0m[0001] Removing cluster details from default kubeconfig... 
+[36mINFO[0m[0001] Removing standalone kubeconfig file (if there is one)... 
+[36mINFO[0m[0001] Successfully deleted cluster thesis-cluster! 
+Create new cluster 'thesis-cluster'
+[36mINFO[0m[0000] Prep: Network                                
+[36mINFO[0m[0000] Re-using existing network 'k3d-thesis-cluster' (96df9256be5cf75fbd5ba311ee351b23a3a5bb044c37c38f950ce42f99750378) 
+[36mINFO[0m[0000] Created image volume k3d-thesis-cluster-images 
+[36mINFO[0m[0000] Starting new tools node...                   
+[36mINFO[0m[0000] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0001] Creating node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0001] Creating LoadBalancer 'k3d-thesis-cluster-serverlb' 
+[36mINFO[0m[0001] Using the k3d-tools node to gather environment information 
+[36mINFO[0m[0002] Starting new tools node...                   
+[36mINFO[0m[0002] Starting node 'k3d-thesis-cluster-tools'     
+[36mINFO[0m[0003] Starting cluster 'thesis-cluster'            
+[36mINFO[0m[0003] Starting servers...                          
+[36mINFO[0m[0003] Starting node 'k3d-thesis-cluster-server-0'  
+[36mINFO[0m[0009] Starting agents...                           
+[36mINFO[0m[0009] Starting node 'k3d-thesis-cluster-agent-1'   
+[36mINFO[0m[0009] Starting node 'k3d-thesis-cluster-agent-0'   
+[36mINFO[0m[0013] Starting helpers...                          
+[36mINFO[0m[0013] Starting node 'k3d-thesis-cluster-serverlb'  
+[36mINFO[0m[0019] Injecting records for hostAliases (incl. host.k3d.internal) and for 5 network members into CoreDNS configmap... 
+[36mINFO[0m[0022] Cluster 'thesis-cluster' created successfully! 
+[36mINFO[0m[0022] You can now use it like this:                
+kubectl cluster-info
+Configuring kubernets api endpoint
+Cluster "k3d-thesis-cluster" set.
+Check if cluster is ready
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          9s    v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   12s   v1.35.5+k3s1
+Checking docker hub reachability
+Docker Hub is not reachable from the node container
+Labeling nodes
+node/k3d-thesis-cluster-agent-0 labeled
+node/k3d-thesis-cluster-agent-1 labeled
+Verifying nodes 
+NAME                          STATUS   ROLES           AGE   VERSION
+k3d-thesis-cluster-agent-0    Ready    <none>          10s   v1.35.5+k3s1
+k3d-thesis-cluster-agent-1    Ready    <none>          10s   v1.35.5+k3s1
+k3d-thesis-cluster-server-0   Ready    control-plane   13s   v1.35.5+k3s1
+Installing Istio 1.31.4 profile MINIMAL
+        |\          
+        | \         
+        |  \        
+        |   \       
+      /||    \      
+     / ||     \     
+    /  ||      \    
+   /   ||       \   
+  /    ||        \  
+ /     ||         \ 
+/______||__________\
+____________________
+  \__       _____/  
+     \_____/        
+
+
+- Processing resources for Istio core.
+✔ Istio core installed ⛵️
+- Processing resources for Istiod.
+- Processing resources for Istiod. Waiting for Deployment/istio-system/istiod
+✔ Istiod installed 🧠
+- Pruning removed resources
+✔ Installation completeEnabling Istio sidecar injection for default namespace
+namespace/default labeled
+Installing monitoring stack
+serviceaccount/prometheus created
+configmap/prometheus created
+clusterrole.rbac.authorization.k8s.io/prometheus created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+service/prometheus created
+deployment.apps/prometheus created
+configmap/prometheus configured
+deployment.apps/prometheus restarted
+serviceaccount/grafana created
+configmap/grafana created
+service/grafana created
+deployment.apps/grafana created
+configmap/istio-grafana-dashboards created
+configmap/istio-services-grafana-dashboards created
+serviceaccount/kiali created
+configmap/kiali created
+clusterrole.rbac.authorization.k8s.io/kiali created
+clusterrolebinding.rbac.authorization.k8s.io/kiali created
+service/kiali created
+deployment.apps/kiali created
+Deploying backend service
+serviceaccount/httpbin created
+service/httpbin created
+deployment.apps/httpbin created
+Deploying k6 load generator
+deployment.apps/k6-deploy created
+Waiting for backend service to be ready and k6
+Waiting for deployment "httpbin" rollout to finish: 0 of 1 updated replicas are available...
+deployment "httpbin" successfully rolled out
+deployment "k6-deploy" successfully rolled out
+2026/11/07 16:50:34 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment.txt
+Environment setup complete. Cluster is ready for testing.
+Verify by running: kubectl get pods -A
+-------- cluster: koniec po 68 s, kod=0
+
+######## 2026-11-07 17:50:35  KROK: versions
+# 2026-11-07T16:50:35Z
+--- istioctl version
+client version: 1.31.4
+control plane version: 1.31.4
+data plane version: 1.31.4 (2 proxies)
+--- obraz sidecara (k6)
+
+--- envoy w sidecarze klienta
+
+/usr/local/bin/envoy  version: defdcd65d0c035b54b324dc6ed4ef258e22bf94d/1.39.7-dev/Clean/RELEASE/BoringSSL
+
+--- envoy w sidecarze serwera
+
+/usr/local/bin/envoy  version: defdcd65d0c035b54b324dc6ed4ef258e22bf94d/1.39.7-dev/Clean/RELEASE/BoringSSL
+
+--- pilot-agent (wersja Go)
+2026/11/07 16:50:38 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+clientVersion:
+  golang_version: go1.26.10
+  revision: a079f649cbcb984cd8d9330699e165b89ff1f6a1
+  status: Clean
+  tag: 1.31.4
+  version: 1.31.4
+
+-------- versions: koniec po 3 s, kod=0
+
+######## 2026-11-07 17:50:38  KROK: pki
+OpenSSL 3.5.9 29 Sep 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)
+...+.+++++++++++++++++++++++++++++++++++++++*........+....+.....+...+..........+......+.....+.........+.+..+....+.........+......+...+.....+......+.+...+++++++++++++++++++++++++++++++++++++++*.......................+.....+....+...+......+...........+...+.+......+.....+.........+.+...+..+.+...+.........+..+.............+.....+...+..........+.....+.........+.+........+......+...+......+....+...+.....+....+.....+......+.......+...+..+.......+.....+.........+....+...+.....+....+.....+...+......+.........+.+.........+........+...+.+.....+......+.........+...............+......+......................+.....+......+.+......+............+...........+....+...+...+..+.............+...............+.........+...+..+.......+.....+...+.......+.....+.+............+.....+...+.......+........+.......+..+.+..+...+............+......+.+...+...+..+.+......+...+..................+...+.....+.......+..+.......+.....+....+..+...+................+..............+.+.........+......+..........................+....+...+...+.....+.........+.+........+..........+.........+.....+.+.....+....+...........+....+.....+.+.....+.....................+...+...+.......+..+....+...........+.+...+......+........+...+...+....+...+.........+.....+..........+......+........+.......++++++
+...+...+......+.+.....+..........+++++++++++++++++++++++++++++++++++++++*....+.....+...+.......+++++++++++++++++++++++++++++++++++++++*....+...+..........+....................+............+....+..+...+....+...............+..+.++++++
+.......+....+++++++++++++++++++++++++++++++++++++++*......+.+++++++++++++++++++++++++++++++++++++++*.+.......+...+.................+.+..+....+.....+....+......+........+..........+...+...+......+......+.....+..........+............+....................+..........+..++++++
+..+.................+....+.....+................+.....+...+......+.+........+...+...+....+.....+......+++++++++++++++++++++++++++++++++++++++*......+............+......+......+++++++++++++++++++++++++++++++++++++++*.......+...+.++++++
+Certificate request self-signature ok
+subject=O=f4, CN=server
+...+..+....+...+...+..+...+++++++++++++++++++++++++++++++++++++++*.+........+.........+.+.....+......+.+.........+.........+..+............+...+++++++++++++++++++++++++++++++++++++++*......+.+............+...+.....+.+.....+.............+.....+...+....+.....+.+............+.................+.............+...+...+..+....+...+..+.+..+.+...........+.........+......................+..................+......+........+.+.....+............+...+.+......+.........+......+..+...+...+................+...+..+.........+......+...+...+.........+....+......+...+.................+....+...........+...+..........+..+......+...+.+.....+....+.....+....+...+..+...............+..........+...+..................+.....+......+...+.+..+.......+.................+....+..+...+......+......+....+........+..................+...+....+..+...............+.+..+.......+......+........+.+.........++++++
+........+..+.+.........+...........+....+..............+.+...+..+...+.......+......+..+++++++++++++++++++++++++++++++++++++++*.................+++++++++++++++++++++++++++++++++++++++*...+...+.+..+....+...+............+...........++++++
+Certificate request self-signature ok
+subject=O=f4, CN=client
+rsa/server.crt: OK
+rsa/client.crt: OK
+== rsa  (SEND_ROOT=0)
+            Public Key Algorithm: rsaEncryption
+        Signature Algorithm: sha256WithRSAEncryption
+    Signature Algorithm: sha256WithRSAEncryption
+  ca.crt               1127 B
+  server.crt           1281 B
+  server.key           1704 B
+  server.chain.pem     1281 B
+  client.crt           1281 B
+  client.key           1704 B
+  client.chain.pem     1281 B
+  DER server.crt: 905 B
+Certificate request self-signature ok
+subject=O=f4, CN=server
+Certificate request self-signature ok
+subject=O=f4, CN=client
+ecdsa/server.crt: OK
+ecdsa/client.crt: OK
+== ecdsa  (SEND_ROOT=0)
+            Public Key Algorithm: id-ecPublicKey
+        Signature Algorithm: ecdsa-with-SHA256
+    Signature Algorithm: ecdsa-with-SHA256
+  ca.crt                591 B
+  server.crt            745 B
+  server.key            241 B
+  server.chain.pem      745 B
+  client.crt            745 B
+  client.key            241 B
+  client.chain.pem      745 B
+  DER server.crt: 508 B
+Certificate request self-signature ok
+subject=O=f4, CN=server
+Certificate request self-signature ok
+subject=O=f4, CN=client
+mldsa/server.crt: OK
+mldsa/client.crt: OK
+== mldsa  (SEND_ROOT=0)
+            Public Key Algorithm: ML-DSA-65
+        Signature Algorithm: ML-DSA-65
+    Signature Algorithm: ML-DSA-65
+  ca.crt               7534 B
+  server.crt           7684 B
+  server.key            128 B
+  server.chain.pem     7684 B
+  client.crt           7684 B
+  client.key            128 B
+  client.chain.pem     7684 B
+  DER server.crt: 5634 B
+
+Gotowe: /home/kacper/Thesis/Thesis_PQC/f4_pki   (podsumowanie rozmiarów: /home/kacper/Thesis/Thesis_PQC/f4_pki/summary.txt)
+-------- pki: koniec po 2 s, kod=0
+
+######## 2026-11-07 17:50:40  KROK: deploy
+Secrety utworzone. Montuje do sidecarow (restart podow httpbin i k6)...
+deployment.apps/httpbin patched
+deployment.apps/k6-deploy patched
+Waiting for deployment "httpbin" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "httpbin" rollout to finish: 1 old replicas are pending termination...
+deployment "httpbin" successfully rolled out
+deployment "k6-deploy" successfully rolled out
+--- zawartosc /etc/f4 w sidecarze serwera (httpbin-7db4ddb44-xjltl)
+/etc/f4/ecdsa
+total 12
+-rw-r--r-- 1 root root 591 Nov  7 16:50 ca.crt
+-rw-r--r-- 1 root root 745 Nov  7 16:50 tls.crt
+-rw-r--r-- 1 root root 241 Nov  7 16:50 tls.key
+/etc/f4/mldsa
+total 20
+-rw-r--r-- 1 root root 7534 Nov  7 16:50 ca.crt
+-rw-r--r-- 1 root root 7684 Nov  7 16:50 tls.crt
+-rw-r--r-- 1 root root  128 Nov  7 16:50 tls.key
+/etc/f4/rsa
+total 12
+-rw-r--r-- 1 root root 1127 Nov  7 16:50 ca.crt
+-rw-r--r-- 1 root root 1281 Nov  7 16:50 tls.crt
+-rw-r--r-- 1 root root 1704 Nov  7 16:50 tls.key
+--- zawartosc /etc/f4 w sidecarze klienta (k6-deploy-6b7fc485fc-c8qrz)
+/etc/f4/ecdsa
+total 12
+-rw-r--r-- 1 root root 591 Nov  7 16:50 ca.crt
+-rw-r--r-- 1 root root 745 Nov  7 16:50 tls.crt
+-rw-r--r-- 1 root root 241 Nov  7 16:50 tls.key
+/etc/f4/mldsa
+total 20
+-rw-r--r-- 1 root root 7534 Nov  7 16:50 ca.crt
+-rw-r--r-- 1 root root 7684 Nov  7 16:50 tls.crt
+-rw-r--r-- 1 root root  128 Nov  7 16:50 tls.key
+/etc/f4/rsa
+total 12
+-rw-r--r-- 1 root root 1127 Nov  7 16:50 ca.crt
+-rw-r--r-- 1 root root 1281 Nov  7 16:50 tls.crt
+-rw-r--r-- 1 root root 1704 Nov  7 16:50 tls.key
+-------- deploy: koniec po 7 s, kod=0
+
+######## 2026-11-07 17:50:47  KROK: smoke all
+=== smoke: native / full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+smoke: alg=native mode=full   2026-11-07T16:51:23Z
+k6: exit=0  http_reqs=716  http_req_failed=0.00%
+serwer: handshake=716  session_reused=0  curves(MLKEM768/wszystkie)=716/716
+klient: handshake=716
+bledy TLS (connection_error + fail_verify, oba sidecary)=0
+sigalgs: mldsa65=0  wszystkie=1432
+PASS/FAIL: traffic=PASS tls_wlaczony=PASS kex_pq=PASS sigalg=PASS bledy=PASS wznowienie=PASS
+--- delta licznikow SERWER (niezerowe)
+=== smoke: native / resumed
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+smoke: alg=native mode=resumed   2026-11-07T16:52:01Z
+k6: exit=0  http_reqs=732  http_req_failed=0.00%
+serwer: handshake=732  session_reused=360  curves(MLKEM768/wszystkie)=732/732
+klient: handshake=732
+bledy TLS (connection_error + fail_verify, oba sidecary)=0
+sigalgs: mldsa65=0  wszystkie=1464
+PASS/FAIL: traffic=PASS tls_wlaczony=PASS kex_pq=PASS sigalg=PASS bledy=PASS wznowienie=PASS
+--- delta licznikow SERWER (niezerowe)
+=== smoke: rsa / full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+smoke: alg=rsa mode=full   2026-11-07T16:52:36Z
+k6: exit=0  http_reqs=715  http_req_failed=0.00%
+serwer: handshake=715  session_reused=0  curves(MLKEM768/wszystkie)=715/715
+klient: handshake=715
+bledy TLS (connection_error + fail_verify, oba sidecary)=0
+sigalgs: mldsa65=0  wszystkie=1430
+PASS/FAIL: traffic=PASS tls_wlaczony=PASS kex_pq=PASS sigalg=PASS bledy=PASS wznowienie=PASS
+--- delta licznikow SERWER (niezerowe)
+=== smoke: rsa / resumed
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+smoke: alg=rsa mode=resumed   2026-11-07T16:53:12Z
+k6: exit=0  http_reqs=735  http_req_failed=0.00%
+serwer: handshake=735  session_reused=366  curves(MLKEM768/wszystkie)=735/735
+klient: handshake=735
+bledy TLS (connection_error + fail_verify, oba sidecary)=0
+sigalgs: mldsa65=0  wszystkie=1470
+PASS/FAIL: traffic=PASS tls_wlaczony=PASS kex_pq=PASS sigalg=PASS bledy=PASS wznowienie=PASS
+--- delta licznikow SERWER (niezerowe)
+=== smoke: ecdsa / full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+smoke: alg=ecdsa mode=full   2026-11-07T16:53:48Z
+k6: exit=0  http_reqs=725  http_req_failed=0.00%
+serwer: handshake=725  session_reused=0  curves(MLKEM768/wszystkie)=725/725
+klient: handshake=725
+bledy TLS (connection_error + fail_verify, oba sidecary)=0
+sigalgs: mldsa65=0  wszystkie=1450
+PASS/FAIL: traffic=PASS tls_wlaczony=PASS kex_pq=PASS sigalg=PASS bledy=PASS wznowienie=PASS
+--- delta licznikow SERWER (niezerowe)
+=== smoke: ecdsa / resumed
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+smoke: alg=ecdsa mode=resumed   2026-11-07T16:54:25Z
+k6: exit=0  http_reqs=722  http_req_failed=0.00%
+serwer: handshake=722  session_reused=222  curves(MLKEM768/wszystkie)=722/722
+klient: handshake=722
+bledy TLS (connection_error + fail_verify, oba sidecary)=0
+sigalgs: mldsa65=0  wszystkie=1444
+PASS/FAIL: traffic=PASS tls_wlaczony=PASS kex_pq=PASS sigalg=PASS bledy=PASS wznowienie=PASS
+--- delta licznikow SERWER (niezerowe)
+=== smoke: mldsa / full
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+smoke: alg=mldsa mode=full   2026-11-07T16:55:01Z
+k6: exit=0  http_reqs=717  http_req_failed=0.00%
+serwer: handshake=717  session_reused=0  curves(MLKEM768/wszystkie)=717/717
+klient: handshake=717
+bledy TLS (connection_error + fail_verify, oba sidecary)=0
+sigalgs: mldsa65=1434  wszystkie=1434
+PASS/FAIL: traffic=PASS tls_wlaczony=PASS kex_pq=PASS sigalg=PASS bledy=PASS wznowienie=PASS
+--- delta licznikow SERWER (niezerowe)
+=== smoke: mldsa / resumed
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+smoke: alg=mldsa mode=resumed   2026-11-07T16:55:36Z
+k6: exit=0  http_reqs=725  http_req_failed=0.00%
+serwer: handshake=725  session_reused=244  curves(MLKEM768/wszystkie)=725/725
+klient: handshake=725
+bledy TLS (connection_error + fail_verify, oba sidecary)=0
+sigalgs: mldsa65=1450  wszystkie=1450
+PASS/FAIL: traffic=PASS tls_wlaczony=PASS kex_pq=PASS sigalg=PASS bledy=PASS wznowienie=PASS
+--- delta licznikow SERWER (niezerowe)
+
+Szczegoly: 04_results/F4_proto/smoke_*.txt   (FAIL-e: 0)
+-------- smoke: wszystkie ramiona PASS
+
+######## 2026-11-07 17:55:37  KROK: sdscheck (opcjonalny, błąd nie zatrzymuje)
+=================== DestinationRule MUTUAL z plikami f4/rsa (sciezka przez pilot-agent/SDS)
+--- istioctl proxy-config secret (klient)
+RESOURCE NAME                                         TYPE           STATUS     VALID CERT     SERIAL NUMBER                                NOT AFTER                NOT BEFORE
+default                                               Cert Chain     ACTIVE     true           fcbb3127b553f54bde9e35dfe95b806c             2026-11-08T16:50:43Z     2026-11-07T16:48:43Z
+file-cert:/etc/f4/rsa/tls.crt~/etc/f4/rsa/tls.key     Cert Chain     ACTIVE     true           46c0b1061c05dadbbf42f8725fdc9fc1c3e0aa5e     2027-02-05T16:50:39Z     2026-11-07T16:50:39Z
+file-root:/etc/f4/rsa/ca.crt                          CA             ACTIVE     true           1bd91b8bc6416264533873c73a94722f7794f979     2027-02-05T16:50:39Z     2026-11-07T16:50:39Z
+ROOTCA                                                CA             ACTIVE     true           3642fb27737e6ede45d7ee6ac7395626             2036-11-04T16:50:05Z     2026-11-07T16:50:05Z
+--- log pilot-agenta (klient), ostatnie 3 min
+2026-11-07T16:55:38.813321Z	info	cache	adding watcher for symlink certificate /etc/f4/rsa/ca.crt -> /etc/f4/rsa/..data/ca.crt
+2026-11-07T16:55:38.813374Z	info	cache	read certificate from file	resource=file-root:/etc/f4/rsa/ca.crt
+2026-11-07T16:55:38.813643Z	info	cache	adding watcher for symlink certificate /etc/f4/rsa/tls.crt -> /etc/f4/rsa/..data/tls.crt
+2026-11-07T16:55:38.813691Z	info	cache	read certificate from file	resource=file-cert:/etc/f4/rsa/tls.crt~/etc/f4/rsa/tls.key
+=================== DestinationRule MUTUAL z plikami f4/mldsa (sciezka przez pilot-agent/SDS)
+--- istioctl proxy-config secret (klient)
+RESOURCE NAME                                             TYPE           STATUS      VALID CERT     SERIAL NUMBER                                NOT AFTER                NOT BEFORE
+file-cert:/etc/f4/mldsa/tls.crt~/etc/f4/mldsa/tls.key                    WARMING     false                                                                                
+default                                                   Cert Chain     ACTIVE      true           fcbb3127b553f54bde9e35dfe95b806c             2026-11-08T16:50:43Z     2026-11-07T16:48:43Z
+file-root:/etc/f4/mldsa/ca.crt                            CA             ACTIVE      true           2e7d7e6fae1f85b3f44a9f019180e4684e0afdc8     2027-02-05T16:50:40Z     2026-11-07T16:50:40Z
+ROOTCA                                                    CA             ACTIVE      true           3642fb27737e6ede45d7ee6ac7395626             2036-11-04T16:50:05Z     2026-11-07T16:50:05Z
+--- log pilot-agenta (klient), ostatnie 3 min
+2026-11-07T16:55:38.813321Z	info	cache	adding watcher for symlink certificate /etc/f4/rsa/ca.crt -> /etc/f4/rsa/..data/ca.crt
+2026-11-07T16:55:38.813374Z	info	cache	read certificate from file	resource=file-root:/etc/f4/rsa/ca.crt
+2026-11-07T16:55:38.813643Z	info	cache	adding watcher for symlink certificate /etc/f4/rsa/tls.crt -> /etc/f4/rsa/..data/tls.crt
+2026-11-07T16:55:38.813691Z	info	cache	read certificate from file	resource=file-cert:/etc/f4/rsa/tls.crt~/etc/f4/rsa/tls.key
+2026-11-07T16:55:59.655564Z	info	cache	adding watcher for symlink certificate /etc/f4/mldsa/ca.crt -> /etc/f4/mldsa/..data/ca.crt
+2026-11-07T16:55:59.655610Z	info	cache	read certificate from file	resource=file-root:/etc/f4/mldsa/ca.crt
+2026-11-07T16:56:08.440165Z	error	cache	resource:file-cert:/etc/f4/mldsa/tls.crt~/etc/f4/mldsa/tls.key failed to generate secret for proxy from file: context deadline exceeded with last error: tls: failed to parse private key
+2026-11-07T16:56:08.440644Z	warning	envoy config external/envoy/source/extensions/config_subscription/grpc/grpc_stream.h:189	StreamSecrets gRPC config stream to sds-grpc closed: 2, failed to generate secret for file-cert:/etc/f4/mldsa/tls.crt~/etc/f4/mldsa/tls.key: context deadline exceeded with last error: tls: failed to parse private key{via_upstream}	thread=14
+
+Oczekiwanie: rsa -> 'read certificate from file' / ACTIVE; mldsa -> 'failed to generate secret ... from file' (tls: failed to parse private key).
+Wynik: 04_results/F4_proto/sdscheck.txt
+
+######## 2026-11-07 17:56:19  KROK: bench
+2026/11/07 16:56:20 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to 04_results/F4_proto/environment_bench_20261107_175619.txt
+deployment.apps/prometheus scaled
+deployment.apps/grafana scaled
+deployment.apps/kiali scaled
+--- [bench] f4-mldsa-full rate=100 mrpc=1 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=102.8 p99=5.26246695 cpu/req=3012.2us hs/s=102.8 reused=0 err=0 sig_mldsa=14002  [OK]
+--- [bench] native-full rate=100 mrpc=1 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=105.6 p99=6.3671 cpu/req=3394.8us hs/s=105.6 reused=0 err=0 sig_mldsa=-7001  [FAIL:unexpected_mldsa_sig]
+--- [bench] f4-rsa-full rate=100 mrpc=1 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=102.8 p99=5.59329486 cpu/req=3222.2us hs/s=102.8 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-rsa-resumed rate=100 mrpc=1 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=101.6 p99=5.148143 cpu/req=2424.3us hs/s=101.6 reused=9121 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-mldsa-resumed rate=100 mrpc=1 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=105.8 p99=4.754164 cpu/req=2579.2us hs/s=105.8 reused=9106 err=0 sig_mldsa=14002  [OK]
+--- [bench] f4-ecdsa-full rate=100 mrpc=1 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=102.6 p99=4.860165590000001 cpu/req=2496.2us hs/s=102.6 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-ecdsa-resumed rate=100 mrpc=1 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=106.0 p99=4.728846 cpu/req=2563.8us hs/s=106.0 reused=9106 err=0 sig_mldsa=0  [OK]
+--- [bench] native-resumed rate=100 mrpc=1 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=102.9 p99=4.581271 cpu/req=2375.5us hs/s=102.9 reused=9104 err=0 sig_mldsa=-7001  [FAIL:unexpected_mldsa_sig]
+--- [bench] f4-mldsa-full rate=100 mrpc=0 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=105.9 p99=2.989609 cpu/req=1091.1us hs/s=0 reused=0 err=0 sig_mldsa=12  [OK]
+--- [bench] f4-rsa-resumed rate=100 mrpc=0 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=105.9 p99=2.825718 cpu/req=1032.4us hs/s=0 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-ecdsa-resumed rate=100 mrpc=0 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=102.9 p99=2.916689 cpu/req=1043.8us hs/s=0 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-rsa-full rate=100 mrpc=0 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=106.0 p99=3.361482 cpu/req=1089.0us hs/s=0 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] native-resumed rate=100 mrpc=0 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=102.7 p99=3.078949 cpu/req=1159.5us hs/s=0 reused=0 err=0 sig_mldsa=-6  [FAIL:unexpected_mldsa_sig]
+--- [bench] native-full rate=100 mrpc=0 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=106.0 p99=2.889025 cpu/req=1032.6us hs/s=0 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-mldsa-resumed rate=100 mrpc=0 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=106.2 p99=2.933605 cpu/req=1050.9us hs/s=0 reused=0 err=0 sig_mldsa=6  [OK]
+--- [bench] f4-ecdsa-full rate=100 mrpc=0 run=1
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=103.0 p99=2.793036 cpu/req=1000.5us hs/s=0 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-mldsa-resumed rate=100 mrpc=0 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=106.0 p99=2.866336 cpu/req=1017.6us hs/s=0 reused=0 err=0 sig_mldsa=6  [OK]
+--- [bench] f4-mldsa-full rate=100 mrpc=0 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=102.9 p99=2.852029 cpu/req=1039.1us hs/s=0 reused=0 err=0 sig_mldsa=8  [OK]
+--- [bench] native-resumed rate=100 mrpc=0 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=106.2 p99=2.962623 cpu/req=1085.3us hs/s=0 reused=0 err=0 sig_mldsa=-10  [FAIL:unexpected_mldsa_sig]
+--- [bench] f4-ecdsa-full rate=100 mrpc=0 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=103.0 p99=2.924029 cpu/req=1048.7us hs/s=0 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-rsa-resumed rate=100 mrpc=0 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=102.9 p99=2.895746 cpu/req=1023.2us hs/s=0 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] native-full rate=100 mrpc=0 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=106.4 p99=2.978611 cpu/req=1038.9us hs/s=0 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-ecdsa-resumed rate=100 mrpc=0 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=103.1 p99=2.777692 cpu/req=1020.7us hs/s=0 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-rsa-full rate=100 mrpc=0 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=106.3 p99=2.897009 cpu/req=1030.2us hs/s=0 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-mldsa-full rate=100 mrpc=1 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=103.0 p99=5.174557 cpu/req=2954.4us hs/s=103.0 reused=0 err=0 sig_mldsa=14004  [OK]
+--- [bench] f4-rsa-resumed rate=100 mrpc=1 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=103.1 p99=4.675411 cpu/req=2306.7us hs/s=103.1 reused=9114 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-rsa-full rate=100 mrpc=1 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=106.8 p99=13.388269 cpu/req=4229.8us hs/s=106.8 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-mldsa-resumed rate=100 mrpc=1 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=103.1 p99=14.102437 cpu/req=3912.2us hs/s=103.1 reused=9095 err=0 sig_mldsa=14004  [OK]
+--- [bench] f4-ecdsa-resumed rate=100 mrpc=1 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=106.4 p99=12.813923 cpu/req=3761.1us hs/s=106.4 reused=9110 err=0 sig_mldsa=0  [OK]
+--- [bench] f4-ecdsa-full rate=100 mrpc=1 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=103.1 p99=12.108527 cpu/req=3844.1us hs/s=103.1 reused=0 err=0 sig_mldsa=0  [OK]
+--- [bench] native-full rate=100 mrpc=1 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=103.1 p99=15.039468 cpu/req=4762.5us hs/s=103.1 reused=0 err=0 sig_mldsa=-14004  [FAIL:unexpected_mldsa_sig]
+--- [bench] native-resumed rate=100 mrpc=1 run=2
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+    rps=106.4 p99=13.109413 cpu/req=3804.1us hs/s=106.4 reused=9097 err=0 sig_mldsa=0  [OK]
+Gotowe: 04_results/F4_proto/sweeps.csv
+deployment.apps/prometheus scaled
+deployment.apps/grafana scaled
+deployment.apps/kiali scaled
+-------- bench: koniec po 4246 s, kod=0
+
+######## 2026-11-07 19:07:05  PODSUMOWANIE (łącznie 77 min)
+sweeps.csv: 32 okien; werdykty:
+  OK: 27
+  FAIL: 5
+Pliki do wgrania do rozmowy: 04_results/F4_proto/ (smoke_*.txt, sdscheck.txt, versions.txt, deploy_mounts_*.txt, sweeps.csv, run_all_20261107_174926.log)

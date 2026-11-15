@@ -1,0 +1,67 @@
+== krok 1: czy oba Envoye żyją? (powinny być dwa razy LIVE)
+HTTP/1.1 200 OK
+content-type: text/plain; charset=UTF-8
+cache-control: no-cache, max-age=0
+x-content-type-options: nosniff
+date: Sat, 07 Nov 2026 14:40:54 GMT
+server: envoy
+connection: close
+transfer-encoding: chunked
+
+5
+LIVE
+
+0
+
+HTTP/1.1 200 OK
+content-type: text/plain; charset=UTF-8
+cache-control: no-cache, max-age=0
+x-content-type-options: nosniff
+date: Sat, 07 Nov 2026 14:40:54 GMT
+server: envoy
+connection: close
+transfer-encoding: chunked
+
+5
+LIVE
+
+0
+
+== krok 2: żądanie przez klienta (HTTP -> TLS -> serwer)
+HTTP/1.1 503 Service Unavailable
+content-length: 98
+content-type: text/plain
+date: Sat, 07 Nov 2026 14:40:54 GMT
+server: envoy
+connection: close
+
+upstream connect error or disconnect/reset before headers. reset reason: remote connection failure== statystyki TLS serwera (tylko niezerowe)
+listener.127.0.0.1_18443.ssl.connection_error: 1
+== statystyki TLS klienta (tylko niezerowe)
+cluster.pq_srv.ssl.connection_error: 1
+== logi (pierwsze linie)
+[2026-11-07 14:40:50.422][7][info][main] [source/server/server.cc:474] initializing epoch 0 (base id=0, hot restart version=disabled)
+[2026-11-07 14:40:50.422][7][info][main] [source/server/server.cc:476] statically linked extensions:
+[2026-11-07 14:40:50.422][7][info][main] [source/server/server.cc:478]   envoy.config_mux: envoy.config_mux.delta_grpc_mux_factory, envoy.config_mux.grpc_mux_factory, envoy.config_mux.new_grpc_mux_factory, envoy.config_mux.sotw_grpc_mux_factory
+[2026-11-07 14:40:50.422][7][info][main] [source/server/server.cc:478]   envoy.queue_policy: envoy.queue_policy.adaptive_lifo, envoy.queue_policy.fifo
+[2026-11-07 14:40:50.422][8][info][main] [source/server/server.cc:474] initializing epoch 0 (base id=0, hot restart version=disabled)
+[2026-11-07 14:40:50.422][8][info][main] [source/server/server.cc:476] statically linked extensions:
+[2026-11-07 14:40:50.422][8][info][main] [source/server/server.cc:478]   envoy.config_mux: envoy.config_mux.delta_grpc_mux_factory, envoy.config_mux.grpc_mux_factory, envoy.config_mux.new_grpc_mux_factory, envoy.config_mux.sotw_grpc_mux_factory
+[2026-11-07 14:40:50.422][8][info][main] [source/server/server.cc:478]   envoy.queue_policy: envoy.queue_policy.adaptive_lifo, envoy.queue_policy.fifo
+== logi serwera: linie o TLS/SSL (sensowne przy LOGLVL=debug)
+[2026-11-07 14:40:50.422][7][info][main] [source/server/server.cc:478]   envoy.tls.upstream_certificate_selectors: envoy.tls.certificate_selectors.dynamic_modules, envoy.tls.certificate_selectors.on_demand_secret
+[2026-11-07 14:40:50.422][7][info][main] [source/server/server.cc:478]   envoy.tls_handshakers: envoy.tls.handshakers.dynamic_modules
+[2026-11-07 14:40:50.422][7][info][main] [source/server/server.cc:478]   envoy.tls.upstream_certificate_mappers: envoy.tls.certificate_mappers.static_name, envoy.tls.upstream_certificate_mappers.filter_state_override
+[2026-11-07 14:40:50.422][7][info][main] [source/server/server.cc:478]   envoy.tls.certificate_selectors: envoy.tls.certificate_selectors.dynamic_modules, envoy.tls.certificate_selectors.on_demand_secret
+[2026-11-07 14:40:50.423][7][info][main] [source/server/server.cc:478]   envoy.tls.certificate_mappers: envoy.tls.certificate_mappers.sni, envoy.tls.certificate_mappers.static_name
+[2026-11-07 14:40:54.588][34][debug][connection] [source/common/tls/ssl_socket.cc:322] [Tags: "ConnectionId":"1"] remote address:127.0.0.1:46270,TLS_error:|268435709:SSL routines:OPENSSL_internal:NO_COMMON_SIGNATURE_ALGORITHMS:TLS_error_end
+== logi klienta: linie o TLS/SSL
+[2026-11-07 14:40:50.422][8][info][main] [source/server/server.cc:478]   envoy.tls.upstream_certificate_selectors: envoy.tls.certificate_selectors.dynamic_modules, envoy.tls.certificate_selectors.on_demand_secret
+[2026-11-07 14:40:50.422][8][info][main] [source/server/server.cc:478]   envoy.tls_handshakers: envoy.tls.handshakers.dynamic_modules
+[2026-11-07 14:40:50.423][8][info][main] [source/server/server.cc:478]   envoy.tls.upstream_certificate_mappers: envoy.tls.certificate_mappers.static_name, envoy.tls.upstream_certificate_mappers.filter_state_override
+[2026-11-07 14:40:50.423][8][info][main] [source/server/server.cc:478]   envoy.tls.certificate_selectors: envoy.tls.certificate_selectors.dynamic_modules, envoy.tls.certificate_selectors.on_demand_secret
+[2026-11-07 14:40:50.423][8][info][main] [source/server/server.cc:478]   envoy.tls.certificate_mappers: envoy.tls.certificate_mappers.sni, envoy.tls.certificate_mappers.static_name
+[2026-11-07 14:40:54.588][69][debug][connection] [source/common/tls/ssl_socket.cc:322] [Tags: "ConnectionId":"2"] remote address:127.0.0.1:18443,TLS_error:|268436496:SSL routines:OPENSSL_internal:SSLV3_ALERT_HANDSHAKE_FAILURE|268435610:SSL routines:OPENSSL_internal:HANDSHAKE_FAILURE_ON_CLIENT_HELLO:TLS_error_end
+[2026-11-07 14:40:54.588][69][debug][pool] [source/common/conn_pool/conn_pool_base.cc:659] [Tags: "ConnectionId":"2"] client disconnected, failure reason: TLS_error:|268436496:SSL routines:OPENSSL_internal:SSLV3_ALERT_HANDSHAKE_FAILURE|268435610:SSL routines:OPENSSL_internal:HANDSHAKE_FAILURE_ON_CLIENT_HELLO:TLS_error_end
+[2026-11-07 14:40:54.588][69][debug][router] [source/common/router/router.cc:1725] [Tags: "ConnectionId":"1","StreamId":"13240024077153202582"] upstream reset: reset reason: remote connection failure, transport failure reason: TLS_error:|268436496:SSL routines:OPENSSL_internal:SSLV3_ALERT_HANDSHAKE_FAILURE|268435610:SSL routines:OPENSSL_internal:HANDSHAKE_FAILURE_ON_CLIENT_HELLO:TLS_error_end
+[2026-11-07 14:40:54.588][69][debug][http] [source/common/http/filter_manager.cc:1189] [Tags: "ConnectionId":"1","StreamId":"13240024077153202582"] Sending local reply with details upstream_reset_before_response_started{remote_connection_failure|TLS_error:|268436496:SSL_routines:OPENSSL_internal:SSLV3_ALERT_HANDSHAKE_FAILURE|268435610:SSL_routines:OPENSSL_internal:HANDSHAKE_FAILURE_ON_CLIENT_HELLO:TLS_error_end}

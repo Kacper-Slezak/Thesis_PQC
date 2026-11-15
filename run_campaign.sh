@@ -7,6 +7,9 @@
 #   SESSIONS=1 N_RUNS=1 ./run_campaign.sh               # quick test run
 set -eo pipefail
 cd "$(dirname "$0")"
+# istioctl matching the cluster version (used by setup_cluster, verify_ciphers, record_env)
+for d in ./istio-*/bin; do [ -x "$d/istioctl" ] && PATH="$PWD/${d#./}:$PATH"; done
+export PATH
 
 SESSIONS="${SESSIONS:-3}"            # number of cluster sessions
 START_SESSION="${START_SESSION:-1}"  # starting session index
@@ -32,7 +35,8 @@ for S in $(seq "$START_SESSION" "$LAST"); do
     ./run_sweeps.sh "$MODE" $SETUPS
 done
 
-# Run statistical analysis on sweep results
+# Run statistical analysis on sweep results (old layout only; run_all_final.sh sets OUT_DIR)
+[ -n "${OUT_DIR:-}" ] && { echo "Done. Results: $OUT_DIR"; exit 0; }
 python ./05_analytics/analyze_stats.py "$MODE" \
   || echo "Warning: analyze_stats.py failed (is .venv set up?)"
 

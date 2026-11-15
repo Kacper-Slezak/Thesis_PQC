@@ -1,0 +1,434 @@
+=== 2026-11-09 19:31:11 R1 rep=1 max_session_keys=64
+2026/11/09 18:31:13 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261109_193112.txt
+=== block smsk64_rep1_run1_r400_m2_a1 (2026-11-09 19:31:13) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 block=smsk64_rep1_run1_r400_m2_a1 ---
+    rps=401.4 p99=3.9677737899999994 cpu/req=1431.8us hs/s=200.7 reused=18234 errors=0  calib=150.0ms
+    block smsk64_rep1_run1_r400_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep1_run1_r100_m2_a1 (2026-11-09 19:33:30) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 block=smsk64_rep1_run1_r100_m2_a1 ---
+    rps=100.1 p99=3.4669 cpu/req=1683.2us hs/s=50.0 reused=4550 errors=0  calib=155.8ms
+    block smsk64_rep1_run1_r100_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep1_run1_r300_m2_a1 (2026-11-09 19:35:46) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 block=smsk64_rep1_run1_r300_m2_a1 ---
+    rps=301.2 p99=3.000198 cpu/req=1430.5us hs/s=150.6 reused=13673 errors=0  calib=156.6ms
+    block smsk64_rep1_run1_r300_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep1_run1_r300_m1_a1 (2026-11-09 19:38:03) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 block=smsk64_rep1_run1_r300_m1_a1 ---
+    rps=300.6 p99=7.759738 cpu/req=2517.8us hs/s=300.6 reused=27363 errors=0  calib=163.0ms
+    block smsk64_rep1_run1_r300_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep1_run1_r400_m1_a1 (2026-11-09 19:40:20) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 block=smsk64_rep1_run1_r400_m1_a1 ---
+    rps=401.6 p99=9.246914 cpu/req=2890.4us hs/s=401.6 reused=36514 errors=0  calib=151.3ms
+    block smsk64_rep1_run1_r400_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep1_run1_r100_m1_a1 (2026-11-09 19:42:37) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 block=smsk64_rep1_run1_r100_m1_a1 ---
+    rps=100.1 p99=4.004373 cpu/req=2277.2us hs/s=100.1 reused=9105 errors=0  calib=157.3ms
+    block smsk64_rep1_run1_r100_m1_a1: entry=off (%) exit=off (%) -> nogate
+Done. Results appended to ./04_results/Summary/sweeps.csv
+=== 2026-11-09 19:44:53 R1 rep=1 max_session_keys=4
+2026/11/09 18:44:55 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261109_194454.txt
+=== block smsk4_rep1_run1_r400_m2_a1 (2026-11-09 19:44:56) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 block=smsk4_rep1_run1_r400_m2_a1 ---
+    rps=401.5 p99=2.987392 cpu/req=1397.9us hs/s=200.7 reused=18229 errors=0  calib=156.9ms
+    block smsk4_rep1_run1_r400_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep1_run1_r300_m2_a1 (2026-11-09 19:47:12) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 block=smsk4_rep1_run1_r300_m2_a1 ---
+    rps=301.0 p99=3.234673 cpu/req=1444.2us hs/s=150.5 reused=13663 errors=0  calib=154.3ms
+    block smsk4_rep1_run1_r300_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep1_run1_r300_m1_a1 (2026-11-09 19:49:29) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 block=smsk4_rep1_run1_r300_m1_a1 ---
+    rps=300.7 p99=7.23321 cpu/req=2470.6us hs/s=300.7 reused=27348 errors=0  calib=165.8ms
+    block smsk4_rep1_run1_r300_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep1_run1_r100_m1_a1 (2026-11-09 19:51:45) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 block=smsk4_rep1_run1_r100_m1_a1 ---
+    rps=100.4 p99=3.928038 cpu/req=2273.2us hs/s=100.4 reused=9104 errors=0  calib=157.2ms
+    block smsk4_rep1_run1_r100_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep1_run1_r100_m2_a1 (2026-11-09 19:54:02) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 block=smsk4_rep1_run1_r100_m2_a1 ---
+    rps=100.3 p99=3.696675 cpu/req=1754.5us hs/s=50.1 reused=4552 errors=0  calib=157.5ms
+    block smsk4_rep1_run1_r100_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep1_run1_r400_m1_a1 (2026-11-09 19:56:18) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 block=smsk4_rep1_run1_r400_m1_a1 ---
+    rps=401.9 p99=8.259388 cpu/req=2851.5us hs/s=402.0 reused=36494 errors=0  calib=152.1ms
+    block smsk4_rep1_run1_r400_m1_a1: entry=off (%) exit=off (%) -> nogate
+Done. Results appended to ./04_results/Summary/sweeps.csv
+=== 2026-11-09 19:58:35 R1 rep=1 max_session_keys=16
+2026/11/09 18:58:38 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261109_195837.txt
+=== block smsk16_rep1_run1_r100_m2_a1 (2026-11-09 19:58:39) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 block=smsk16_rep1_run1_r100_m2_a1 ---
+    rps=100.4 p99=3.768919 cpu/req=1705.6us hs/s=50.2 reused=4552 errors=0  calib=155.2ms
+    block smsk16_rep1_run1_r100_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep1_run1_r400_m1_a1 (2026-11-09 20:00:55) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 block=smsk16_rep1_run1_r400_m1_a1 ---
+    rps=401.4 p99=10.038971 cpu/req=2893.1us hs/s=401.5 reused=36511 errors=0  calib=152.4ms
+    block smsk16_rep1_run1_r400_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep1_run1_r400_m2_a1 (2026-11-09 20:03:12) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 block=smsk16_rep1_run1_r400_m2_a1 ---
+    rps=401.2 p99=11.891531 cpu/req=1762.7us hs/s=200.6 reused=18247 errors=0  calib=165.4ms
+    block smsk16_rep1_run1_r400_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep1_run1_r300_m1_a1 (2026-11-09 20:05:28) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 block=smsk16_rep1_run1_r300_m1_a1 ---
+    rps=294.5 p99=40.484296 cpu/req=3032.4us hs/s=294.5 reused=27687 errors=0  calib=169.6ms
+    block smsk16_rep1_run1_r300_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep1_run1_r100_m1_a1 (2026-11-09 20:07:45) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 block=smsk16_rep1_run1_r100_m1_a1 ---
+    rps=100.4 p99=10.036136000000004 cpu/req=2957.3us hs/s=100.4 reused=9121 errors=0  calib=164.3ms
+    block smsk16_rep1_run1_r100_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep1_run1_r300_m2_a1 (2026-11-09 20:10:01) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 block=smsk16_rep1_run1_r300_m2_a1 ---
+    rps=300.9 p99=10.465999 cpu/req=1800.6us hs/s=150.5 reused=13683 errors=0  calib=217.6ms
+    block smsk16_rep1_run1_r300_m2_a1: entry=off (%) exit=off (%) -> nogate
+Done. Results appended to ./04_results/Summary/sweeps.csv
+=== 2026-11-09 20:12:19 R1 rep=1 max_session_keys=1
+2026/11/09 19:12:21 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261109_201220.txt
+=== block smsk1_rep1_run1_r400_m2_a1 (2026-11-09 20:12:21) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 block=smsk1_rep1_run1_r400_m2_a1 ---
+    rps=401.9 p99=14.655974 cpu/req=1797.2us hs/s=200.9 reused=17183 errors=0  calib=229.7ms
+    block smsk1_rep1_run1_r400_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep1_run1_r300_m2_a1 (2026-11-09 20:14:38) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 block=smsk1_rep1_run1_r300_m2_a1 ---
+    rps=301.7 p99=11.179275 cpu/req=1899.1us hs/s=150.8 reused=13062 errors=0  calib=166.5ms
+    block smsk1_rep1_run1_r300_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep1_run1_r400_m1_a1 (2026-11-09 20:16:54) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 block=smsk1_rep1_run1_r400_m1_a1 ---
+    rps=408.7 p99=241.239585 cpu/req=3641.3us hs/s=408.8 reused=31329 errors=0  calib=156.4ms
+    block smsk1_rep1_run1_r400_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep1_run1_r100_m2_a1 (2026-11-09 20:19:11) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 block=smsk1_rep1_run1_r100_m2_a1 ---
+    rps=100.5 p99=9.032414 cpu/req=2199.4us hs/s=50.2 reused=4549 errors=0  calib=156.8ms
+    block smsk1_rep1_run1_r100_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep1_run1_r100_m1_a1 (2026-11-09 20:21:27) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 block=smsk1_rep1_run1_r100_m1_a1 ---
+    rps=100.3 p99=10.104779 cpu/req=2941.2us hs/s=100.3 reused=9105 errors=0  calib=160.2ms
+    block smsk1_rep1_run1_r100_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep1_run1_r300_m1_a1 (2026-11-09 20:23:44) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 block=smsk1_rep1_run1_r300_m1_a1 ---
+    rps=301.2 p99=45.784873 cpu/req=3085.7us hs/s=301.2 reused=25314 errors=0  calib=206.3ms
+    block smsk1_rep1_run1_r300_m1_a1: entry=off (%) exit=off (%) -> nogate
+Done. Results appended to ./04_results/Summary/sweeps.csv
+=== 2026-11-09 20:26:01 R1 rep=2 max_session_keys=64
+2026/11/09 19:26:02 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261109_202602.txt
+=== block smsk64_rep2_run1_r100_m2_a1 (2026-11-09 20:26:02) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 block=smsk64_rep2_run1_r100_m2_a1 ---
+    rps=100.3 p99=8.742352 cpu/req=2189.3us hs/s=50.1 reused=4556 errors=0  calib=161.9ms
+    block smsk64_rep2_run1_r100_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep2_run1_r400_m2_a1 (2026-11-09 20:28:19) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 block=smsk64_rep2_run1_r400_m2_a1 ---
+    rps=400.6 p99=12.947125 cpu/req=1782.4us hs/s=200.3 reused=18238 errors=0  calib=166.5ms
+    block smsk64_rep2_run1_r400_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep2_run1_r400_m1_a1 (2026-11-09 20:30:35) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 block=smsk64_rep2_run1_r400_m1_a1 ---
+    rps=402.1 p99=59.011045 cpu/req=3393.7us hs/s=402.1 reused=36565 errors=0  calib=169.4ms
+    block smsk64_rep2_run1_r400_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep2_run1_r100_m1_a1 (2026-11-09 20:32:52) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 block=smsk64_rep2_run1_r100_m1_a1 ---
+    rps=100.3 p99=9.939518190000006 cpu/req=2939.2us hs/s=100.3 reused=9110 errors=0  calib=208.1ms
+    block smsk64_rep2_run1_r100_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep2_run1_r300_m2_a1 (2026-11-09 20:35:08) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 block=smsk64_rep2_run1_r300_m2_a1 ---
+    rps=301.3 p99=10.076466 cpu/req=1805.6us hs/s=150.6 reused=13691 errors=0  calib=164.2ms
+    block smsk64_rep2_run1_r300_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep2_run1_r300_m1_a1 (2026-11-09 20:37:25) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 block=smsk64_rep2_run1_r300_m1_a1 ---
+    rps=300.9 p99=47.72549 cpu/req=3143.4us hs/s=300.9 reused=27405 errors=0  calib=206.4ms
+    block smsk64_rep2_run1_r300_m1_a1: entry=off (%) exit=off (%) -> nogate
+Done. Results appended to ./04_results/Summary/sweeps.csv
+=== 2026-11-09 20:39:41 R1 rep=2 max_session_keys=4
+2026/11/09 19:39:43 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261109_203942.txt
+=== block smsk4_rep2_run1_r100_m2_a1 (2026-11-09 20:39:43) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 block=smsk4_rep2_run1_r100_m2_a1 ---
+    rps=100.4 p99=8.943404 cpu/req=2201.5us hs/s=50.2 reused=4562 errors=0  calib=169.9ms
+    block smsk4_rep2_run1_r100_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep2_run1_r300_m2_a1 (2026-11-09 20:41:59) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 block=smsk4_rep2_run1_r300_m2_a1 ---
+    rps=300.8 p99=10.23345 cpu/req=1839.5us hs/s=150.4 reused=13679 errors=0  calib=154.0ms
+    block smsk4_rep2_run1_r300_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep2_run1_r400_m2_a1 (2026-11-09 20:44:16) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 block=smsk4_rep2_run1_r400_m2_a1 ---
+    rps=401.1 p99=12.190447 cpu/req=1765.0us hs/s=200.5 reused=18203 errors=0  calib=168.7ms
+    block smsk4_rep2_run1_r400_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep2_run1_r400_m1_a1 (2026-11-09 20:46:32) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 block=smsk4_rep2_run1_r400_m1_a1 ---
+    rps=402.0 p99=64.369303 cpu/req=3410.8us hs/s=402.0 reused=35758 errors=0  calib=163.7ms
+    block smsk4_rep2_run1_r400_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep2_run1_r300_m1_a1 (2026-11-09 20:48:49) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 block=smsk4_rep2_run1_r300_m1_a1 ---
+    rps=300.7 p99=48.641512 cpu/req=3043.0us hs/s=300.7 reused=27195 errors=0  calib=166.5ms
+    block smsk4_rep2_run1_r300_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep2_run1_r100_m1_a1 (2026-11-09 20:51:05) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 block=smsk4_rep2_run1_r100_m1_a1 ---
+    rps=100.4 p99=9.851505 cpu/req=2918.2us hs/s=100.3 reused=9110 errors=0  calib=167.9ms
+    block smsk4_rep2_run1_r100_m1_a1: entry=off (%) exit=off (%) -> nogate
+Done. Results appended to ./04_results/Summary/sweeps.csv
+=== 2026-11-09 20:53:22 R1 rep=2 max_session_keys=16
+2026/11/09 19:53:24 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261109_205323.txt
+=== block smsk16_rep2_run1_r300_m1_a1 (2026-11-09 20:53:24) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 block=smsk16_rep2_run1_r300_m1_a1 ---
+    rps=300.8 p99=48.346969 cpu/req=3013.7us hs/s=300.9 reused=27378 errors=0  calib=154.0ms
+    block smsk16_rep2_run1_r300_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep2_run1_r300_m2_a1 (2026-11-09 20:55:41) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 block=smsk16_rep2_run1_r300_m2_a1 ---
+    rps=301.5 p99=9.924719 cpu/req=1825.6us hs/s=150.7 reused=13688 errors=0  calib=168.3ms
+    block smsk16_rep2_run1_r300_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep2_run1_r100_m2_a1 (2026-11-09 20:57:58) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 block=smsk16_rep2_run1_r100_m2_a1 ---
+    rps=100.4 p99=8.947115 cpu/req=2179.5us hs/s=50.2 reused=4553 errors=0  calib=221.0ms
+    block smsk16_rep2_run1_r100_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep2_run1_r400_m1_a1 (2026-11-09 21:00:14) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 block=smsk16_rep2_run1_r400_m1_a1 ---
+    rps=401.4 p99=65.55837994999997 cpu/req=3423.4us hs/s=401.4 reused=36403 errors=0  calib=157.1ms
+    block smsk16_rep2_run1_r400_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep2_run1_r100_m1_a1 (2026-11-09 21:02:31) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 block=smsk16_rep2_run1_r100_m1_a1 ---
+    rps=100.5 p99=10.620936 cpu/req=2968.7us hs/s=100.5 reused=9104 errors=0  calib=168.0ms
+    block smsk16_rep2_run1_r100_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep2_run1_r400_m2_a1 (2026-11-09 21:04:47) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 block=smsk16_rep2_run1_r400_m2_a1 ---
+    rps=401.3 p99=12.09731345999999 cpu/req=1771.8us hs/s=200.6 reused=18266 errors=0  calib=247.0ms
+    block smsk16_rep2_run1_r400_m2_a1: entry=off (%) exit=off (%) -> nogate
+Done. Results appended to ./04_results/Summary/sweeps.csv
+=== 2026-11-09 21:07:04 R1 rep=2 max_session_keys=1
+2026/11/09 20:07:05 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261109_210705.txt
+=== block smsk1_rep2_run1_r100_m2_a1 (2026-11-09 21:07:05) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 block=smsk1_rep2_run1_r100_m2_a1 ---
+    rps=100.6 p99=8.575567 cpu/req=2198.4us hs/s=50.3 reused=4544 errors=0  calib=180.9ms
+    block smsk1_rep2_run1_r100_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep2_run1_r100_m1_a1 (2026-11-09 21:09:22) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 block=smsk1_rep2_run1_r100_m1_a1 ---
+    rps=100.3 p99=10.260661 cpu/req=2971.9us hs/s=100.3 reused=9103 errors=0  calib=192.4ms
+    block smsk1_rep2_run1_r100_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep2_run1_r300_m2_a1 (2026-11-09 21:11:38) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 block=smsk1_rep2_run1_r300_m2_a1 ---
+    rps=301.1 p99=11.596666 cpu/req=1832.2us hs/s=150.5 reused=13161 errors=0  calib=170.0ms
+    block smsk1_rep2_run1_r300_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep2_run1_r400_m1_a1 (2026-11-09 21:13:55) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 block=smsk1_rep2_run1_r400_m1_a1 ---
+    rps=403.3 p99=74.846774 cpu/req=3520.9us hs/s=403.3 reused=31376 errors=0  calib=167.3ms
+    block smsk1_rep2_run1_r400_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep2_run1_r300_m1_a1 (2026-11-09 21:16:11) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 block=smsk1_rep2_run1_r300_m1_a1 ---
+    rps=301.1 p99=44.913458 cpu/req=3033.1us hs/s=301.2 reused=25318 errors=0  calib=193.7ms
+    block smsk1_rep2_run1_r300_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep2_run1_r400_m2_a1 (2026-11-09 21:18:27) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 block=smsk1_rep2_run1_r400_m2_a1 ---
+    rps=402.4 p99=15.333765 cpu/req=1788.1us hs/s=201.1 reused=17197 errors=0  calib=163.0ms
+    block smsk1_rep2_run1_r400_m2_a1: entry=off (%) exit=off (%) -> nogate
+Done. Results appended to ./04_results/Summary/sweeps.csv
+=== 2026-11-09 21:20:45 R1 rep=3 max_session_keys=64
+2026/11/09 20:20:47 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261109_212046.txt
+=== block smsk64_rep3_run1_r100_m1_a1 (2026-11-09 21:20:47) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 block=smsk64_rep3_run1_r100_m1_a1 ---
+    rps=100.2 p99=9.733100520000006 cpu/req=2945.6us hs/s=100.2 reused=9108 errors=0  calib=167.5ms
+    block smsk64_rep3_run1_r100_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep3_run1_r300_m2_a1 (2026-11-09 21:23:03) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 block=smsk64_rep3_run1_r300_m2_a1 ---
+    rps=302.1 p99=9.60831 cpu/req=1792.1us hs/s=151.0 reused=13684 errors=0  calib=203.2ms
+    block smsk64_rep3_run1_r300_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep3_run1_r400_m2_a1 (2026-11-09 21:25:19) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 block=smsk64_rep3_run1_r400_m2_a1 ---
+    rps=402.7 p99=12.290017 cpu/req=1738.9us hs/s=201.3 reused=18240 errors=0  calib=194.7ms
+    block smsk64_rep3_run1_r400_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep3_run1_r300_m1_a1 (2026-11-09 21:27:36) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 block=smsk64_rep3_run1_r300_m1_a1 ---
+    rps=301.6 p99=49.243859 cpu/req=2984.3us hs/s=301.6 reused=27377 errors=0  calib=160.2ms
+    block smsk64_rep3_run1_r300_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep3_run1_r100_m2_a1 (2026-11-09 21:29:52) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 block=smsk64_rep3_run1_r100_m2_a1 ---
+    rps=100.5 p99=8.672237 cpu/req=2164.7us hs/s=50.2 reused=4556 errors=0  calib=159.2ms
+    block smsk64_rep3_run1_r100_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk64_rep3_run1_r400_m1_a1 (2026-11-09 21:32:09) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 block=smsk64_rep3_run1_r400_m1_a1 ---
+    rps=401.8 p99=62.452645819999994 cpu/req=3407.2us hs/s=401.8 reused=36505 errors=0  calib=159.9ms
+    block smsk64_rep3_run1_r400_m1_a1: entry=off (%) exit=off (%) -> nogate
+Done. Results appended to ./04_results/Summary/sweeps.csv
+=== 2026-11-09 21:34:25 R1 rep=3 max_session_keys=4
+2026/11/09 20:34:27 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261109_213426.txt
+=== block smsk4_rep3_run1_r300_m2_a1 (2026-11-09 21:34:27) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 block=smsk4_rep3_run1_r300_m2_a1 ---
+    rps=302.2 p99=9.694868 cpu/req=1847.7us hs/s=151.0 reused=13676 errors=0  calib=158.9ms
+    block smsk4_rep3_run1_r300_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep3_run1_r300_m1_a1 (2026-11-09 21:36:43) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 block=smsk4_rep3_run1_r300_m1_a1 ---
+    rps=300.9 p99=36.845829 cpu/req=2979.4us hs/s=300.9 reused=27192 errors=0  calib=158.3ms
+    block smsk4_rep3_run1_r300_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep3_run1_r400_m1_a1 (2026-11-09 21:39:00) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 block=smsk4_rep3_run1_r400_m1_a1 ---
+    rps=403.9 p99=65.11539 cpu/req=3401.4us hs/s=403.9 reused=35708 errors=0  calib=164.9ms
+    block smsk4_rep3_run1_r400_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep3_run1_r100_m1_a1 (2026-11-09 21:41:16) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 block=smsk4_rep3_run1_r100_m1_a1 ---
+    rps=100.6 p99=10.234393 cpu/req=2902.3us hs/s=100.6 reused=9106 errors=0  calib=178.9ms
+    block smsk4_rep3_run1_r100_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep3_run1_r100_m2_a1 (2026-11-09 21:43:32) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 block=smsk4_rep3_run1_r100_m2_a1 ---
+    rps=100.3 p99=8.565979 cpu/req=2161.5us hs/s=50.1 reused=4559 errors=0  calib=164.7ms
+    block smsk4_rep3_run1_r100_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk4_rep3_run1_r400_m2_a1 (2026-11-09 21:45:49) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 block=smsk4_rep3_run1_r400_m2_a1 ---
+    rps=403.0 p99=12.956147 cpu/req=1761.8us hs/s=201.5 reused=18221 errors=0  calib=160.5ms
+    block smsk4_rep3_run1_r400_m2_a1: entry=off (%) exit=off (%) -> nogate
+Done. Results appended to ./04_results/Summary/sweeps.csv
+=== 2026-11-09 21:48:06 R1 rep=3 max_session_keys=1
+2026/11/09 20:48:08 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261109_214807.txt
+=== block smsk1_rep3_run1_r100_m1_a1 (2026-11-09 21:48:08) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 block=smsk1_rep3_run1_r100_m1_a1 ---
+    rps=100.3 p99=10.273979 cpu/req=2987.1us hs/s=100.3 reused=9093 errors=0  calib=164.0ms
+    block smsk1_rep3_run1_r100_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep3_run1_r400_m2_a1 (2026-11-09 21:50:24) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 block=smsk1_rep3_run1_r400_m2_a1 ---
+    rps=401.8 p99=15.598373 cpu/req=1797.6us hs/s=200.9 reused=17076 errors=0  calib=162.7ms
+    block smsk1_rep3_run1_r400_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep3_run1_r100_m2_a1 (2026-11-09 21:52:40) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 block=smsk1_rep3_run1_r100_m2_a1 ---
+    rps=100.3 p99=8.567153 cpu/req=2163.4us hs/s=50.1 reused=4550 errors=0  calib=159.9ms
+    block smsk1_rep3_run1_r100_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep3_run1_r300_m2_a1 (2026-11-09 21:54:56) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 block=smsk1_rep3_run1_r300_m2_a1 ---
+    rps=301.2 p99=11.500982 cpu/req=1825.8us hs/s=150.5 reused=13146 errors=0  calib=174.0ms
+    block smsk1_rep3_run1_r300_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep3_run1_r300_m1_a1 (2026-11-09 21:57:13) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 block=smsk1_rep3_run1_r300_m1_a1 ---
+    rps=302.1 p99=46.296637 cpu/req=3075.0us hs/s=302.2 reused=25344 errors=0  calib=185.1ms
+    block smsk1_rep3_run1_r300_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk1_rep3_run1_r400_m1_a1 (2026-11-09 21:59:29) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 block=smsk1_rep3_run1_r400_m1_a1 ---
+    rps=401.6 p99=70.538623 cpu/req=3494.5us hs/s=401.6 reused=31465 errors=0  calib=161.2ms
+    block smsk1_rep3_run1_r400_m1_a1: entry=off (%) exit=off (%) -> nogate
+Done. Results appended to ./04_results/Summary/sweeps.csv
+=== 2026-11-09 22:01:46 R1 rep=3 max_session_keys=16
+2026/11/09 21:01:47 INFO GOMEMLIMIT is already set, skipping package=github.com/KimMachineGun/automemlimit/memlimit GOMEMLIMIT=536870912
+Saved to ./04_results/Summary/environment_sweeps_20261109_220147.txt
+=== block smsk16_rep3_run1_r300_m2_a1 (2026-11-09 22:01:47) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=2 run=1 block=smsk16_rep3_run1_r300_m2_a1 ---
+    rps=302.1 p99=10.39947 cpu/req=1822.5us hs/s=151.0 reused=13690 errors=0  calib=199.9ms
+    block smsk16_rep3_run1_r300_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep3_run1_r400_m2_a1 (2026-11-09 22:04:03) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=2 run=1 block=smsk16_rep3_run1_r400_m2_a1 ---
+    rps=402.6 p99=11.926924 cpu/req=1738.7us hs/s=201.3 reused=18279 errors=0  calib=184.8ms
+    block smsk16_rep3_run1_r400_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep3_run1_r300_m1_a1 (2026-11-09 22:06:20) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=300 mrpc=1 run=1 block=smsk16_rep3_run1_r300_m1_a1 ---
+    rps=304.4 p99=46.731242 cpu/req=3031.3us hs/s=304.5 reused=27424 errors=0  calib=160.2ms
+    block smsk16_rep3_run1_r300_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep3_run1_r100_m1_a1 (2026-11-09 22:08:36) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=1 run=1 block=smsk16_rep3_run1_r100_m1_a1 ---
+    rps=101.7 p99=10.016307 cpu/req=2945.9us hs/s=101.7 reused=9113 errors=0  calib=163.2ms
+    block smsk16_rep3_run1_r100_m1_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep3_run1_r100_m2_a1 (2026-11-09 22:10:51) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=100 mrpc=2 run=1 block=smsk16_rep3_run1_r100_m2_a1 ---
+    rps=101.2 p99=8.630589 cpu/req=2180.8us hs/s=50.6 reused=4554 errors=0  calib=161.8ms
+    block smsk16_rep3_run1_r100_m2_a1: entry=off (%) exit=off (%) -> nogate
+=== block smsk16_rep3_run1_r400_m1_a1 (2026-11-09 22:13:05) ===
+Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
+--- [grid] mtls1.3-postquantum rate=400 mrpc=1 run=1 block=smsk16_rep3_run1_r400_m1_a1 ---
+    rps=411.1 p99=15.79783131999999 cpu/req=3031.7us hs/s=411.1 reused=36540 errors=0  calib=157.8ms
+    block smsk16_rep3_run1_r400_m1_a1: entry=off (%) exit=off (%) -> nogate
+Done. Results appended to ./04_results/Summary/sweeps.csv
+=== 2026-11-09 22:15:20 results saved in 04_results/R1_resumption_20261109_1931
+max_session_keys rate mrpc resumed_share
+1 100 1 0.998
+1 100 2 0.998
+1 300 1 0.925
+1 300 2 0.959
+1 400 1 0.853
+1 400 2 0.940
+4 100 1 1.000
+4 100 2 1.000
+4 300 1 0.995
+4 300 2 1.000
+4 400 1 0.985
+4 400 2 0.999
+16 100 1 1.000
+16 100 2 1.000
+16 300 1 1.004
+16 300 2 1.000
+16 400 1 0.998
+16 400 2 1.000
+64 100 1 1.000
+64 100 2 1.000
+64 300 1 1.000
+64 300 2 1.000
+64 400 1 1.000
+64 400 2 1.000

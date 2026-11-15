@@ -1,0 +1,48 @@
+OpenSSL 3.5.9 29 Sep 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)
+================ s_client 
+Connecting to 127.0.0.1
+CONNECTED(00000003)
+depth=1 CN=probe-ca
+verify return:1
+depth=0 CN=localhost
+verify return:1
+---
+Certificate chain
+ 0 s:CN=localhost
+   i:CN=probe-ca
+   a:PKEY: RSA, 2048 (bit); sigalg: sha256WithRSAEncryption
+   v:NotBefore: Nov  7 14:22:53 2026 GMT; NotAfter: Nov 14 14:22:53 2026 GMT
+---
+Server certificate
+subject=CN=localhost
+issuer=CN=probe-ca
+---
+No client certificate CA names sent
+Peer signing digest: SHA256
+Peer signature type: rsa_pss_rsae_sha256
+Negotiated TLS1.3 group: X25519MLKEM768
+---
+SSL handshake has read 2400 bytes and written 1549 bytes
+Verification: OK
+---
+New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
+Protocol: TLSv1.3
+Server public key is 2048 bit
+This TLS version forbids renegotiation.
+No ALPN negotiated
+Early data was not sent
+Verify return code: 0 (ok)
+---
+DONE
+================ s_client -brief
+Connecting to 127.0.0.1
+CONNECTION ESTABLISHED
+Protocol version: TLSv1.3
+Ciphersuite: TLS_AES_256_GCM_SHA384
+Peer certificate: CN=localhost
+Hash used: SHA256
+Signature type: rsa_pss_rsae_sha256
+Verification: OK
+Negotiated TLS1.3 group: X25519MLKEM768
+DONE
+================ log serwera Envoya (błędy TLS, jeśli były)

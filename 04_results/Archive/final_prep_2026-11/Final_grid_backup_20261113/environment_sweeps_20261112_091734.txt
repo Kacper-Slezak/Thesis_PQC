@@ -1,0 +1,16 @@
+date:            2026-11-12T08:17:34Z
+git_commit:      a828532-dirty
+kernel:          6.6.87.2-microsoft-standard-WSL2
+cpu_model:       AMD Ryzen AI 9 HX 370 w/ Radeon 890M
+cpu_threads:     20
+aes_ni:          yes
+avx2:            yes
+ram:             19Gi
+docker:          28.5.1
+k3d:             k3d version v5.9.0
+istioctl:        client version: 1.31.4
+istio_requested: 1.31.4
+istiod_image:    docker.io/istio/pilot:1.31.4
+envoy:           "version":"defdcd65d0c035b54b324dc6ed4ef258e22bf94d/1.39.7-dev/Clean/RELEASE/BoringSSL"
+backend_image:   mccutchen/go-httpbin:2.18.3
+k6:              k6 v1.3.0+dirty (commit/5870e99ae8-dirty, go1.25.1, linux/amd64)

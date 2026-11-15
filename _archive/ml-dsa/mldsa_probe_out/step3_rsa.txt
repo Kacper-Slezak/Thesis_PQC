@@ -1,0 +1,18 @@
+== krok 1: czy oba Envoye żyją?
+LIVE
+LIVE
+== krok 2: żądanie przez klienta (HTTP -> TLS -> serwer)
+ok
+HTTP 200
+== statystyki TLS serwera (tylko niezerowe)
+listener.127.0.0.1_18443.ssl.curves.X25519MLKEM768: 1
+listener.127.0.0.1_18443.ssl.handshake: 1
+listener.127.0.0.1_18443.ssl.versions.TLSv1.3: 1
+== statystyki TLS klienta (tylko niezerowe)
+cluster.pq_srv.ssl.curves.X25519MLKEM768: 1
+cluster.pq_srv.ssl.handshake: 1
+cluster.pq_srv.ssl.sigalgs.rsa_pss_rsae_sha256: 1
+cluster.pq_srv.ssl.versions.TLSv1.3: 1
+== logi (pierwsze linie)
+[2026-11-07 14:23:12.090][7][warning][main] [external/envoy/source/server/server.cc:1031] There is no configured limit to the number of allowed active downstream connections. Configure a limit in `envoy.resource_monitors.global_downstream_max_connections` resource monitor.
+[2026-11-07 14:23:12.092][8][warning][main] [external/envoy/source/server/server.cc:1031] There is no configured limit to the number of allowed active downstream connections. Configure a limit in `envoy.resource_monitors.global_downstream_max_connections` resource monitor.

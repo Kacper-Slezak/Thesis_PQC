@@ -1,0 +1,3 @@
+setting,rate,mrpc,max_session_keys,envoy_server_handshakes,envoy_session_reused,client_hello,client_hello_psk,server_hello,server_hello_psk,incomplete
+mtls1.3-postquantum,300,1,1,6273,12164,5869,5687,5868,5686,1
+mtls1.3-postquantum,300,1,64,6248,12510,5548,5548,5548,5548,0
