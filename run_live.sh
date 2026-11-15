@@ -37,16 +37,11 @@ echo "=== monitoring on"
 kubectl rollout status deploy/prometheus -n istio-system --timeout=180s
 kubectl rollout status deploy/grafana -n istio-system --timeout=180s
 
-# Export Envoy TLS counters (ssl.handshake, ssl.session_reused, ssl.curves.*) to Prometheus.
-# Istio exports only a subset of Envoy stats by default; changing the pod template restarts the pods.
-echo "=== enable ssl.* stats export in both sidecars (restarts k6 and httpbin)"
-PATCH='{"spec":{"template":{"metadata":{"annotations":{"proxy.istio.io/config":"{\"proxyStatsMatcher\":{\"inclusionRegexps\":[\".*ssl.*\"]}}"}}}}}'
-kubectl patch deployment httpbin   --type merge -p "$PATCH" >/dev/null
-kubectl patch deployment k6-deploy --type merge -p "$PATCH" >/dev/null
-kubectl rollout status deployment/httpbin   --timeout=240s
-kubectl rollout status deployment/k6-deploy --timeout=240s
-sleep 10
-K6_POD=$(kubectl get pods -l app=k6 -o jsonpath='{.items[?(@.metadata.deletionTimestamp==null)].metadata.name}' | awk '{print $1}')
+# Envoy TLS counters (ssl.*) are already exported to Prometheus: k6.yaml and backend.yaml set
+# proxyStatsMatcher (.*ssl.*, .*tls.*, cluster.inbound.*upstream_rq_total). Do not override it:
+# the matcher decides which stats Envoy creates at all, and run_sweeps.sh needs upstream_rq_total.
+K6_POD=$(kubectl get pods -l app=k6 -o go-template='{{range .items}}{{if not .metadata.deletionTimestamp}}{{.metadata.name}}{{"\n"}}{{end}}{{end}}' | head -1)
+[ -n "$K6_POD" ] || { echo "no running k6 pod"; exit 1; }
 ./01_scripts/record_env.sh "$OUT/environment.txt" || true
 
 N=$(echo $PHASES | wc -w)
@@ -94,7 +89,9 @@ prom p50        "histogram_quantile(0.5, sum by (le) (rate(istio_request_duratio
 prom p99        "histogram_quantile(0.99, sum by (le) (rate(istio_request_duration_milliseconds_bucket{reporter=\"destination\",destination_workload=\"httpbin\"}[30s])))"
 prom handshakes "sum(rate({__name__=~\"envoy_listener_ssl_handshake\",namespace=\"default\",pod=~\"httpbin.*\"}[30s]))"
 prom reused     "sum(rate({__name__=~\"envoy_listener_ssl_session_reused\",namespace=\"default\",pod=~\"httpbin.*\"}[30s]))"
-prom curves     "sum by (__name__) (rate({__name__=~\"envoy_listener_ssl_curves_.*\",namespace=\"default\",pod=~\"httpbin.*\"}[30s]))"
+# one query per key-exchange group: rate() drops the metric name, so "sum by (__name__)" cannot be used
+prom curve_X25519         "sum(rate(envoy_listener_ssl_curves_X25519{namespace=\"default\",pod=~\"httpbin.*\"}[30s]))"
+prom curve_X25519MLKEM768 "sum(rate(envoy_listener_ssl_curves_X25519MLKEM768{namespace=\"default\",pod=~\"httpbin.*\"}[30s]))"
 prom mtls       "sum by (connection_security_policy) (rate(istio_requests_total{reporter=\"destination\",destination_workload=\"httpbin\"}[30s]))"
 echo "Done: $OUT  (plots: .venv/bin/python -I 05_analytics/plot_live.py $OUT)"
 echo "Grafana is still running for screenshots; afterwards: ./01_scripts/quiet_mode.sh on"

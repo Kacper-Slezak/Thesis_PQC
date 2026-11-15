@@ -60,34 +60,58 @@ def shade(ax, top_labels=False):
                     ha="center", va="bottom", fontsize=7, color=INK2)
 
 
+def current_pods(name):
+    """Per role (k6 / httpbin) keep only the pod with the most samples: pods replaced just before
+    the run still appear in cAdvisor for a few minutes."""
+    best = {}
+    for m, xs, ys in series(name):
+        role = "httpbin" if m.get("pod", "").startswith("httpbin") else "k6"
+        if role not in best or len(xs) > len(best[role][1]):
+            best[role] = (m, xs, ys)
+    return list(best.values())
+
+
+def curve_series():
+    """Key-exchange groups: prom_curves.json (one file) or prom_curve_<group>.json (one per group)."""
+    out = [(m.get("__name__", "").split("curves_")[-1], xs, ys) for m, xs, ys in series("curves")]
+    for g in ("X25519", "X25519MLKEM768"):
+        out += [(g, xs, ys) for _, xs, ys in series(f"curve_{g}")]
+    return out
+
+
 def pod_style(metric):
     pod = metric.get("pod", "")
     return ("server sidecar (httpbin)", ORANGE) if pod.startswith("httpbin") else ("client sidecar (k6)", BLUE)
 
 
 def draw_cpu(ax):
-    for m, xs, ys in series("cpu"):
+    for m, xs, ys in current_pods("cpu"):
         lab, c = pod_style(m)
         ax.plot(xs, [y * 1000 for y in ys], color=c, label=lab)
     ax.set_ylabel("sidecar CPU [millicores]")
 
 
 def draw_memory(ax):
-    for m, xs, ys in series("memory"):
+    for m, xs, ys in current_pods("memory"):
         lab, c = pod_style(m)
         ax.plot(xs, [y / 2**20 for y in ys], color=c, label=lab)
     ax.set_ylabel("sidecar memory\n(working set) [MiB]")
 
 
 def draw_handshakes(ax):
-    for name, lab, c, ls in (("handshakes", "handshakes / s (server)", BLUE, "-"), ("reused", "resumed / s (server)", BLUE, "--")):
-        for _, xs, ys in series(name):
-            ax.plot(xs, ys, color=c, ls=ls, label=lab)
-    for m, xs, ys in series("curves"):
-        nm = m.get("__name__", "").split("curves_")[-1]
-        if "MLKEM" in nm:
-            ax.plot(xs, ys, color=ORANGE, ls=":", lw=2.2, label=f"key exchange {nm} / s")
-    ax.set_ylabel("TLS handshakes / s")
+    """Full and resumed handshakes separately (full = all - resumed); key-exchange groups dotted."""
+    hs, ru = series("handshakes"), series("reused")
+    if hs:
+        _, xs, ys = hs[0]
+        rmap = dict(zip(ru[0][1], ru[0][2])) if ru else {}
+        full = [y - rmap.get(x, 0.0) for x, y in zip(xs, ys)]
+        ax.plot(xs, full, color=INK2, ls="-", label="full handshakes / s")
+        if ru:
+            ax.plot(ru[0][1], ru[0][2], color=INK2, ls="--", label="resumed handshakes / s")
+    for nm, xs, ys in curve_series():
+        c = ORANGE if "MLKEM" in nm else BLUE
+        ax.plot(xs, ys, color=c, ls=":", lw=2.2, label=f"key exchange {nm} / s")
+    ax.set_ylabel("TLS handshakes / s\n(server sidecar)")
 
 
 def draw_latency(ax):
