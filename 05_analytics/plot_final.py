@@ -4,9 +4,11 @@ Statistics as in final_summary.py (imported): one run = one block per (rate, mrp
 comparisons are paired inside a block, then mean and 95% t-CI over runs; blocks with a
 machine-state flip inside the block (final_summary.outliers) are left out.
 
+Chart types: grouped bars (mean ± 95% t-CI over runs) for every comparison, box plots
+(median, IQR, whiskers 1.5 IQR, every run) where the spread of single runs matters
+(f2b, latency); only the machine-state time series (f7) stays a scatter.
 Encoding: key exchange = hue (X25519 blue, X25519MLKEM768 orange, plaintext gray);
-full vs resumed handshake = line style + marker (solid/circle vs dashed/triangle);
-offered load = one-hue ordinal blue ramp. Machine state: fast = filled, slow = hollow.
+full vs resumed handshake = solid vs hatched bar; offered load = one-hue ordinal blue ramp.
 
 Usage:
   .venv/bin/python -I 05_analytics/plot_final.py              # titles on  -> <grid>/plots/
@@ -92,11 +94,6 @@ def ci(v):
     return st.mean(v), (T95[n] * st.stdev(v) / n ** 0.5 if n > 1 else 0.0)
 
 
-def iqr(v):
-    q = st.quantiles(v, n=4) if len(v) > 1 else [v[0], v[0], v[0]]
-    return st.median(v), q[0], q[2]
-
-
 def at(rate, mrpc, bset=None):
     return [b for k, b in (bset or B).items() if k[2] == rate and k[3] == mrpc]
 
@@ -135,6 +132,32 @@ def xcat(ax, labels, xlabel=None):
         ax.set_xlabel(xlabel)
 
 
+def bar(ax, x, mu, h, w, color, hatched=False, label=None):
+    """One bar of a grouped bar chart with its 95% CI whisker."""
+    ax.bar(x, mu, w * 0.9, yerr=h or None, color=color, hatch="////" if hatched else None, edgecolor="white",
+           linewidth=0.6, label=label, error_kw={"ecolor": INK, "lw": 1, "capsize": 2})
+
+
+def off(j, n, w):
+    """x offset of series j of n inside a group of bars of width w."""
+    return (j - (n - 1) / 2) * w
+
+
+def box(ax, x, v, w, color, hatched=False):
+    """Box plot of the single runs (median, IQR, whiskers 1.5 IQR, outliers as dots)."""
+    bp = ax.boxplot([v], positions=[x], widths=w * 0.85, patch_artist=True, manage_ticks=False,
+                    medianprops={"color": "white", "lw": 1.6}, whiskerprops={"color": INK2, "lw": 0.8},
+                    capprops={"color": INK2, "lw": 0.8},
+                    flierprops={"marker": "o", "ms": 2.5, "mfc": color, "mec": INK2, "mew": 0.4})
+    for p in bp["boxes"]:
+        p.set(facecolor=color, edgecolor=INK2, linewidth=0.6, hatch="////" if hatched else None)
+
+
+def proxy(ax, color, label, hatched=False):
+    """Legend entry for series drawn with box(): a zero-size bar."""
+    ax.bar([0], [0], 0, color=color, hatch="////" if hatched else None, edgecolor="white", label=label)
+
+
 def multi_and_single(name, panels, draw, ylabel, xlabel, sup, figsize, single_size=(4.2, 3.2), ncol=5, sharey=True):
     """Draw the same panels once side by side and once one per file."""
     fig, axes = plt.subplots(1, len(panels), figsize=figsize, sharey=sharey)
@@ -160,71 +183,61 @@ def multi_and_single(name, panels, draw, ylabel, xlabel, sup, figsize, single_si
 
 
 # ----------------------------------------------------------------------------- panel drawers
+def not_measured(ax, i):
+    ax.text(i, 0.02, "not\nmeasured", transform=ax.get_xaxis_transform(), ha="center", va="bottom",
+            fontsize=6.5, color=INK2)
+
+
 def draw_cpu(ax, rate):
-    for s in ORDER:
-        lab, c, ls, mk = STYLE[s]
-        xs, ys, es = [], [], []
+    w = 0.16
+    for j, s in enumerate(ORDER):
+        lab, c, ls, _ = STYLE[s]
         for i, m in enumerate(MRPCS):
             bl = at(rate, m)
             if bl:
                 mu, h = ci([cpu(b[s]) for b in bl])
-                xs.append(i); ys.append(mu / 1000); es.append(h / 1000)
-        ax.errorbar(xs, ys, yerr=es, color=c, ls=ls, marker=mk, label=lab)
+                bar(ax, i + off(j, 5, w), mu / 1000, h / 1000, w, c, ls == "--", lab if i == 3 else None)
+            elif j == 0:
+                not_measured(ax, i)
     xcat(ax, [MLAB[m] for m in MRPCS])
 
 
-def draw_overhead(ax, which):
+def draw_overhead_box(ax, which):
+    """Single runs per (offered load, mrpc) as box plots: the spread behind f2."""
     a, b = (PQF, XF) if which == "full" else (PQ, X)
+    w = 0.2
     for j, rate in enumerate(RATES):
-        xs, ys, es = [], [], []
+        proxy(ax, RAMP[j], f"{rate} req/s")
         for i, m in enumerate(MRPCS):
             bl = at(rate, m)
             if bl:
-                mu, h = ci([(cpu(x[a]) / cpu(x[b]) - 1) * 100 for x in bl])
-                xs.append(i + (j - 1.5) * 0.12); ys.append(mu); es.append(h)
-        ax.errorbar(xs, ys, yerr=es, color=RAMP[j], ls="none", marker="o", label=f"{rate} req/s")
-    ax.axhline(0, color=INK2, lw=0.8)
-    xcat(ax, [MLAB[m] for m in MRPCS])
-
-
-def draw_overhead_runs(ax, which):
-    """Every run as a small dot, mean ± CI as a bar: shows the spread behind f2."""
-    a, b = (PQF, XF) if which == "full" else (PQ, X)
-    for j, rate in enumerate(RATES):
-        for i, m in enumerate(MRPCS):
-            bl = at(rate, m)
-            if not bl:
-                continue
-            v = [(cpu(x[a]) / cpu(x[b]) - 1) * 100 for x in bl]
-            x0 = i + (j - 1.5) * 0.17
-            ax.plot([x0 - 0.04] * len(v), v, ls="none", marker="o", ms=2.6, color=RAMP[j], alpha=0.55)
-            mu, h = ci(v)
-            ax.errorbar([x0 + 0.03], [mu], yerr=[h], color=RAMP[j], marker="D", ms=4,
-                        label=f"{rate} req/s" if i == 1 else None)
+                box(ax, i + off(j, 4, w), [(cpu(x[a]) / cpu(x[b]) - 1) * 100 for x in bl], w, RAMP[j])
     ax.axhline(0, color=INK2, lw=0.8)
     xcat(ax, [MLAB[m] for m in MRPCS])
 
 
 def draw_latency(ax, km):
     key, m = km
-    for s in ORDER:
-        lab, c, ls, mk = STYLE[s]
-        xs, ys, lo, hi = [], [], [], []
+    w = 0.16
+    for j, s in enumerate(ORDER):
+        lab, c, ls, _ = STYLE[s]
+        proxy(ax, c, lab, ls == "--")
         for i, rate in enumerate(RATES):
             bl = at(rate, m)
             if bl:
-                med, q1, q3 = iqr([float(b[s][key]) for b in bl])
-                xs.append(i + (ORDER.index(s) - 2) * 0.05); ys.append(med); lo.append(med - q1); hi.append(q3 - med)
-        ax.errorbar(xs, ys, yerr=[lo, hi], color=c, ls=ls, marker=mk, label=lab)
+                box(ax, i + off(j, 5, w), [float(b[s][key]) for b in bl], w, c, ls == "--")
+            elif j == 0:
+                not_measured(ax, i)
     xcat(ax, [str(r) for r in RATES])
 
 
 def draw_memory(ax, key):
+    w = 0.16
     for j, s in enumerate(ORDER):
-        lab, c, ls, mk = STYLE[s]
-        ys, es = zip(*[ci(per_run(m, lambda b, s=s: float(b[s][key]))) for m in MRPCS])
-        ax.errorbar([i + (j - 2) * 0.1 for i in range(4)], ys, yerr=es, color=c, ls="none", marker=mk,
-                    label=lab, mfc="white" if ls == "--" else c)
+        lab, c, ls, _ = STYLE[s]
+        for i, m in enumerate(MRPCS):
+            mu, h = ci(per_run(m, lambda b, s=s: float(b[s][key])))
+            bar(ax, i + off(j, 5, w), mu, h, w, c, ls == "--", lab if i == 0 else None)
     xcat(ax, [MLAB[m] for m in MRPCS])
 
 
@@ -237,12 +250,24 @@ def fig_cpu():
 
 
 def fig_overhead():
+    # main result: paired ratio per block, averaged over the offered loads of one run -> n = 8 values per mrpc
+    fig, ax = plt.subplots(figsize=(5.4, 3.2))
+    w = 0.34
+    for j, (a, b, lab) in enumerate(((PQF, XF, "full handshake"), (PQ, X, "resumed handshake"))):
+        for i, m in enumerate(MRPCS):
+            mu, h = ci(per_run(m, lambda x, a=a, b=b: (cpu(x[a]) / cpu(x[b]) - 1) * 100))
+            bar(ax, i + off(j, 2, w), mu, h, w, ORANGE, j == 1, lab if i == 0 else None)
+            ax.text(i + off(j, 2, w), max(mu + h, 0) + 0.1, f"{round(mu, 1) + 0:+.1f}", ha="center", va="bottom", fontsize=7, color=INK2)
+    ax.axhline(0, color=INK2, lw=0.8)
+    xcat(ax, [MLAB[m] for m in MRPCS], XL_MRPC)
+    ax.set_ylabel("change in CPU per request [%]")
+    ax.legend(frameon=False)
+    title(ax, "X25519MLKEM768 vs X25519 (paired within block, averaged over offered loads,\n"
+              "mean ± 95% CI, n = 8 runs)", fontsize=9)
+    save(fig, "f2_pqc_overhead_pct")
     panels = [("full", "X25519MLKEM768 vs X25519, full handshake"), ("resumed", "X25519MLKEM768 vs X25519, resumed handshake")]
-    multi_and_single("f2_pqc_overhead_pct", panels, draw_overhead, "change in CPU per request [%]", XL_MRPC,
-                     "Post-quantum key exchange overhead (paired within block, mean ± 95% CI, n = 7-8 runs)",
-                     (8, 3.2), ncol=4)
-    multi_and_single("f2b_pqc_overhead_pct_runs", panels, draw_overhead_runs, "change in CPU per request [%]", XL_MRPC,
-                     "Post-quantum overhead: every run (dots) and mean ± 95% CI (diamonds)",
+    multi_and_single("f2b_pqc_overhead_pct_runs", panels, draw_overhead_box, "change in CPU per request [%]", XL_MRPC,
+                     "Post-quantum overhead per offered load: single runs (box = median and IQR, whiskers 1.5 IQR, n = 8)",
                      (8, 3.4), ncol=4)
 
 
@@ -275,10 +300,11 @@ def fig_pq_addon_points():
     """PQ add-on per handshake [µs] at every grid point: is it really constant?"""
     fig, ax = plt.subplots(figsize=(7.4, 3.2))
     pts = [(r, m) for m in (1, 2, 5) for r in RATES if at(r, m)]
-    for j, (a, b, lab, c, mk) in enumerate(((PQF, XF, "full handshake", ORANGE, "o"), (PQ, X, "resumed handshake", ORANGE, "^"))):
-        ys, es = zip(*[ci([hs_cost(B, x, a, b) for x in at(r, m)]) for r, m in pts])
-        ax.errorbar([i + (j - 0.5) * 0.2 for i in range(len(pts))], ys, yerr=es, color=c, ls="none", marker=mk,
-                    mfc="white" if j else c, label=lab)
+    w = 0.38
+    for j, (a, b, lab) in enumerate(((PQF, XF, "full handshake"), (PQ, X, "resumed handshake"))):
+        for i, (r, m) in enumerate(pts):
+            mu, h = ci([hs_cost(B, x, a, b) for x in at(r, m)])
+            bar(ax, i + off(j, 2, w), mu, h, w, ORANGE, j == 1, lab if i == 0 else None)
     allv = [hs_cost(B, x, PQF, XF) for r, m in pts for x in at(r, m)]
     ax.axhline(st.mean(allv), color=INK2, lw=0.8, ls=":")
     ax.axhline(0, color=INK2, lw=0.8)
@@ -307,10 +333,9 @@ def fig_cpu_split():
         ax.set_title("CPU per request by sidecar (mrpc = 1)")
     ax = axes[1]
     for i, (k, nm) in enumerate((("client_sidecar_cpu", "client"), ("server_sidecar_cpu", "server"))):
-        for j, (a, b, lab, mk) in enumerate(((PQF, XF, "full", "o"), (PQ, X, "resumed", "^"))):
+        for j, (a, b, lab) in enumerate(((PQF, XF, "full"), (PQ, X, "resumed"))):
             mu, h = ci(per_run(1, lambda x, a=a, b=b, k=k: hs_cost(B, x, a, b, val=lambda r, k=k: float(r[k]) * 1e6 / float(r["window_rps"]))))
-            ax.errorbar([i + (j - 0.5) * 0.2], [mu], yerr=[h], color=ORANGE, marker=mk, mfc="white" if j else ORANGE,
-                        ls="none", label=f"{lab} handshake" if i == 0 else None)
+            bar(ax, i + off(j, 2, 0.3), mu, h, 0.3, ORANGE, j == 1, f"{lab} handshake" if i == 0 else None)
     ax.axhline(0, color=INK2, lw=0.8)
     xcat(ax, ["client sidecar (k6)", "server sidecar (httpbin)"])
     ax.set_ylabel("post-quantum add-on per handshake [µs]")
@@ -324,10 +349,12 @@ def fig_cpu_split():
 
 def fig_mtls_overhead():
     fig, ax = plt.subplots(figsize=(5.4, 3.3))
-    for s in (XF, X, PQF, PQ):
-        lab, c, ls, mk = STYLE[s]
-        ys, es = zip(*[ci(per_run(m, lambda b, s=s: (cpu(b[s]) / cpu(b[PL]) - 1) * 100)) for m in MRPCS])
-        ax.errorbar(range(4), ys, yerr=es, color=c, ls=ls, marker=mk, label=lab)
+    w = 0.2
+    for j, s in enumerate((XF, X, PQF, PQ)):
+        lab, c, ls, _ = STYLE[s]
+        for i, m in enumerate(MRPCS):
+            mu, h = ci(per_run(m, lambda b, s=s: (cpu(b[s]) / cpu(b[PL]) - 1) * 100))
+            bar(ax, i + off(j, 4, w), mu, h, w, c, ls == "--", lab if i == 0 else None)
     xcat(ax, [MLAB[m] for m in MRPCS], XL_MRPC)
     ax.set_ylabel("CPU per request vs plaintext [%]")
     ax.set_ylim(bottom=0)
@@ -341,7 +368,7 @@ def fig_latency():
                          ("p95_ms", "f5c_latency_p95", "latency p95 [ms]"),
                          ("p99_ms", "f5b_latency_p99", "latency p99 [ms]")):
         multi_and_single(nm, [((key, m), f"mrpc = {MLAB[m]}") for m in MRPCS], draw_latency, lab, XL_RATE,
-                         f"Request latency {key[:3]} (median over 8 runs, bars = interquartile range; k6, whole 60 s test)",
+                         f"Request latency {key[:3]} over 8 runs (box = median and IQR, whiskers 1.5 IQR; k6, whole 60 s test)",
                          (10, 3.0))
 
 
@@ -398,15 +425,12 @@ def fig_overhead_by_state():
     for ax, (a, b, nm) in zip(axes, ((PQF, XF, "full handshake"), (PQ, X, "resumed handshake"))):
         counts = {m: [] for m in MRPCS}
         for j, stt in enumerate(("fast", "slow")):
-            ys, es, xs, ns = [], [], [], []
             for i, m in enumerate(MRPCS):
                 v = [(cpu(x[a]) / cpu(x[b]) - 1) * 100 for k, x in B.items() if k[3] == m and state_of(x) == stt]
                 if len(v) >= 2:
                     mu, h = ci(v) if len(v) <= 10 else (st.mean(v), 1.96 * st.stdev(v) / len(v) ** 0.5)
-                    xs.append(i + (j - 0.5) * 0.18); ys.append(mu); es.append(h); ns.append(len(v))
+                    bar(ax, i + off(j, 2, 0.36), mu, h, 0.36, BLUE, j == 1, f"{stt} state" if i == 0 else None)
                 counts[m].append(len(v))
-            ax.errorbar(xs, ys, yerr=es, color=BLUE, ls="none", marker="o", mfc=BLUE if stt == "fast" else "white",
-                        label=f"{stt} state")
         ax.axhline(0, color=INK2, lw=0.8)
         xcat(ax, [f"{MLAB[m]}\nn = {counts[m][0]} / {counts[m][1]}" for m in MRPCS])
         ax.set_title(f"X25519MLKEM768 vs X25519, {nm}")
@@ -428,15 +452,17 @@ def fig_r1():
         acc[k][0] += int(r["session_reused"]); acc[k][1] += 2 * int(r["handshakes"])
     keys = sorted({k[0] for k in acc})
     fig, ax = plt.subplots(figsize=(5.4, 3.3))
-    for j, rate in enumerate((100, 300, 400)):
-        for m, ls, mk in ((1, "-", "o"), (2, "--", "^")):
-            ys = [min(acc[(n, rate, m)][0] / acc[(n, rate, m)][1], 1.0) for n in keys]
-            ax.plot(range(len(keys)), ys, color=RAMP[[0, 2, 3][j]], ls=ls, marker=mk, label=f"{rate} req/s, mrpc = {m}")
+    w = 0.13
+    series = [(rate, m) for rate in (100, 300, 400) for m in (1, 2)]
+    for j, (rate, m) in enumerate(series):
+        for i, n in enumerate(keys):
+            full = 100 * (1 - min(acc[(n, rate, m)][0] / acc[(n, rate, m)][1], 1.0))
+            bar(ax, i + off(j, len(series), w), full, 0, w, RAMP[[0, 2, 3][j // 2]], m == 2,
+                f"{rate} req/s, mrpc = {m}" if i == 0 else None)
     xcat(ax, [f"{n}{' (default)' if n == 1 else ''}" for n in keys], "client max_session_keys (ticket slots)")
-    ax.set_ylabel("resumed handshakes / all handshakes")
-    ax.set_ylim(0.83, 1.005)
-    ax.legend(frameon=False, fontsize=7, loc="lower right")
-    title(ax, "Session resumption share vs client ticket cache size\n(R1, X25519MLKEM768 resumed arm, 3 repetitions pooled)", fontsize=9)
+    ax.set_ylabel("full (not resumed) handshakes [%]")
+    ax.legend(frameon=False, fontsize=7, loc="upper right")
+    title(ax, "Handshakes that could not resume vs client ticket cache size\n(R1, X25519MLKEM768 resumed arm, 3 repetitions pooled)", fontsize=9)
     save(fig, "f8_r1_resumption_share")
 
 

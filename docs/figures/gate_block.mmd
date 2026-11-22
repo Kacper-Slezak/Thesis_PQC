@@ -1,0 +1,22 @@
+flowchart TB
+    S0(["Session start"]) --> S1["fresh k3d cluster<br/>verify_ciphers: every setup negotiates<br/>the expected cipher and group"]
+    S1 --> S2["session gate<br/>10 min warm-up at 200 req/s,<br/>5 canary windows, all within ±5% of<br/>their median and CV ≤ 3%"]
+    S2 --> R(["Run: 14 grid points<br/>(rate × mrpc) in random order"])
+
+    R --> B0["calib_guard<br/>host calibration ≥ 300 ms<br/>(turbo off), otherwise wait"]
+    B0 --> B1["entry canary<br/>X25519 resumed, same rate and mrpc<br/>→ CPU per request C_in"]
+    B1 --> B2["5 setups in random order, one window each:<br/>plaintext · X25519 full · X25519 resumed ·<br/>X25519MLKEM768 full · X25519MLKEM768 resumed"]
+    B2 --> B3["exit canary → C_out"]
+    B3 --> D{"|C_out / C_in − 1| ≤ 5% ?"}
+    D -- yes --> OK["block accepted<br/>rows: block_status = ok"]
+    D -- no --> RJ["rows kept as rejected<br/>(machine state changed<br/>during the block)"]
+    RJ --> A{"attempt ≤ 2 ?"}
+    A -- yes --> B0
+    A -- no --> EF["accepted with flag exit_fail"]
+    OK --> N(["next grid point"])
+    EF --> N
+
+    classDef dec fill:#fff4e5,stroke:#eb6834,color:#0b0b0b;
+    classDef good fill:#e8f1fc,stroke:#2a78d6,color:#0b0b0b;
+    class D,A dec;
+    class OK good;

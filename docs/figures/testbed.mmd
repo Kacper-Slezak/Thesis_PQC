@@ -1,0 +1,34 @@
+flowchart TB
+    subgraph HOST["Laptop: Windows 11 + WSL2 · AMD Ryzen AI 9 HX 370 · turbo off"]
+        direction TB
+        SCRIPT["Measurement scripts (WSL2)<br/>run_sweeps.sh · gate.sh<br/>kubectl exec at window start and end"]
+        subgraph K3D["k3d cluster · k3s · Istio 1.31.4 (Envoy 1.39.7, BoringSSL)"]
+            direction LR
+            subgraph NC["agent node 1 · role=client"]
+                direction TB
+                K6["<b>k6</b><br/>constant arrival rate 100-400 req/s<br/><i>read: latency p50/p95/p99</i>"]
+                SC["<b>istio-proxy</b> (client sidecar)<br/>2 CPU / 512 MiB<br/><i>read: cgroup cpu.stat, memory.current,<br/>Envoy /stats, /memory</i>"]
+                K6 -- "HTTP/1.1, localhost" --> SC
+            end
+            subgraph NS["agent node 2 · role=server"]
+                direction TB
+                SS["<b>istio-proxy</b> (server sidecar)<br/>2 CPU / 512 MiB<br/><i>read: cgroup cpu.stat, memory.current,<br/>Envoy /stats (requests, handshakes,<br/>resumptions, key-exchange group)</i>"]
+                HB["<b>go-httpbin</b> :8080"]
+                SS -- "HTTP/1.1, localhost" --> HB
+            end
+            subgraph CP["server node"]
+                ISTIOD["<b>istiod</b><br/>certificates (SDS, RSA-2048)<br/>config (xDS): EnvoyFilter, DestinationRule"]
+            end
+            SC == "<b>mTLS 1.3</b><br/>X25519 or X25519MLKEM768" ==> SS
+        end
+        SCRIPT -.-> K6
+        SCRIPT -.-> SC
+        SCRIPT -.-> SS
+        ISTIOD -.-> SC
+        ISTIOD -.-> SS
+    end
+
+    classDef proxy fill:#e8f1fc,stroke:#2a78d6,color:#0b0b0b;
+    classDef tool fill:#fff4e5,stroke:#eb6834,color:#0b0b0b;
+    class SC,SS proxy;
+    class SCRIPT tool;

@@ -1,0 +1,27 @@
+sequenceDiagram
+    autonumber
+    participant C as Client sidecar (k6)
+    participant S as Server sidecar (httpbin)
+
+    Note over C,S: Full handshake (new TCP connection, no ticket)
+    rect rgba(235, 104, 52, 0.15)
+    C->>S: ClientHello + key_share<br/>X25519: 32 B · X25519MLKEM768: 1216 B
+    S->>C: ServerHello + key_share<br/>X25519: 32 B · X25519MLKEM768: 1120 B (ciphertext)
+    end
+    rect rgba(42, 120, 214, 0.12)
+    S->>C: EncryptedExtensions, CertificateRequest,<br/>Certificate (RSA-2048), CertificateVerify (signature), Finished
+    C->>S: Certificate (RSA-2048), CertificateVerify (signature), Finished
+    end
+    S->>C: NewSessionTicket (stored by the client, up to max_session_keys)
+    C->>S: HTTP request / response
+
+    Note over C,S: Resumed handshake (psk_dhe_ke: ticket + fresh key exchange)
+    rect rgba(235, 104, 52, 0.15)
+    C->>S: ClientHello + key_share + pre_shared_key (ticket)
+    S->>C: ServerHello + key_share + pre_shared_key (accepted)
+    end
+    S->>C: EncryptedExtensions, Finished (no certificates, no signatures)
+    C->>S: Finished
+    C->>S: HTTP request / response
+
+    Note over C,S: orange = key exchange (where ML-KEM adds cost, in both handshakes)<br/>blue = certificates and signatures (only in the full handshake)
